@@ -1,0 +1,26 @@
+group 'cz.vutbr.fit.sin'
+version '1.0'
+
+apply plugin: 'java'
+// allows running app (gradlew run)
+apply plugin: 'application'
+// entry point to the app
+mainClassName = 'cz.vutbr.fit.sin.crossroads.Main'
+
+repositories {
+    mavenCentral()
+}
+
+//sourceSets { main { org.gradle.util.Resources { srcDir 'src/main/java'	} }	}
+
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.intellij:forms_rt:7.0.3'
+    compile group: 'net.sf.ingenias', name: 'jade', version: '4.3'
+    // https://mvnrepository.com/artifact/net.sf.ingenias/jade
+}
