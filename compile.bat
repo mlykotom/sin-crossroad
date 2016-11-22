@@ -1,0 +1,1 @@
+"%JDK_HOME%\javac" -classpath lib\jade.jar -d bin src\Agents\*.java

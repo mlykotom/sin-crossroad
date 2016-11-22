@@ -25,6 +25,7 @@ hs_err_pid*
 # generated files
 bin/
 gen/
+run/
 
 # Local configuration file (sdk path, etc)
 local.properties

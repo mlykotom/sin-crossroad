@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/crossroads.iml" filepath="$PROJECT_DIR$/.idea/modules/crossroads.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/crossroads_main.iml" filepath="$PROJECT_DIR$/.idea/modules/crossroads_main.iml" group="crossroads" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/crossroads_test.iml" filepath="$PROJECT_DIR$/.idea/modules/crossroads_test.iml" group="crossroads" />
+      <module fileurl="file://$PROJECT_DIR$/sin-crossroad.iml" filepath="$PROJECT_DIR$/sin-crossroad.iml" />
     </modules>
   </component>
 </project>
