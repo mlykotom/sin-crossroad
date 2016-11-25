@@ -54,7 +54,7 @@ public class PingAgent extends Agent {
 		public void action() {
 			ACLMessage  msg = myAgent.receive();
 			if(msg != null){
-				ACLMessage reply = msg.createReply();
+					ACLMessage reply = msg.createReply();
 
 				if(msg.getPerformative()== ACLMessage.REQUEST){
 					String content = msg.getContent();

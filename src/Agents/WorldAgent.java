@@ -1,5 +1,6 @@
 package Agents;
 
+import GUI.MainGui;
 import Map.*;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
@@ -24,10 +25,14 @@ public class WorldAgent extends Agent {
     private List<AgentController> _crossRoadAgents;
     private List<AgentController> _carAgents;
 
+    private MainGui _gui;
+    private int _updatePeriod = 100;
+
     protected void setup()
     {
         myLogger.log(Level.INFO, "Creating World");
         _world = new World();
+        _gui = new MainGui();
 
         ContainerController controller = getContainerController();
         _crossRoadAgents = new LinkedList<>();
@@ -45,9 +50,13 @@ public class WorldAgent extends Agent {
             {
                 addBehaviour(new SpawnCarBehavior(this, 10000, spawnPoint));
             }
+
+            addBehaviour(new UpdateBehaviour(this, _updatePeriod));
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }
+
+        _gui.setVisible(true);
     }
 
     private class SpawnCarBehavior extends TickerBehaviour
@@ -103,6 +112,22 @@ public class WorldAgent extends Agent {
             } catch (StaleProxyException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private class UpdateBehaviour extends TickerBehaviour
+    {
+
+        public UpdateBehaviour(Agent a, long period) {
+            super(a, period);
+        }
+
+        @Override
+        protected void onTick() {
+            //TODO: Update simulation
+
+            //TODO: Update GUI
+            //_gui.Update();
         }
     }
 }

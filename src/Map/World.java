@@ -28,10 +28,10 @@ public class World {
         CrossRoads.add(crossroad);
 
         Roads = new LinkedList<>();
-        Road roadA = new Road(spawnA, crossroad);
-        Road roadB = new Road(spawnB, crossroad);
-        Road roadC = new Road(spawnC, crossroad);
-        Road roadD = new Road(spawnD, crossroad);
+        Road roadA = new Road(spawnA, crossroad, 50); //TODO: Determine length from distance of 2 places
+        Road roadB = new Road(spawnB, crossroad, 50); //TODO: Determine length from distance of 2 places
+        Road roadC = new Road(spawnC, crossroad, 50); //TODO: Determine length from distance of 2 places
+        Road roadD = new Road(spawnD, crossroad, 50); //TODO: Determine length from distance of 2 places
         Roads.add(roadA);
         Roads.add(roadB);
         Roads.add(roadC);
