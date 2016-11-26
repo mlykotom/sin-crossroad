@@ -1,6 +1,8 @@
 package Agents;
 
 
+import Behaviours.CrossRoad.ControlBehaviour;
+import Behaviours.CrossRoad.MessagingBehaviour;
 import Map.CrossRoad;
 import jade.core.AID;
 import jade.core.Agent;
@@ -19,7 +21,6 @@ import java.util.List;
 public class CrossRoadAgent extends Agent {
     private Logger myLogger = Logger.getMyLogger(getClass().getName());
     private CrossRoad _crossRoad;
-    private List<AID> _receivers;
     private boolean _green;
 
     @Override
@@ -27,61 +28,24 @@ public class CrossRoadAgent extends Agent {
         Object[] args = getArguments();
         _crossRoad = (CrossRoad)args[0];
         addBehaviour(new ControlBehaviour(this, 2300));
-        addBehaviour(new MessagingBehaviour());
+        addBehaviour(new MessagingBehaviour(this, this.myLogger));
         _green = true;
-        _receivers = new LinkedList<>();
+        receivers = new LinkedList<>();
     }
 
-    private class ControlBehaviour extends TickerBehaviour
+    public List<AID> receivers;
+
+    public boolean changeGreen()
     {
-        public ControlBehaviour(Agent a, long period) {
-            super(a, period);
-        }
-
-        @Override
-        protected void onTick() {
-            _green = !_green;
-            if (_green) {
-                if (_receivers.size() > 0) {
-                    ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-                    for (AID receiver : _receivers) {
-                        msg.addReceiver(receiver);
-                    }
-                    _receivers.clear();
-                    send(msg);
-                }
-            }
-        }
+        _green = !_green;
+        return _green;
     }
 
-    private class MessagingBehaviour extends CyclicBehaviour
+    public boolean getGreen()
     {
-        @Override
-        public void action() {
-            ACLMessage msg = myAgent.receive();
-            if(msg != null){
-                ACLMessage reply = msg.createReply();
-
-                if(msg.getPerformative() == ACLMessage.QUERY_IF){
-                    if (_green){
-                        reply.setPerformative(ACLMessage.AGREE);
-                    }
-                    else{
-                        _receivers.add(msg.getSender());
-                        reply.setPerformative(ACLMessage.REFUSE);
-                    }
-
-                }
-                else {
-                    myLogger.log(Logger.INFO, "Agent "+getLocalName()+" - Unexpected message ["+ACLMessage.getPerformative(msg.getPerformative())+"] received from "+msg.getSender().getLocalName());
-                    reply.setPerformative(ACLMessage.NOT_UNDERSTOOD);
-                    reply.setContent("( (Unexpected-act "+ACLMessage.getPerformative(msg.getPerformative())+") )");
-                }
-                send(reply);
-            }
-            else {
-                block();
-            }
-        }
+        return _green;
     }
+
+
+
 }
