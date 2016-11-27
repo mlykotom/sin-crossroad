@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="14a3c9c6-24d7-493f-b4d1-2a19f4b8af25" name="Default" comment="Added Car status behaviour and others">
+    <list default="true" id="14a3c9c6-24d7-493f-b4d1-2a19f4b8af25" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Agents/CarAgent.java" afterPath="$PROJECT_DIR$/src/Agents/CarAgent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Behaviours/Car/CrossBehaviour.java" afterPath="$PROJECT_DIR$/src/Behaviours/Car/CrossBehaviour.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Behaviours/Car/DriveBehaviour.java" afterPath="$PROJECT_DIR$/src/Behaviours/Car/DriveBehaviour.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Map/Road.java" afterPath="$PROJECT_DIR$/src/Map/Road.java" />
     </list>
     <ignored path="sin-crossroad.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -40,8 +37,8 @@
       <file leaf-file-name="CarAgent.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Agents/CarAgent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="235">
-              <caret line="76" column="30" selection-start-line="76" selection-start-column="30" selection-end-line="76" selection-end-column="30" />
+            <state relative-caret-position="229">
+              <caret line="40" column="34" selection-start-line="40" selection-start-column="34" selection-end-line="40" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -59,21 +56,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CrossRoadPlus.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Map/CrossRoadPlus.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="28" column="29" selection-start-line="28" selection-start-column="24" selection-end-line="28" selection-end-column="29" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DriveBehaviour.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DriveBehaviour.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Behaviours/Car/DriveBehaviour.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="314">
-              <caret line="30" column="81" selection-start-line="30" selection-start-column="81" selection-end-line="30" selection-end-column="81" />
+            <state relative-caret-position="484">
+              <caret line="40" column="9" selection-start-line="40" selection-start-column="9" selection-end-line="40" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -126,6 +113,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="300">
               <caret line="25" column="40" selection-start-line="25" selection-start-column="40" selection-end-line="25" selection-end-column="40" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CarStatusBehaviour.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Behaviours/Car/CarStatusBehaviour.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="399">
+              <caret line="38" column="13" selection-start-line="38" selection-start-column="13" selection-end-line="38" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -188,8 +185,8 @@
         <option value="$PROJECT_DIR$/src/Agents/CrossRoadAgent.java" />
         <option value="$PROJECT_DIR$/src/Map/Road.java" />
         <option value="$PROJECT_DIR$/src/Behaviours/Car/CrossBehaviour.java" />
-        <option value="$PROJECT_DIR$/src/Agents/CarAgent.java" />
         <option value="$PROJECT_DIR$/src/Behaviours/Car/DriveBehaviour.java" />
+        <option value="$PROJECT_DIR$/src/Agents/CarAgent.java" />
       </list>
     </option>
   </component>
@@ -526,7 +523,7 @@
       <workItem from="1480166290853" duration="651000" />
       <workItem from="1480168060815" duration="7369000" />
       <workItem from="1480200676110" duration="8288000" />
-      <workItem from="1480257583392" duration="1651000" />
+      <workItem from="1480257583392" duration="1983000" />
     </task>
     <task id="LOCAL-00001" summary="Added behaviours to separate files and added soeme logic to crossBehaviour">
       <created>1480200794233</created>
@@ -542,11 +539,18 @@
       <option name="project" value="LOCAL" />
       <updated>1480209563869</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Refactoring of car agent">
+      <created>1480259279347</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1480259279347</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="50881000" />
+    <option name="totallyTimeSpent" value="51213000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -593,7 +597,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added behaviours to separate files and added soeme logic to crossBehaviour" />
     <MESSAGE value="Added Car status behaviour and others" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Car status behaviour and others" />
+    <MESSAGE value="Refactoring of car agent" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactoring of car agent" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -825,14 +830,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Behaviours/Car/CarStatusBehaviour.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Behaviours/CrossRoad/MessagingBehaviour.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -970,21 +967,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Behaviours/Car/DriveBehaviour.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="484">
+          <caret line="40" column="9" selection-start-line="40" selection-start-column="9" selection-end-line="40" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Agents/CarAgent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="76" column="30" selection-start-line="76" selection-start-column="30" selection-end-line="76" selection-end-column="30" />
+        <state relative-caret-position="229">
+          <caret line="40" column="34" selection-start-line="40" selection-start-column="34" selection-end-line="40" selection-end-column="34" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Behaviours/Car/DriveBehaviour.java">
+    <entry file="file://$PROJECT_DIR$/src/Behaviours/Car/CarStatusBehaviour.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="30" column="81" selection-start-line="30" selection-start-column="81" selection-end-line="30" selection-end-column="81" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="399">
+          <caret line="38" column="13" selection-start-line="38" selection-start-column="13" selection-end-line="38" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>

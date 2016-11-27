@@ -1,5 +1,6 @@
 package Agents;
 
+import Behaviours.Car.CarStatusBehaviour;
 import Behaviours.Car.CrossBehaviour;
 import Behaviours.Car.DriveBehaviour;
 import Common.CarStatus;
@@ -35,7 +36,9 @@ public class CarAgent extends Agent {
         _origin = (Place)args[0];
         _path = (List<Road>)args[1];
         myLogger.log(Level.INFO, getLocalName()+" driving");
+
         addBehaviour(new DriveBehaviour(this));
+        addBehaviour(new CarStatusBehaviour(this));
 
         //TODO: Model changed, car will receive full path
         //TODO: Use road.nextPlace with origin to navigate to next place
@@ -77,7 +80,7 @@ public class CarAgent extends Agent {
         _origin = currentPlace;
         _currentRoadIdx++;
         addBehaviour(new DriveBehaviour(this));
-        myLogger.log(Level.INFO, "CrossRoad Passed!");
+        myLogger.log(Level.INFO, getLocalName() + " crossRoad Passed!");
     }
 
     public void crossRoadArrived(CrossRoad crossRoad)
