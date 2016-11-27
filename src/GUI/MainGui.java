@@ -15,12 +15,12 @@ public class MainGui extends JFrame {
     private static Logger sLogger = Logger.getMyLogger(MainGui.class.getSimpleName());
 
     private final WorldAgent mWorldAgent;
+    private WorldMapCanvas mWorldMapCanvas;
+
+    private JPanel rootPanel;
     private JButton button1;
     private JPanel worldMap;
     private JLabel simulationTime;
-    private JPanel rootPanel;
-
-    private WorldMapCanvas mWorldMapCanvas;
 
     public static MainGui runGUI(WorldAgent worldAgent) {
         MainGui mainGui = new MainGui(worldAgent);
