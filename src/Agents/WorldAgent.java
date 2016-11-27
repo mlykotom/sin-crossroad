@@ -8,45 +8,50 @@ import jade.util.Logger;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
+import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 import java.util.*;
 import java.util.logging.Level;
 
-/**
- * Created by raven on 23.11.2016.
- */
 public class WorldAgent extends Agent {
+    public static final long SPAWN_CAR_INTERVAL_MILLIS = 10 * DateUtils.MILLIS_PER_SECOND;
     private Logger myLogger = Logger.getMyLogger(getClass().getName());
 
-    private World _world;
-    private AgentController _ping;
-    private AgentController _test;
+    private World mWorld;
     private List<AgentController> _crossRoadAgents;
     private List<AgentController> _carAgents;
 
-    private MainGui _gui;
+    private long mEllapsedTime = 0;
+
+    public long getEllapsedTime() {
+        return mEllapsedTime;
+    }
+
+
+    private MainGui mMainGui;
     private int _updatePeriod = 100;
 
+    @Override
     protected void setup() {
         myLogger.log(Level.INFO, "Creating World");
-        _world = new World();
-        _gui = MainGui.runGUI(this, _carAgents, _crossRoadAgents);
+        mWorld = new World();
+        mMainGui = MainGui.runGUI(this, _carAgents, _crossRoadAgents);
 
         ContainerController controller = getContainerController();
         _crossRoadAgents = new LinkedList<>();
         _carAgents = new LinkedList<>();
         try {
-            for (CrossRoad crossRoad : _world.CrossRoads) {
+            for (CrossRoad crossRoad : mWorld.CrossRoads) {
                 Object[] args = {crossRoad};
                 AgentController cont = controller.createNewAgent(crossRoad.Name, "Agents.CrossRoadAgent", args);
                 _crossRoadAgents.add(cont);
                 cont.start();
             }
 
-            for (SpawnPoint spawnPoint : _world.SpawnPoints) {
-                addBehaviour(new SpawnCarBehavior(this, 10000, spawnPoint));
+            for (SpawnPoint spawnPoint : mWorld.SpawnPoints) {
+                addBehaviour(new SpawnCarBehavior(this, SPAWN_CAR_INTERVAL_MILLIS, spawnPoint));
             }
 
             addBehaviour(new UpdateBehaviour(this, _updatePeriod));
@@ -54,7 +59,7 @@ public class WorldAgent extends Agent {
             e.printStackTrace();
         }
 
-        _gui.setVisible(true);
+        mMainGui.setVisible(true);
     }
 
     private class SpawnCarBehavior extends TickerBehaviour {
@@ -117,12 +122,11 @@ public class WorldAgent extends Agent {
 
         @Override
         protected void onTick() {
+            mEllapsedTime += getPeriod();
             //TODO: Update simulation
 
             //TODO: Update GUI
-            //_gui.Update()
-
-            _gui.invalidate();
+            mMainGui.updateSimulation(mEllapsedTime);
         }
     }
 }
