@@ -11,13 +11,11 @@ import jade.util.Logger;
 public class MessagingBehaviour extends CyclicBehaviour
 {
     private final CrossRoadAgent _agent;
-    private final Logger myLogger;
 
-    public MessagingBehaviour(CrossRoadAgent agent, Logger agentLogger)
+    public MessagingBehaviour(CrossRoadAgent agent)
     {
         super(agent);
         _agent = agent;
-        myLogger = agentLogger;
     }
     @Override
     public void action() {
@@ -35,7 +33,7 @@ public class MessagingBehaviour extends CyclicBehaviour
                 }
             }
             else {
-                myLogger.log(Logger.INFO, "Agent "+ myAgent.getLocalName()+" - Unexpected message ["+ACLMessage.getPerformative(msg.getPerformative())+"] received from "+msg.getSender().getLocalName());
+                _agent.myLogger.log(Logger.INFO, "Agent "+ myAgent.getLocalName()+" - Unexpected message ["+ACLMessage.getPerformative(msg.getPerformative())+"] received from "+msg.getSender().getLocalName());
                 reply.setPerformative(ACLMessage.NOT_UNDERSTOOD);
                 reply.setContent("( (Unexpected-act "+ACLMessage.getPerformative(msg.getPerformative())+") )");
             }

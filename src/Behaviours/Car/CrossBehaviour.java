@@ -55,7 +55,7 @@ public class CrossBehaviour extends Behaviour
 
         // Start Behaviour for crossing next road
         _crossed = true;
-        _carAgent.crossRoadPassed();
+        _carAgent.crossRoadPassed(_roadTo.nextPlace(_roadFrom));
 
         //TODO: Maybe use ReceiverBehaviour from JADE.
     }

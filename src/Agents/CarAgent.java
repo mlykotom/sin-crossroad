@@ -2,6 +2,7 @@ package Agents;
 
 import Behaviours.Car.CrossBehaviour;
 import Behaviours.Car.DriveBehaviour;
+import Common.CarStatus;
 import Map.CrossRoad;
 import Map.Place;
 import Map.Road;
@@ -15,7 +16,7 @@ import java.util.logging.Level;
  * Created by adamj on 22.11.2016.
  */
 public class CarAgent extends Agent {
-    private Logger myLogger = Logger.getMyLogger(getClass().getName());
+    public Logger myLogger = Logger.getMyLogger(getClass().getName());
 
     private Place sourcePlace;
     private Place destinationPlace;
@@ -54,10 +55,7 @@ public class CarAgent extends Agent {
 //        destinationPlace = (Place) args[1];
     }
 
-    public int getCurrentRoadIndex()
-    {
-        return _currentRoadIdx;
-    }
+    public int getCurrentRoadIndex() { return _currentRoadIdx; }
 
     public List<Road> getPath()
     {
@@ -75,10 +73,12 @@ public class CarAgent extends Agent {
         doDelete();
     }
 
-    public void crossRoadPassed()
+    public void crossRoadPassed(Place destination)
     {
+        _origin = destination;
         _currentRoadIdx++;
         addBehaviour(new DriveBehaviour(this));
+        myLogger.log(Level.INFO, "CrossRoad Passed!");
     }
 
     public void crossRoadArrived(CrossRoad crossRoad)
@@ -89,5 +89,10 @@ public class CarAgent extends Agent {
 
     protected void takeDown() {
         timestampEnd = System.currentTimeMillis();
+    }
+
+    public CarStatus getStatus() {
+        return new CarStatus(getName(), sourcePlace, destinationPlace,
+                timestampStart, timestampEnd, _path.get(_currentRoadIdx));
     }
 }

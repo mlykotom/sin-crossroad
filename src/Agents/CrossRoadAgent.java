@@ -19,7 +19,7 @@ import java.util.List;
  * Created by raven on 23.11.2016.
  */
 public class CrossRoadAgent extends Agent {
-    private Logger myLogger = Logger.getMyLogger(getClass().getName());
+    public Logger myLogger = Logger.getMyLogger(getClass().getName());
     private CrossRoad _crossRoad;
     private boolean _green;
 
@@ -28,7 +28,7 @@ public class CrossRoadAgent extends Agent {
         Object[] args = getArguments();
         _crossRoad = (CrossRoad)args[0];
         addBehaviour(new ControlBehaviour(this, 2300));
-        addBehaviour(new MessagingBehaviour(this, this.myLogger));
+        addBehaviour(new MessagingBehaviour(this));
         _green = true;
         receivers = new LinkedList<>();
     }

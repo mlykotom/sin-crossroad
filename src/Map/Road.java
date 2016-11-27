@@ -21,9 +21,15 @@ public class Road {
         Length = length;
     }
 
+
     public Place nextPlace(Place currentPlace)
     {
         return currentPlace == PlaceA ? PlaceB : PlaceA;
+    }
+
+    public Place nextPlace(Road from)
+    {
+        return (from.PlaceA == PlaceA || from.PlaceB == PlaceA) ? PlaceA : PlaceB;
     }
 
     public LinkedList<Car> GetLane(Place destination)

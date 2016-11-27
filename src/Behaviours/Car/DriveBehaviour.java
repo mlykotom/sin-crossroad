@@ -29,6 +29,12 @@ public class DriveBehaviour extends OneShotBehaviour
         List<Road> path = _carAgent.getPath();
 
         Place destination = path.get(roadIndex).nextPlace(_carAgent.getOrigin());
+        if(roadIndex == 1)
+        {
+            _carAgent.myLogger.log(Level.INFO, "Driving: CurrentIndex " + roadIndex + " origin: " + _carAgent.getOrigin().getClass().toString()
+            + " blabla " + path.get(roadIndex).getClass().toString());
+        }
+
         if (destination instanceof SpawnPoint)
         {
             _carAgent.delete();
