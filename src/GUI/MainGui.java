@@ -1,27 +1,29 @@
 package GUI;
 
 import Agents.WorldAgent;
+import Common.CarStatus;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import jade.wrapper.AgentController;
+import jade.util.Logger;
 import org.apache.commons.lang3.time.DateUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
+import java.util.logging.Level;
 
 public class MainGui extends JFrame {
+    private static Logger sLogger = Logger.getMyLogger(MainGui.class.getSimpleName());
+
     private final WorldAgent mWorldAgent;
-    private final List<AgentController> mCarAgents;
-    private final List<AgentController> mCrossRoadAgents;
     private JButton button1;
-    private JPanel map;
+    private JPanel worldMap;
     private JLabel simulationTime;
     private JPanel rootPanel;
 
+    private WorldMapCanvas mWorldMapCanvas;
 
-    public static MainGui runGUI(WorldAgent worldAgent, List<AgentController> carAgents, List<AgentController> crossRoadAgents) {
-        MainGui mainGui = new MainGui(worldAgent, carAgents, crossRoadAgents);
+    public static MainGui runGUI(WorldAgent worldAgent) {
+        MainGui mainGui = new MainGui(worldAgent);
         SwingUtilities.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -42,10 +44,9 @@ public class MainGui extends JFrame {
         thread.start();
     }
 
-    private MainGui(WorldAgent worldAgent, List<AgentController> carAgents, List<AgentController> crossRoadAgents) {
+    private MainGui(WorldAgent worldAgent) {
         mWorldAgent = worldAgent;
-        mCarAgents = carAgents;
-        mCrossRoadAgents = crossRoadAgents;
+        mWorldMapCanvas = new WorldMapCanvas();
     }
 
 
@@ -53,11 +54,18 @@ public class MainGui extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Visualization of crossroads");
         setContentPane(rootPanel);
+
+        worldMap.add(mWorldMapCanvas);
         pack();
     }
 
-    public void updateSimulation(long ellapsedTime) {
+    public void update(long ellapsedTime) {
         simulationTime.setText(String.format("%d s", ellapsedTime / DateUtils.MILLIS_PER_SECOND));
+        worldMap.repaint();
+    }
+
+    public void updateMapStatus(CarStatus status) {
+//        sLogger.log(Level.INFO, status.name);
     }
 
     {
@@ -80,9 +88,9 @@ public class MainGui extends JFrame {
         button1 = new JButton();
         button1.setText("Button");
         rootPanel.add(button1, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        map = new JPanel();
-        map.setLayout(new GridBagLayout());
-        rootPanel.add(map, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(400, 400), null, null, 1, false));
+        worldMap = new JPanel();
+        worldMap.setLayout(new GridBagLayout());
+        rootPanel.add(worldMap, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(400, 400), null, null, 1, false));
         final JLabel label1 = new JLabel();
         label1.setText("Simulation time:");
         rootPanel.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));

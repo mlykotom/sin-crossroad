@@ -17,6 +17,7 @@ import java.util.logging.Level;
  * Created by adamj on 22.11.2016.
  */
 public class CarAgent extends Agent {
+    public static final String CAR_NAME_PREFIX = "Car ";
     public Logger myLogger = Logger.getMyLogger(getClass().getName());
 
     private Place sourcePlace;
@@ -27,15 +28,19 @@ public class CarAgent extends Agent {
     private Place _origin;
     private int _currentRoadIdx = 0;
 
+    public static String getAgentName(int id) {
+        return String.format("%s%d", CAR_NAME_PREFIX, id);
+    }
+
     @Override
     protected void setup() {
         Object args[] = getArguments();
 
         timestampStart = System.currentTimeMillis();
 
-        _origin = (Place)args[0];
-        _path = (List<Road>)args[1];
-        myLogger.log(Level.INFO, getLocalName()+" driving");
+        _origin = (Place) args[0];
+        _path = (List<Road>) args[1];
+        myLogger.log(Level.INFO, getLocalName() + " driving");
 
         addBehaviour(new DriveBehaviour(this));
         addBehaviour(new CarStatusBehaviour(this));
@@ -57,36 +62,33 @@ public class CarAgent extends Agent {
 //        destinationPlace = (Place) args[1];
     }
 
-    public int getCurrentRoadIndex() { return _currentRoadIdx; }
+    public int getCurrentRoadIndex() {
+        return _currentRoadIdx;
+    }
 
-    public List<Road> getPath()
-    {
+    public List<Road> getPath() {
         return _path;
     }
 
-    public Place getOrigin()
-    {
+    public Place getOrigin() {
         return _origin;
     }
 
-    public void delete()
-    {
+    public void delete() {
         myLogger.log(Level.INFO, getLocalName() + " arrived");
         doDelete();
     }
 
-    public void crossRoadPassed(Place currentPlace)
-    {
+    public void crossRoadPassed(Place currentPlace) {
         _origin = currentPlace;
         _currentRoadIdx++;
         addBehaviour(new DriveBehaviour(this));
         myLogger.log(Level.INFO, getLocalName() + " crossRoad Passed!");
     }
 
-    public void crossRoadArrived(CrossRoad crossRoad)
-    {
+    public void crossRoadArrived(CrossRoad crossRoad) {
         addBehaviour(new CrossBehaviour(this, crossRoad,
-                _path.get(_currentRoadIdx), _path.get(_currentRoadIdx+1)));
+                _path.get(_currentRoadIdx), _path.get(_currentRoadIdx + 1)));
     }
 
     protected void takeDown() {

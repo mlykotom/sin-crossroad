@@ -1,12 +1,14 @@
 package Behaviours.Car;
 
 import Agents.CarAgent;
+import Behaviours.world.WorldSimulationBehavior;
 import Common.CarStatus;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 import java.io.IOException;
+import java.util.logging.Level;
 
 /**
  * Created by adamj on 27.11.2016.
@@ -14,8 +16,7 @@ import java.io.IOException;
 public class CarStatusBehaviour extends CyclicBehaviour {
     CarAgent _car;
 
-    public CarStatusBehaviour(CarAgent agent)
-    {
+    public CarStatusBehaviour(CarAgent agent) {
         super(agent);
         _car = agent;
     }
@@ -24,21 +25,22 @@ public class CarStatusBehaviour extends CyclicBehaviour {
     public void action() {
         MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
         ACLMessage msg = myAgent.blockingReceive(mt);
+        if (msg == null) return;
 
-        if(msg != null)
-        {
-            ACLMessage reply = msg.createReply();
-            reply.setPerformative(ACLMessage.INFORM);
+//        _car.myLogger.log(Level.INFO, msg.getContent());
 
-            CarStatus status = _car.getStatus();
+        ACLMessage reply = msg.createReply();
+        reply.setPerformative(ACLMessage.INFORM);
+        reply.setConversationId(WorldSimulationBehavior.CONVERSATION_GET_CAR_STATUS);
 
-            try {
-                reply.setContentObject(status);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        CarStatus status = _car.getStatus();
 
-            myAgent.send(reply);
+        try {
+            reply.setContentObject(status);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        myAgent.send(reply);
     }
 }
