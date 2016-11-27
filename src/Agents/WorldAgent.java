@@ -8,6 +8,7 @@ import jade.util.Logger;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 import java.util.*;
@@ -28,26 +29,23 @@ public class WorldAgent extends Agent {
     private MainGui _gui;
     private int _updatePeriod = 100;
 
-    protected void setup()
-    {
+    protected void setup() {
         myLogger.log(Level.INFO, "Creating World");
         _world = new World();
-        _gui = new MainGui();
+        _gui = MainGui.runGUI(this, _carAgents, _crossRoadAgents);
 
         ContainerController controller = getContainerController();
         _crossRoadAgents = new LinkedList<>();
         _carAgents = new LinkedList<>();
         try {
-            for(CrossRoad crossRoad : _world.CrossRoads)
-            {
+            for (CrossRoad crossRoad : _world.CrossRoads) {
                 Object[] args = {crossRoad};
                 AgentController cont = controller.createNewAgent(crossRoad.Name, "Agents.CrossRoadAgent", args);
                 _crossRoadAgents.add(cont);
                 cont.start();
             }
 
-            for(SpawnPoint spawnPoint : _world.SpawnPoints)
-            {
+            for (SpawnPoint spawnPoint : _world.SpawnPoints) {
                 addBehaviour(new SpawnCarBehavior(this, 10000, spawnPoint));
             }
 
@@ -59,32 +57,28 @@ public class WorldAgent extends Agent {
         _gui.setVisible(true);
     }
 
-    private class SpawnCarBehavior extends TickerBehaviour
-    {
+    private class SpawnCarBehavior extends TickerBehaviour {
         SpawnPoint _spawnPoint;
 
-        public SpawnCarBehavior(Agent a, long t, SpawnPoint s)
-        {
+        public SpawnCarBehavior(Agent a, long t, SpawnPoint s) {
             super(a, t);
             _spawnPoint = s;
         }
 
-        private List<Road> createPath(SpawnPoint start)
-        {
+        private List<Road> createPath(SpawnPoint start) {
             List<Road> path = new LinkedList<>();
 
             Road currentRoad = start.Road(), nextRoad;
             Place currentPlace = start, nextPlace = currentRoad.nextPlace(currentPlace);
 
             path.add(start.Road());
-            while(!(nextPlace instanceof SpawnPoint)) {
+            while (!(nextPlace instanceof SpawnPoint)) {
                 // Get all connections at the next place
                 List<Road> connections = currentRoad.nextPlace(currentPlace).Connections;
 
                 // Pick randomly one connection that's not the same as current road
                 nextRoad = currentRoad;
-                while (currentRoad == nextRoad)
-                {
+                while (currentRoad == nextRoad) {
                     nextRoad = connections.get(ThreadLocalRandom.current().nextInt(0, connections.size()));
                 }
 
@@ -98,14 +92,14 @@ public class WorldAgent extends Agent {
 
         @Override
         protected void onTick() {
-            WorldAgent agent = ((WorldAgent)getAgent());
+            WorldAgent agent = ((WorldAgent) getAgent());
             myLogger.log(Level.INFO, "Spawning car at: " + _spawnPoint.Name);
 
             ContainerController controller = getContainerController();
             Object[] args = {_spawnPoint, createPath(_spawnPoint)};
 
             try {
-                AgentController cont = controller.createNewAgent("Car"+agent._carAgents.size(),
+                AgentController cont = controller.createNewAgent("Car" + agent._carAgents.size(),
                         "Agents.CarAgent", args);
                 agent._carAgents.add(cont);
                 cont.start();
@@ -115,8 +109,7 @@ public class WorldAgent extends Agent {
         }
     }
 
-    private class UpdateBehaviour extends TickerBehaviour
-    {
+    private class UpdateBehaviour extends TickerBehaviour {
 
         public UpdateBehaviour(Agent a, long period) {
             super(a, period);
@@ -127,7 +120,9 @@ public class WorldAgent extends Agent {
             //TODO: Update simulation
 
             //TODO: Update GUI
-            //_gui.Update();
+            //_gui.Update()
+
+            _gui.invalidate();
         }
     }
 }
