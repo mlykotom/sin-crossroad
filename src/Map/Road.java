@@ -27,7 +27,7 @@ public class Road {
         return currentPlace == PlaceA ? PlaceB : PlaceA;
     }
 
-    public Place nextPlace(Road from)
+    public Place currentPlace(Road from)
     {
         return (from.PlaceA == PlaceA || from.PlaceB == PlaceA) ? PlaceA : PlaceB;
     }

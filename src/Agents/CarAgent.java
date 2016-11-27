@@ -24,7 +24,7 @@ public class CarAgent extends Agent {
     private long timestampEnd = 0;
     private List<Road> _path;
     private Place _origin;
-    private int _currentRoadIdx;
+    private int _currentRoadIdx = 0;
 
     @Override
     protected void setup() {
@@ -34,7 +34,6 @@ public class CarAgent extends Agent {
 
         _origin = (Place)args[0];
         _path = (List<Road>)args[1];
-        _currentRoadIdx = 0;
         myLogger.log(Level.INFO, getLocalName()+" driving");
         addBehaviour(new DriveBehaviour(this));
 
@@ -73,9 +72,9 @@ public class CarAgent extends Agent {
         doDelete();
     }
 
-    public void crossRoadPassed(Place destination)
+    public void crossRoadPassed(Place currentPlace)
     {
-        _origin = destination;
+        _origin = currentPlace;
         _currentRoadIdx++;
         addBehaviour(new DriveBehaviour(this));
         myLogger.log(Level.INFO, "CrossRoad Passed!");
