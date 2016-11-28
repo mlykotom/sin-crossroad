@@ -6,39 +6,25 @@ import Common.DirectionType;
 import java.util.LinkedList;
 import java.util.List;
 
+
 /**
  * Created by raven on 23.11.2016.
  * Crossroad of following shape:
- *   | D3 |
+ * | D3 |
  * --     --
  * A0     C2
  * --     --
- *   | B1 |
- *
- *         | [0,-1] |
- * --------          --------
- * [-1,-1]   [0, 0]   [1, 0]
- * --------          --------
- *         | [0, 1] |
- *
+ * | B1 |
  */
 public class CrossRoadPlus extends CrossRoad {
-    public CrossRoadPlus()
-    {
-        super();
+
+    public CrossRoadPlus(String name, int coordX, int coordY) {
+        super(name, coordX, coordY);
     }
 
-    public CrossRoadPlus(String name)
-    {
-        super(name);
-    }
 
-    public void SetExits(Road exitA, Road exitB, Road exitC, Road exitD)
-    {
-        Connections.add(exitA);
-        Connections.add(exitB);
-        Connections.add(exitC);
-        Connections.add(exitD);
+    public void setRoads(Road roadA, Road roadB, Road roadC, Road roadD) {
+        addRoads(roadA, roadB, roadC, roadD);
     }
 
     public List<String> CarsExitA = new LinkedList<>();

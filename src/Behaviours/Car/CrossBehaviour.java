@@ -40,7 +40,7 @@ public class CrossBehaviour extends Behaviour
         super(agent);
         _carAgent = agent;
         _crossRoad = crossRoad;
-        _crossRoadReceiver = new AID(crossRoad.Name, AID.ISLOCALNAME);
+        _crossRoadReceiver = new AID(crossRoad.getName(), AID.ISLOCALNAME);
         _roadFrom = from;
         _roadTo = to;
         _crossed = false;

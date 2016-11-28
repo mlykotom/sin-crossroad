@@ -38,7 +38,7 @@ public class WorldAgent extends Agent {
         try {
             for (CrossRoad crossRoad : mWorld.CrossRoads) {
                 Object[] args = {crossRoad};
-                AgentController cont = controller.createNewAgent(crossRoad.Name, CrossRoadAgent.class.getName(), args);
+                AgentController cont = controller.createNewAgent(crossRoad.getName(), CrossRoadAgent.class.getName(), args);
                 mCrossRoadAgents.add(cont);
                 cont.start();
             }

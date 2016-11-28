@@ -2,13 +2,13 @@ package Behaviours.Car;
 
 import Agents.CarAgent;
 import Behaviours.world.WorldSimulationBehavior;
-import Common.CarStatus;
+import status.CarStatus;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 import java.io.IOException;
-import java.util.logging.Level;
+
 
 /**
  * Created by adamj on 27.11.2016.

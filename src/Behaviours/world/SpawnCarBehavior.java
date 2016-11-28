@@ -16,10 +16,12 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
+
 public class SpawnCarBehavior extends TickerBehaviour {
     private static Logger sLogger = Logger.getMyLogger(SpawnCarBehavior.class.getSimpleName());
     private final WorldAgent mWorldAgent;
     private final SpawnPoint mSpawnPoint;
+
 
     public SpawnCarBehavior(WorldAgent a, long t, SpawnPoint s) {
         super(a, t);
@@ -27,16 +29,17 @@ public class SpawnCarBehavior extends TickerBehaviour {
         mSpawnPoint = s;
     }
 
+
     private static List<Road> createPath(SpawnPoint start) {
         List<Road> path = new LinkedList<>();
 
-        Road currentRoad = start.Road(), nextRoad;
+        Road currentRoad = start.getRoad(), nextRoad;
         Place currentPlace = start, nextPlace = currentRoad.nextPlace(currentPlace);
 
-        path.add(start.Road());
+        path.add(start.getRoad());
         while (!(nextPlace instanceof SpawnPoint)) {
             // Get all connections at the next place
-            List<Road> connections = currentRoad.nextPlace(currentPlace).Connections;
+            List<Road> connections = currentRoad.nextPlace(currentPlace).getRoads();
 
             // Pick randomly one connection that's not the same as current road
             nextRoad = currentRoad;
@@ -52,9 +55,11 @@ public class SpawnCarBehavior extends TickerBehaviour {
         return path;
     }
 
+
     @Override
     protected void onTick() {
-        sLogger.log(Level.INFO, "Spawning car at: " + mSpawnPoint.Name);
+        sLogger.log(Level.INFO, "Spawning car at: " + mSpawnPoint.getName());
+
         Object[] args = {mSpawnPoint, createPath(mSpawnPoint)};
 
         try {

@@ -1,6 +1,6 @@
 package Map;
 
-import Common.Car;
+import model.Car;
 
 import java.io.Serializable;
 import java.util.LinkedList;

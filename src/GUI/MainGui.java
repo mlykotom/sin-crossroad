@@ -1,7 +1,7 @@
 package GUI;
 
 import Agents.WorldAgent;
-import Common.CarStatus;
+import status.CarStatus;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import jade.util.Logger;
@@ -9,7 +9,8 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.logging.Level;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 public class MainGui extends JFrame {
     private static Logger sLogger = Logger.getMyLogger(MainGui.class.getSimpleName());
@@ -59,7 +60,7 @@ public class MainGui extends JFrame {
         pack();
     }
 
-    public void update(long ellapsedTime) {
+    public void update(long ellapsedTime, final ConcurrentHashMap<String, CarStatus> carAgentStatus) {
         simulationTime.setText(String.format("%d s", ellapsedTime / DateUtils.MILLIS_PER_SECOND));
         worldMap.repaint();
     }

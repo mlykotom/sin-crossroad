@@ -3,7 +3,7 @@ package Agents;
 import Behaviours.Car.CarStatusBehaviour;
 import Behaviours.Car.CrossBehaviour;
 import Behaviours.Car.DriveBehaviour;
-import Common.CarStatus;
+import status.CarStatus;
 import Map.CrossRoad;
 import Map.Place;
 import Map.Road;

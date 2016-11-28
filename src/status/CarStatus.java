@@ -1,4 +1,4 @@
-package Common;
+package status;
 
 import Map.Place;
 import Map.Road;

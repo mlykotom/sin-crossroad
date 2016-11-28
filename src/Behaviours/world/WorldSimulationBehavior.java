@@ -2,7 +2,7 @@ package Behaviours.world;
 
 import Agents.CarAgent;
 import Agents.WorldAgent;
-import Common.CarStatus;
+import status.CarStatus;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.TickerBehaviour;
@@ -17,6 +17,9 @@ import jade.util.Logger;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 public class WorldSimulationBehavior extends TickerBehaviour {
     private static Logger sLogger = Logger.getMyLogger(WorldSimulationBehavior.class.getSimpleName());
@@ -25,6 +28,9 @@ public class WorldSimulationBehavior extends TickerBehaviour {
 
     private final WorldAgent mWorldAgent;
     private SearchConstraints mSearchConstraints = new SearchConstraints();
+
+    private ConcurrentHashMap<String, CarStatus> mCarAgentStatus = new ConcurrentHashMap<>();
+
 
     public WorldSimulationBehavior(WorldAgent a, long period) {
         super(a, period);
@@ -38,7 +44,7 @@ public class WorldSimulationBehavior extends TickerBehaviour {
 
                 try {
                     CarStatus status = (CarStatus) msg.getContentObject();
-                    mWorldAgent.getMainGui().updateMapStatus(status);
+                    mCarAgentStatus.put(status.name, status);
                 } catch (UnreadableException e) {
                     e.printStackTrace();
                 }
@@ -46,6 +52,7 @@ public class WorldSimulationBehavior extends TickerBehaviour {
         });
         mSearchConstraints.setMaxResults(-1L);
     }
+
 
     private void requestCarStatus() {
         ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
@@ -65,16 +72,18 @@ public class WorldSimulationBehavior extends TickerBehaviour {
         }
     }
 
+
     private long calculateEllapsedTime() {
         return new Date().getTime() - mWorldAgent.getSimulationStart().getTime();
     }
+
 
     @Override
     protected void onTick() {
         long ellapsedTime = calculateEllapsedTime();
         //TODO: Update simulation
 
-        //requestCarStatus();
-        mWorldAgent.getMainGui().update(ellapsedTime);
+        requestCarStatus();
+        mWorldAgent.getMainGui().update(ellapsedTime, mCarAgentStatus);
     }
 }
