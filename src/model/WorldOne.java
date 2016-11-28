@@ -1,21 +1,14 @@
-package Map;
+package model;
 
-import java.util.ArrayList;
+import Map.CrossRoadPlus;
+import Map.Road;
+import Map.SpawnPoint;
+
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 
-/**
- * Created by raven on 23.11.2016.
- */
-public class World {
-    public List<SpawnPoint> SpawnPoints = new ArrayList<>();
-    public List<CrossRoad> CrossRoads = new ArrayList<>();
-    public List<Road> Roads = new ArrayList<>();
-
-
-    public World() {
+public class WorldOne extends BaseWorld {
+    public WorldOne() {
         SpawnPoint spawnA = new SpawnPoint("SpawnA", 1, 0);
         SpawnPoint spawnB = new SpawnPoint("SpawnB", 0, 1);
         SpawnPoint spawnC = new SpawnPoint("SpawnC", 1, 2);
