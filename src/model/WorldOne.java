@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 public class WorldOne extends BaseWorld {
     public WorldOne() {
+        super("WorldOne");
         SpawnPoint spawnA = new SpawnPoint("SpawnA", 1, 0);
         SpawnPoint spawnB = new SpawnPoint("SpawnB", 0, 1);
         SpawnPoint spawnC = new SpawnPoint("SpawnC", 1, 2);

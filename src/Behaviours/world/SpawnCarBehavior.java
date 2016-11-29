@@ -8,7 +8,6 @@ import Map.SpawnPoint;
 import jade.core.behaviours.TickerBehaviour;
 import jade.util.Logger;
 import jade.wrapper.AgentController;
-import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 
 import java.util.LinkedList;
@@ -59,15 +58,18 @@ public class SpawnCarBehavior extends TickerBehaviour {
     @Override
     protected void onTick() {
         sLogger.log(Level.INFO, "Spawning car at: " + mSpawnPoint.getName());
+        setupCarAgent();
+    }
 
+
+    private void setupCarAgent() {
         Object[] args = {mSpawnPoint, createPath(mSpawnPoint)};
 
         try {
             AgentController cont = mWorldAgent.getContainerController().createNewAgent(
-                    CarAgent.getAgentName(mWorldAgent.getCarAgents().size()),
+                    CarAgent.getAgentName(mWorldAgent.getCarAgentNewId()),
                     CarAgent.class.getName(),
                     args);
-            mWorldAgent.getCarAgents().add(cont);   // TODO not proper because agents are destroying itself and then it lays "dirty" in the list
             cont.start();
         } catch (StaleProxyException e) {
             e.printStackTrace();

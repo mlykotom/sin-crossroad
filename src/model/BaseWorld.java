@@ -12,4 +12,10 @@ public abstract class BaseWorld {
     public List<SpawnPoint> SpawnPoints = new ArrayList<>();
     public List<CrossRoad> CrossRoads = new ArrayList<>();
     public List<Road> Roads = new ArrayList<>();
+    public final String name;
+
+
+    public BaseWorld(String name) {
+        this.name = name;
+    }
 }
