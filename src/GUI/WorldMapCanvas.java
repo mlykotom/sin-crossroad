@@ -9,9 +9,6 @@ import java.util.*;
 import java.util.List;
 
 
-/**
- * TODO testing classes, put somewhere else, encapsulate with proper classes
- */
 public class WorldMapCanvas extends JPanel {
     public static final int FIXES_OUT_OF_CANVAS = 1;
     private int mGridSize;
@@ -19,10 +16,8 @@ public class WorldMapCanvas extends JPanel {
     private final BaseWorld mWorld;
     private int mCanvasSize;
     private float mCellSize;
-    GridRenderable mGrid;
-
-    private HashMap<String, Renderable> mRenderables = new HashMap<>();
-    private List<PlaceRenderable> mPlaces = new ArrayList<>();
+    private GridRenderable mGrid;
+    private List<Renderable> mPlaces = new ArrayList<>();
 
 
     public WorldMapCanvas(BaseWorld world) {
@@ -71,11 +66,8 @@ public class WorldMapCanvas extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D context = setupCanvas(g);
-        // render static points
+        // render
         mPlaces.forEach(placeRenderable -> placeRenderable.render(context, mCellSize));
         mGrid.render(context, mCellSize);
-        // render dynamic points
-        mRenderables.forEach((key, renderable) -> renderable.render(context, mCellSize));
     }
-
 }

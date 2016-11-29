@@ -24,7 +24,7 @@ public class GridRenderable extends Renderable {
                         1.5f
                 );
 
-                drawShape(g2D, point, Color.PINK);
+                drawShape(g2D, point, Color.BLACK);
             }
         }
     }
