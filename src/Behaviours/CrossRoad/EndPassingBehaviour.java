@@ -40,7 +40,7 @@ public class EndPassingBehaviour extends CyclicBehaviour
 
         if(exitingCar.isPresent())
         {
-            _agent.CarsIn.remove(exitingCar);
+            _agent.CarsIn.remove(exitingCar.get());
 
             // Inform other cars
             ACLMessage inform = new ACLMessage(ACLMessage.INFORM);

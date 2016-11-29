@@ -52,7 +52,6 @@ public class CrossRoadStateBehaviour extends CyclicBehaviour
 
         if(_agent.CarsIn.stream().anyMatch((car) -> car.exitId == oppositeExitId && car.direction == DirectionType.Straight))
         {
-            _agent.myLogger.log(Level.WARNING, "REFUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE: " + String.valueOf(_agent.CarsIn.size()));
 
             reply.setPerformative(ACLMessage.REFUSE);
         }
