@@ -68,6 +68,11 @@ public class WorldAgent extends Agent {
     }
 
 
+    public BaseWorld getWorld() {
+        return mWorld;
+    }
+
+
     public synchronized int getCarAgentNewId() {
         return mCarAgentsCount++;
     }
