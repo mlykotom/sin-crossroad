@@ -29,17 +29,15 @@ public class DriveBehaviour extends OneShotBehaviour {
         List<Road> path = _carAgent.getPath();
 
         Road currentRoad = path.get(roadIndex);
-        Place destination = path.get(roadIndex).nextPlace(_carAgent.getOrigin());
-        if (roadIndex == 1) {
-            _carAgent.myLogger.log(Level.INFO, "Driving: CurrentIndex " + roadIndex + " origin: " + _carAgent.getOrigin().getClass().toString()
-                    + " blabla " + path.get(roadIndex).getClass().toString());
-        }
+        Place destination = currentRoad.nextPlace(_carAgent.getOrigin());
 
         // TODO simulates driving -> IMPROVE with encapsulation
-        _carAgent.addBehaviour(new WakerBehaviour(_carAgent, Road.DRIVE_SPEED * currentRoad.Length) {
+        // TODO parameters
+        _carAgent.addBehaviour(new WakerBehaviour(_carAgent, 2000) {
             @Override
             protected void onWake() {
                 super.onWake();
+
                 if (destination instanceof SpawnPoint) {
                     _carAgent.delete();
                 } else if (destination instanceof CrossRoad) {

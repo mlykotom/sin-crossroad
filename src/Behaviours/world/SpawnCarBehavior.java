@@ -55,7 +55,6 @@ public class SpawnCarBehavior extends TickerBehaviour {
     @Override
     protected void onTick() {
         sLogger.log(Level.INFO, "Spawning car at: " + mSpawnPoint.Name);
-
         Object[] args = {mSpawnPoint, createPath(mSpawnPoint)};
 
         try {

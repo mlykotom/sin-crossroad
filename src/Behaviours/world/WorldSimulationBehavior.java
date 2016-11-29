@@ -74,7 +74,7 @@ public class WorldSimulationBehavior extends TickerBehaviour {
         long ellapsedTime = calculateEllapsedTime();
         //TODO: Update simulation
 
-        requestCarStatus();
+        //requestCarStatus();
         mWorldAgent.getMainGui().update(ellapsedTime);
     }
 }

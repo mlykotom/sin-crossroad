@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.logging.Level;
 
 public class WorldAgent extends Agent {
-    public static final long SPAWN_CAR_INTERVAL_MILLIS = 10 * DateUtils.MILLIS_PER_SECOND;
+    public static final long SPAWN_CAR_INTERVAL_MILLIS =  10 * DateUtils.MILLIS_PER_SECOND ;
     public static final long WORLD_UPDATE_PERIOD_MILLIS = 500;  // TODO parametrized
     private Logger myLogger = Logger.getMyLogger(getClass().getName());
 

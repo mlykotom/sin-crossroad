@@ -29,7 +29,9 @@ public class CarAgent extends Agent {
     private int _currentRoadIdx = 0;
 
     public static String getAgentName(int id) {
+
         return String.format("%s%d", CAR_NAME_PREFIX, id);
+
     }
 
     @Override
@@ -62,33 +64,39 @@ public class CarAgent extends Agent {
 //        destinationPlace = (Place) args[1];
     }
 
-    public int getCurrentRoadIndex() {
-        return _currentRoadIdx;
-    }
+    public int getCurrentRoadIndex() { return _currentRoadIdx; }
 
-    public List<Road> getPath() {
+    public List<Road> getPath()
+    {
         return _path;
     }
 
-    public Place getOrigin() {
+    public Place getOrigin()
+    {
         return _origin;
     }
 
-    public void delete() {
+    public void delete()
+    {
         myLogger.log(Level.INFO, getLocalName() + " arrived");
         doDelete();
     }
 
-    public void crossRoadPassed(Place currentPlace) {
-        _origin = currentPlace;
+    public void placePassed(Place passedPlace)
+    {
+        _origin = passedPlace;
         _currentRoadIdx++;
+
         addBehaviour(new DriveBehaviour(this));
         myLogger.log(Level.INFO, getLocalName() + " crossRoad Passed!");
     }
 
-    public void crossRoadArrived(CrossRoad crossRoad) {
+    public void crossRoadArrived(CrossRoad crossRoad)
+    {
+        myLogger.log(Level.INFO, "CrossRoad arrived!");
+
         addBehaviour(new CrossBehaviour(this, crossRoad,
-                _path.get(_currentRoadIdx), _path.get(_currentRoadIdx + 1)));
+                _path.get(_currentRoadIdx), _path.get(_currentRoadIdx+1)));
     }
 
     protected void takeDown() {

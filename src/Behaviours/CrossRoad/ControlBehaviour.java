@@ -25,6 +25,8 @@ public class ControlBehaviour extends TickerBehaviour
         if (green) {
             if (_agent.receivers.size() > 0) {
                 ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+                msg.setConversationId(CrossRoadAgent.SEMAPHORE_CHANGED);
+
                 for (AID receiver : _agent.receivers) {
                     msg.addReceiver(receiver);
                 }

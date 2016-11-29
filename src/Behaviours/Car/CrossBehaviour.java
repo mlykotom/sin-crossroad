@@ -1,13 +1,21 @@
 package Behaviours.Car;
 
 import Agents.CarAgent;
+import Agents.CrossRoadAgent;
+import Common.DirectionType;
 import Map.CrossRoad;
 import Map.Road;
+import Messages.CrossRoadArrivedMessage;
+import Messages.CrossRoadPassingMessage;
+import Messages.CrossRoadStateMessage;
 import jade.core.AID;
-import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.WakerBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+
+import java.io.IOException;
+import java.util.logging.Level;
 
 /**
  * Created by adamj on 26.11.2016.
@@ -40,23 +48,127 @@ public class CrossBehaviour extends Behaviour
 
     @Override
     public void action() {
-        ACLMessage msg = new ACLMessage(ACLMessage.QUERY_IF);
+        // Joining queue
+        ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+        msg.setConversationId(CrossRoadAgent.CAR_JOINING_QUEUE);
         msg.addReceiver(_crossRoadReceiver);
-        _carAgent.send(msg);
-        ACLMessage received = myAgent.blockingReceive();
 
-        int carCanGo = received.getPerformative();
-        if(carCanGo != ACLMessage.AGREE)
-        {
-            // Wait For Receiving message to go
-            MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
-            myAgent.blockingReceive(mt);
+        CrossRoadArrivedMessage infoMessage = new CrossRoadArrivedMessage(
+                _crossRoad.resolveExitId(_roadFrom), _crossRoad.resolveDirection(_roadFrom, _roadTo)
+        );
+        try {
+            msg.setContentObject(infoMessage);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        // Start Behaviour for crossing next road
-        _crossed = true;
-        _carAgent.crossRoadPassed(_roadTo.currentPlace(_roadFrom));
+        myAgent.send(msg);
 
+        MessageTemplate mt = MessageTemplate.MatchConversationId(CrossRoadAgent.CROSSROAD_QUEUE_RESPONSE);
+        ACLMessage queueResponse = myAgent.blockingReceive(mt);
+
+        if(queueResponse.getPerformative() != ACLMessage.AGREE) {
+            _carAgent.myLogger.log(Level.WARNING, "wating in queueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+
+            mt = MessageTemplate.MatchConversationId(CrossRoadAgent.FIRST_IN_QUEUE_RESPONSE);
+            myAgent.blockingReceive(mt);
+        }
+        _carAgent.myLogger.log(Level.WARNING, "Iam HEREEEEEEEE");
+
+        while(true){
+            ACLMessage semaphoreMsg = new ACLMessage(ACLMessage.QUERY_IF);
+            semaphoreMsg.setConversationId(CrossRoadAgent.SEMAPHORE_CONVERSATION_REQUEST);
+            semaphoreMsg.addReceiver(_crossRoadReceiver);
+            myAgent.send(semaphoreMsg);
+
+            mt = MessageTemplate.MatchConversationId(CrossRoadAgent.SEMAPHORE_CONVERSATION_RESPONSE);
+            ACLMessage received = myAgent.blockingReceive(mt);
+
+
+            int carCanGo = received.getPerformative();
+            if(carCanGo != ACLMessage.AGREE)
+            {
+                _carAgent.myLogger.log(Level.WARNING, "wating for GREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN");
+
+                // Wait For Receiving message to go
+                mt = MessageTemplate.MatchConversationId(CrossRoadAgent.SEMAPHORE_CHANGED);
+                myAgent.blockingReceive(mt);
+                continue;
+            }
+
+            if(infoMessage.direction == DirectionType.Left)
+            {
+                ACLMessage stateMsg = new ACLMessage(ACLMessage.QUERY_IF);
+                stateMsg.setConversationId(CrossRoadAgent.CROSSROAD_STATE_REQUEST);
+                stateMsg.addReceiver(_crossRoadReceiver);
+                try {
+                    stateMsg.setContentObject(new CrossRoadStateMessage(
+                            _crossRoad.resolveExitId(_roadFrom),_crossRoad.resolveDirection(_roadFrom, _roadTo)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                myAgent.send(stateMsg);
+
+                mt = MessageTemplate.MatchConversationId(CrossRoadAgent.CROSSROAD_STATE_RESPONSE);
+                received = myAgent.blockingReceive(mt);
+                if(received.getPerformative() == ACLMessage.AGREE)
+                {
+                    _carAgent.myLogger.log(Level.WARNING, "LEAAAVING TURNING LEEEEEEEEEEEFT");
+                    break;
+                }
+
+                _carAgent.myLogger.log(Level.WARNING, "Beeing blocked and trying to turn left. BLOOOOOOOOOOOOOOOOCKEEEEEEEEEEEEEEDDDDDDDDDDDDDDDDDD");
+
+                mt = MessageTemplate.MatchConversationId(CrossRoadAgent.STATE_IN_CROSSROAD_CHANGED);
+                myAgent.blockingReceive(mt);
+
+                _carAgent.myLogger.log(Level.WARNING, "Igot unblocked: maybe");
+            }
+            else
+            {
+                _carAgent.myLogger.log(Level.WARNING, "Leaving this shitTTTTTTTTTTTTT");
+                break;
+            }
+        }
+
+        _carAgent.myLogger.log(Level.WARNING, "Yuhuuuu Im driving thourg crossroad");
+
+
+        // Sending message that car is passing crossroad
+        msg = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
+        msg.setConversationId(CrossRoadAgent.PASSING_CROSSROAD_INFORM);
+        msg.addReceiver(_crossRoadReceiver);
+
+        CrossRoadPassingMessage passingMessage = new CrossRoadPassingMessage(
+                _crossRoad.resolveExitId(_roadFrom), _crossRoad.resolveDirection(_roadFrom, _roadTo)
+        );
+        try {
+            msg.setContentObject(passingMessage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        myAgent.send(msg);
+
+        // TODO driving through crossroad time
+        _carAgent.addBehaviour(new WakerBehaviour(_carAgent, 2000) {
+            @Override
+            protected void onWake() {
+                super.onWake();
+
+                // Sending End passing message
+                ACLMessage msg = new ACLMessage(ACLMessage.REQUEST_WHENEVER);
+                msg.setConversationId(CrossRoadAgent.PASSED_CROSSROAD_INFORM);
+                msg.addReceiver(_crossRoadReceiver);
+                myAgent.send(msg);
+
+                _carAgent.myLogger.log(Level.WARNING, "I LOOOOOVE");
+                // Start Behaviour for crossing next road
+                _carAgent.placePassed(_crossRoad);
+            }
+        });
+
+        _crossed = true;
         //TODO: Maybe use ReceiverBehaviour from JADE.
     }
 

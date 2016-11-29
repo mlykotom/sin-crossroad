@@ -3,6 +3,7 @@ package Behaviours.CrossRoad;
 import Agents.CrossRoadAgent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import jade.util.Logger;
 
 /**
@@ -19,13 +20,16 @@ public class MessagingBehaviour extends CyclicBehaviour
     }
     @Override
     public void action() {
-        ACLMessage msg = myAgent.receive();
+        MessageTemplate mt = MessageTemplate.MatchConversationId(CrossRoadAgent.SEMAPHORE_CONVERSATION_REQUEST);
+        ACLMessage msg = myAgent.receive(mt);
+
         if(msg != null){
             ACLMessage reply = msg.createReply();
-
+            reply.setConversationId(CrossRoadAgent.SEMAPHORE_CONVERSATION_RESPONSE);
             if(msg.getPerformative() == ACLMessage.QUERY_IF){
                 if (_agent.getGreen()){
-                    reply.setPerformative(ACLMessage.AGREE);
+                        reply.setPerformative(ACLMessage.AGREE);
+                    // Send only reply if agent can go
                 }
                 else{
                     _agent.receivers.add(msg.getSender());

@@ -23,8 +23,8 @@ public class CarStatusBehaviour extends CyclicBehaviour {
 
     @Override
     public void action() {
-        MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
-        ACLMessage msg = myAgent.blockingReceive(mt);
+        MessageTemplate mt = MessageTemplate.MatchConversationId(WorldSimulationBehavior.CONVERSATION_GET_CAR_STATUS);
+        ACLMessage msg = myAgent.receive(mt);
         if (msg == null) return;
 
 //        _car.myLogger.log(Level.INFO, msg.getContent());
