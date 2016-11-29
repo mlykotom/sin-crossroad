@@ -12,6 +12,9 @@ public class SpawnPoint extends Place {
 
 
     public Road getRoad() {
+        if (mRoads.isEmpty()) {
+            throw new IllegalArgumentException(String.format("SpawnPoint [%d,%d] has no road!", mCoordX, mCoordY));
+        }
         return mRoads.get(0);
     }
 }

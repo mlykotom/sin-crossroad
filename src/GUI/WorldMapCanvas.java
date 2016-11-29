@@ -1,98 +1,69 @@
 package GUI;
 
-import Agents.CarAgent;
-import GUI.tmp_delete.CarRenderable;
-import GUI.tmp_delete.CrossR;
-import GUI.tmp_delete.Renderable;
-import GUI.tmp_delete.RoadRenderable;
-import Map.Place;
-import Map.SpawnPoint;
+import GUI.renderable.*;
 import model.BaseWorld;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.util.HashMap;
+import java.util.*;
+import java.util.List;
 
 
 /**
  * TODO testing classes, put somewhere else, encapsulate with proper classes
  */
 public class WorldMapCanvas extends JPanel {
-    public int gridSize = 10; // TODO get from world
+    public static final int FIXES_OUT_OF_CANVAS = 1;
+    private int mGridSize;
     private static final Color CANVAS_DEFAULT_COLOR = Color.WHITE;
     private final BaseWorld mWorld;
-    private Dimension mCanvasSize;
+    private int mCanvasSize;
+    private float mCellSize;
+    GridRenderable mGrid;
+
+    private HashMap<String, Renderable> mRenderables = new HashMap<>();
+    private List<PlaceRenderable> mPlaces = new ArrayList<>();
 
 
     public WorldMapCanvas(BaseWorld world) {
-        mCanvasSize = new Dimension(500, 500);
+        mCanvasSize = 500;
+        mGridSize = 10 + FIXES_OUT_OF_CANVAS; // TODO get from world
         mWorld = world;
 
+        Dimension canvasDimension = new Dimension(mCanvasSize, mCanvasSize);
         setBackground(CANVAS_DEFAULT_COLOR);
-        setMinimumSize(mCanvasSize);
-        setPreferredSize(mCanvasSize);
-        setMaximumSize(mCanvasSize);
+        setMinimumSize(canvasDimension);
+        setPreferredSize(canvasDimension);
+        setMaximumSize(canvasDimension);
+        setupPlaces();
     }
 
 
-    private static Graphics2D setupCanvas(Graphics graphics) {
+    private void setupPlaces() {
+        mGrid = new GridRenderable(mGridSize);
+
+        mWorld.Roads.stream()
+                .map(RoadRenderable::new)
+                .forEach(roadRenderable -> mPlaces.add(roadRenderable));
+
+        mWorld.SpawnPoints.stream()
+                .map(SpawnPointRenderable::new)
+                .forEach(spawnPointRenderable -> mPlaces.add(spawnPointRenderable));
+
+        mWorld.CrossRoads.stream()
+                .map(CrossRoadRenderable::new)
+                .forEach(crossRoadRenderable -> mPlaces.add(crossRoadRenderable));
+    }
+
+
+    private Graphics2D setupCanvas(Graphics graphics) {
         Graphics2D g2D = (Graphics2D) graphics;
+        mCellSize = mCanvasSize / mGridSize;
+
         g2D.setBackground(CANVAS_DEFAULT_COLOR);
         g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
         return g2D;
-    }
-
-
-    HashMap<String, Renderable> renderables = new HashMap<>();
-
-
-    void test() {
-        renderables.put("CrossRoad 1", new CrossR(53, 50));
-        renderables.put("Road 2", new RoadRenderable(0, 0, 0, 1));
-        renderables.put("CrossRoad 3", new CrossR(30, 30));
-        renderables.put(CarAgent.getAgentName(1), new CarRenderable(102, 205));
-    }
-
-
-    void renderGrid(Graphics2D context) {
-        for (int row = 0; row < mCanvasSize.height; row += mCanvasSize.height / gridSize) {
-            for (int col = 0; col < mCanvasSize.width; col += mCanvasSize.width / gridSize) {
-                Ellipse2D point = new Ellipse2D.Float(col, row, 1, 1);
-                context.setPaint(Color.GRAY);
-                context.fill(point);
-                context.draw(point);
-            }
-        }
-    }
-
-
-    private static class Ren {
-        protected Place mPlace;
-
-
-        public Ren(Place place) {
-            mPlace = place;
-        }
-
-
-        public void render(Graphics2D context, int cellSize) {
-            float realX = mPlace.getCoordX() * cellSize;
-            float realY = mPlace.getCoordY() * cellSize;
-            Ellipse2D point = new Ellipse2D.Float(realX, realY, 3, 3);
-            context.setPaint(Color.RED);
-            context.fill(point);
-            context.draw(point);
-        }
-    }
-
-
-    private void renderWorld(Graphics2D context) {
-        mWorld.SpawnPoints.forEach(spawnPoint -> {
-            new Ren(spawnPoint).render(context, mCanvasSize.width / gridSize);
-        });
     }
 
 
@@ -100,13 +71,11 @@ public class WorldMapCanvas extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D context = setupCanvas(g);
-
-        renderGrid(context);
-        renderWorld(context);
-
-
-        renderables.forEach((name, renderable) -> {
-            renderable.render(context);
-        });
+        // render static points
+        mPlaces.forEach(placeRenderable -> placeRenderable.render(context, mCellSize));
+        mGrid.render(context, mCellSize);
+        // render dynamic points
+        mRenderables.forEach((key, renderable) -> renderable.render(context, mCellSize));
     }
+
 }

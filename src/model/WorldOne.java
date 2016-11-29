@@ -19,16 +19,17 @@ public class WorldOne extends BaseWorld {
         CrossRoadPlus crossroad = new CrossRoadPlus("MainCrossroad", 1, 1);
         CrossRoads.add(crossroad);
 
-        Road roadA = new Road(spawnA, crossroad, 50); //TODO: Determine length from distance of 2 places
-        Road roadB = new Road(spawnB, crossroad, 50); //TODO: Determine length from distance of 2 places
-        Road roadC = new Road(spawnC, crossroad, 50); //TODO: Determine length from distance of 2 places
-        Road roadD = new Road(spawnD, crossroad, 50); //TODO: Determine length from distance of 2 places
-        Roads.addAll(Arrays.asList(roadA, roadB, roadC, roadD));
+        Road roadA = new Road(spawnA, crossroad);
+        Road roadB = new Road(spawnB, crossroad);
+        Road roadC = new Road(spawnC, crossroad);
+        Road roadD = new Road(spawnD, crossroad);
 
         crossroad.setRoads(roadA, roadB, roadC, roadD);
         spawnA.setRoad(roadA);
         spawnB.setRoad(roadB);
         spawnC.setRoad(roadC);
         spawnD.setRoad(roadD);
+
+        Roads.addAll(Arrays.asList(roadA, roadB, roadC, roadD));
     }
 }
