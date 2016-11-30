@@ -12,6 +12,7 @@ import jade.wrapper.StaleProxyException;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
@@ -19,10 +20,24 @@ import java.util.logging.Level;
 public class SpawnCarBehavior extends TickerBehaviour {
     private static Logger sLogger = Logger.getMyLogger(SpawnCarBehavior.class.getSimpleName());
     private final SpawnPoint mSpawnPoint;
+    private Random mRandom;
+    private int mMaxSpawnDelay, mMinSpawnDelay;
 
-    public SpawnCarBehavior(WorldAgent a, long t, SpawnPoint s) {
-        super(a, t);
+
+    /**
+     * @param a Agent running this behaviour.
+     * @param s Spawn point from which the cars will originate.
+     * @param minSpawnDelay Minimum time to wait before spawning next car (in ms).
+     * @param maxSpawnDelay Maximum time to wait before spawning next car (in ms).
+     */
+    public SpawnCarBehavior(WorldAgent a, SpawnPoint s, int minSpawnDelay, int maxSpawnDelay) {
+        super(a, Integer.MAX_VALUE);
+        mRandom = new Random();
         mSpawnPoint = s;
+        mMinSpawnDelay = minSpawnDelay;
+        mMaxSpawnDelay = maxSpawnDelay;
+
+        planNextSpawn();
     }
 
     private static List<Road> createPath(SpawnPoint start) {
@@ -48,6 +63,12 @@ public class SpawnCarBehavior extends TickerBehaviour {
         }
 
         return path;
+    }
+
+    private void planNextSpawn()
+    {
+        int randomDelay = mRandom.nextInt(mMaxSpawnDelay - mMinSpawnDelay) + mMinSpawnDelay;
+        reset(randomDelay);
     }
 
     @Override

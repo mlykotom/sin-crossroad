@@ -20,7 +20,8 @@ import java.util.logging.Level;
 
 
 public class WorldAgent extends Agent {
-    public static final long SPAWN_CAR_INTERVAL_MILLIS =  20 * DateUtils.MILLIS_PER_SECOND ;
+    public static final int MIN_SPAWN_CAR_INTERVAL_MILLIS =  1000;
+    public static final int MAX_SPAWN_CAR_INTERVAL_MILLIS =  10000;
     public static final long WORLD_UPDATE_PERIOD_MILLIS = 500;  // TODO parametrized
     private static Logger sLogger = Logger.getMyLogger(WorldAgent.class.getSimpleName());
 
@@ -80,7 +81,8 @@ public class WorldAgent extends Agent {
 
     private void setupSpawnPoints() {
         mWorld.SpawnPoints.forEach(spawnPoint -> {
-            addBehaviour(new SpawnCarBehavior(this, SPAWN_CAR_INTERVAL_MILLIS, spawnPoint));
+            addBehaviour(new SpawnCarBehavior(this, spawnPoint,
+                    MIN_SPAWN_CAR_INTERVAL_MILLIS, MAX_SPAWN_CAR_INTERVAL_MILLIS));
             mSpawnPointsCount++;
         });
     }

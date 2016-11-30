@@ -58,6 +58,13 @@ public class CrossRoadPlus extends CrossRoad {
         return getRoads().indexOf(road);
     }
 
+
+    /**
+     *
+     * @param exitId
+     * @param direction
+     * @return
+     */
     public Semaphore resolveSemaphore(int exitId, DirectionType direction)
     {
         int semaphoreIndex = exitId * 2 + (direction == DirectionType.Left ? 1 : 0);

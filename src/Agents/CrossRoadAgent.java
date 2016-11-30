@@ -25,7 +25,7 @@ public class CrossRoadAgent extends Agent {
     protected void setup() {
         Object[] args = getArguments();
         _crossRoad = (CrossRoad)args[0];
-        addBehaviour(new ControlBehaviour(this, 5));
+        addBehaviour(new ControlBehaviour(this, 20)); //TODO: Parametrize cycle duration?
         addBehaviour(new SemaphoreBehaviour(this));
         addBehaviour(new StartPassingBehaviour(this));
         addBehaviour(new EndPassingBehaviour(this));
