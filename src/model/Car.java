@@ -4,12 +4,12 @@ package model;
  * Created by raven on 25.11.2016.
  */
 public class Car {
-    public double Speed; // in km/h
-    public double Length; // in meters
+    public static double Speed = 50; // in km/h
+    public static double Length = 3; // in meters
 
-    Car()
+
+    public static double getSpeedInMeters()
     {
-        Length = 3;
-        Speed = 50;
+        return Speed / 3.6;
     }
 }

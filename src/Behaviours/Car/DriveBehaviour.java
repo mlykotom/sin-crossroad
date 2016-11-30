@@ -1,6 +1,7 @@
 package Behaviours.Car;
 
 import Agents.CarAgent;
+import Common.Car;
 import Map.CrossRoad;
 import Map.Place;
 import Map.Road;
@@ -33,7 +34,8 @@ public class DriveBehaviour extends OneShotBehaviour {
 
         // TODO simulates driving -> IMPROVE with encapsulation
         // TODO parameters
-        _carAgent.addBehaviour(new WakerBehaviour(_carAgent, 2000) {
+        double drivingTime = currentRoad.Length / Car.getSpeedInMeters(); // In seconds
+        _carAgent.addBehaviour(new WakerBehaviour(_carAgent, (int)(drivingTime*1000)) {
             @Override
             protected void onWake() {
                 super.onWake();

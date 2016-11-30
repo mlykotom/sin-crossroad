@@ -7,13 +7,15 @@ import jade.lang.acl.MessageTemplate;
 import jade.util.Logger;
 
 /**
- * Created by adamj on 26.11.2016.
+ * Receives messages from Cars with request to pass crossroad.
+ * Depending on the traffic light state, the crossroad will either
+ * allow/agree crossing (green) or deny/refuse it (red).
  */
-public class MessagingBehaviour extends CyclicBehaviour
+public class SemaphoreBehaviour extends CyclicBehaviour
 {
     private final CrossRoadAgent _agent;
 
-    public MessagingBehaviour(CrossRoadAgent agent)
+    public SemaphoreBehaviour(CrossRoadAgent agent)
     {
         super(agent);
         _agent = agent;

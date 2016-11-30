@@ -18,16 +18,12 @@ import java.util.logging.Level;
 
 public class SpawnCarBehavior extends TickerBehaviour {
     private static Logger sLogger = Logger.getMyLogger(SpawnCarBehavior.class.getSimpleName());
-    private final WorldAgent mWorldAgent;
     private final SpawnPoint mSpawnPoint;
-
 
     public SpawnCarBehavior(WorldAgent a, long t, SpawnPoint s) {
         super(a, t);
-        mWorldAgent = a;
         mSpawnPoint = s;
     }
-
 
     private static List<Road> createPath(SpawnPoint start) {
         List<Road> path = new LinkedList<>();
@@ -54,20 +50,19 @@ public class SpawnCarBehavior extends TickerBehaviour {
         return path;
     }
 
-
     @Override
     protected void onTick() {
         sLogger.log(Level.INFO, "Spawning car at: " + mSpawnPoint.getName());
         setupCarAgent();
     }
 
-
     private void setupCarAgent() {
         Object[] args = {mSpawnPoint, createPath(mSpawnPoint)};
+        WorldAgent worldAgent = (WorldAgent)myAgent;
 
         try {
-            AgentController cont = mWorldAgent.getContainerController().createNewAgent(
-                    CarAgent.getAgentName(mWorldAgent.getCarAgentNewId()),
+            AgentController cont = worldAgent.getContainerController().createNewAgent(
+                    CarAgent.getAgentName(worldAgent.getCarAgentNewId()),
                     CarAgent.class.getName(),
                     args);
             cont.start();
