@@ -25,8 +25,8 @@ public class SpawnCarBehavior extends TickerBehaviour {
 
 
     /**
-     * @param a Agent running this behaviour.
-     * @param s Spawn point from which the cars will originate.
+     * @param a             Agent running this behaviour.
+     * @param s             Spawn point from which the cars will originate.
      * @param minSpawnDelay Minimum time to wait before spawning next car (in ms).
      * @param maxSpawnDelay Maximum time to wait before spawning next car (in ms).
      */
@@ -39,6 +39,7 @@ public class SpawnCarBehavior extends TickerBehaviour {
 
         planNextSpawn();
     }
+
 
     private static List<Road> createPath(SpawnPoint start) {
         List<Road> path = new LinkedList<>();
@@ -65,11 +66,12 @@ public class SpawnCarBehavior extends TickerBehaviour {
         return path;
     }
 
-    private void planNextSpawn()
-    {
+
+    private void planNextSpawn() {
         int randomDelay = mRandom.nextInt(mMaxSpawnDelay - mMinSpawnDelay) + mMinSpawnDelay;
         reset(randomDelay);
     }
+
 
     @Override
     protected void onTick() {
@@ -77,9 +79,10 @@ public class SpawnCarBehavior extends TickerBehaviour {
         setupCarAgent();
     }
 
+
     private void setupCarAgent() {
         Object[] args = {mSpawnPoint, createPath(mSpawnPoint)};
-        WorldAgent worldAgent = (WorldAgent)myAgent;
+        WorldAgent worldAgent = (WorldAgent) myAgent;
 
         try {
             AgentController cont = worldAgent.getContainerController().createNewAgent(

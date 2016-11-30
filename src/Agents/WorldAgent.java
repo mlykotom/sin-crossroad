@@ -20,13 +20,12 @@ import java.util.logging.Level;
 
 
 public class WorldAgent extends Agent {
-    public static final int MIN_SPAWN_CAR_INTERVAL_MILLIS =  1000;
-    public static final int MAX_SPAWN_CAR_INTERVAL_MILLIS =  10000;
+    public static final int MIN_SPAWN_CAR_INTERVAL_MILLIS = 1000;
+    public static final int MAX_SPAWN_CAR_INTERVAL_MILLIS = 10000;
     public static final long WORLD_UPDATE_PERIOD_MILLIS = 500;  // TODO parametrized
     private static Logger sLogger = Logger.getMyLogger(WorldAgent.class.getSimpleName());
 
     private BaseWorld mWorld;
-    private List<AgentController> mCarAgents;
     private int mCrossRoadsAgentsCount = 0;
     private int mCarAgentsCount = 0;
     private int mSpawnPointsCount = 0;
@@ -56,16 +55,16 @@ public class WorldAgent extends Agent {
 
 
     private void setupCrossRoads() {
-        for (CrossRoad crossRoad : mWorld.CrossRoads) {
+        mWorld.CrossRoads.forEach((uuid, crossRoad) -> {
             try {
                 Object[] args = {crossRoad};
                 AgentController cont = mContainerController.createNewAgent(crossRoad.getName(), CrossRoadAgent.class.getName(), args);
-                mCrossRoadsAgentsCount++;
                 cont.start();
+                mCrossRoadsAgentsCount++;
             } catch (StaleProxyException e) {
                 e.printStackTrace();
             }
-        }
+        });
     }
 
 
@@ -80,9 +79,8 @@ public class WorldAgent extends Agent {
 
 
     private void setupSpawnPoints() {
-        mWorld.SpawnPoints.forEach(spawnPoint -> {
-            addBehaviour(new SpawnCarBehavior(this, spawnPoint,
-                    MIN_SPAWN_CAR_INTERVAL_MILLIS, MAX_SPAWN_CAR_INTERVAL_MILLIS));
+        mWorld.SpawnPoints.forEach((uuid, spawnPoint) -> {
+            addBehaviour(new SpawnCarBehavior(this, spawnPoint, MIN_SPAWN_CAR_INTERVAL_MILLIS, MAX_SPAWN_CAR_INTERVAL_MILLIS));
             mSpawnPointsCount++;
         });
     }
@@ -98,6 +96,7 @@ public class WorldAgent extends Agent {
 
     /**
      * Extend for any status
+     *
      * @param status
      */
     public void updateStatus(CarStatus status) {

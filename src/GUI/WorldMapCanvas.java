@@ -38,15 +38,9 @@ public class WorldMapCanvas extends JPanel {
     private void setupPlaces() {
         mGrid = new GridRenderable(mGridSize);
 
-        mWorld.Roads.forEach((id, road) -> mPlaces.put(id, new RoadRenderable(road)));
-
-        mWorld.SpawnPoints.stream()
-                .map(SpawnPointRenderable::new)
-                .forEach(spawnPointRenderable -> mPlaces.put(UUID.randomUUID(), spawnPointRenderable)); // TODO uuid to place
-
-        mWorld.CrossRoads.stream()
-                .map(CrossRoadRenderable::new)
-                .forEach(crossRoadRenderable -> mPlaces.put(UUID.randomUUID(), crossRoadRenderable)); // todo uuid to place
+        mWorld.Roads.forEach((uuid, road) -> mPlaces.put(uuid, new RoadRenderable(road)));
+        mWorld.SpawnPoints.forEach((uuid, spawnPoint) -> mPlaces.put(uuid, new SpawnPointRenderable(spawnPoint)));
+        mWorld.CrossRoads.forEach((uuid, crossRoad) -> mPlaces.put(uuid, new CrossRoadRenderable(crossRoad)));
     }
 
 

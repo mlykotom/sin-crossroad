@@ -15,10 +15,8 @@ public class WorldOne extends BaseWorld {
         SpawnPoint spawnB = new SpawnPoint("SpawnB", 0, 1);
         SpawnPoint spawnC = new SpawnPoint("SpawnC", 1, 3);
         SpawnPoint spawnD = new SpawnPoint("SpawnD", 2, 1);
-        SpawnPoints.addAll(Arrays.asList(spawnA, spawnB, spawnC, spawnD));
 
         CrossRoadPlus crossroad = new CrossRoadPlus("MainCrossroad", 1, 1);
-        CrossRoads.add(crossroad);
 
         Road roadA = new Road(spawnA, crossroad);
         Road roadB = new Road(spawnB, crossroad);
@@ -31,6 +29,8 @@ public class WorldOne extends BaseWorld {
         spawnC.setRoad(roadC);
         spawnD.setRoad(roadD);
 
+        Stream.of(spawnA, spawnB, spawnC, spawnD).forEach(spawnPoint -> SpawnPoints.put(spawnPoint.getId(), spawnPoint));
+        Stream.of(crossroad).forEach(crossRoad -> CrossRoads.put(crossRoad.getId(), crossRoad));
         Stream.of(roadA, roadB, roadC, roadD).forEach(road -> Roads.put(road.getId(), road));
     }
 }
