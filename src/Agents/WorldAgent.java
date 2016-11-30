@@ -1,9 +1,9 @@
 package Agents;
 
+import Behaviours.state.AgentStatus;
 import Behaviours.world.SpawnCarBehavior;
 import Behaviours.world.WorldSimulationBehavior;
 import GUI.MainGui;
-import Map.*;
 import jade.core.Agent;
 import jade.util.Logger;
 import jade.wrapper.AgentController;
@@ -11,10 +11,7 @@ import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import model.BaseWorld;
 import model.WorldOne;
-import org.apache.commons.lang3.time.DateUtils;
-import status.CarStatus;
 
-import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
@@ -32,6 +29,7 @@ public class WorldAgent extends Agent {
     private MainGui mMainGui;
 
     private ContainerController mContainerController;
+    public final ConcurrentHashMap<String, AgentStatus> worldStatus = new ConcurrentHashMap<>();
 
 
     @Override
@@ -91,15 +89,5 @@ public class WorldAgent extends Agent {
      */
     public void updateWorld(long ellapsedTime) {
         mMainGui.update(ellapsedTime);
-    }
-
-
-    /**
-     * Extend for any status
-     *
-     * @param status
-     */
-    public void updateStatus(CarStatus status) {
-        mMainGui.updateStatus(status);
     }
 }

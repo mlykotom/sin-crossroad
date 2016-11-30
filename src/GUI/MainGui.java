@@ -1,7 +1,6 @@
 package GUI;
 
 import Agents.WorldAgent;
-import status.CarStatus;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import jade.util.Logger;
@@ -9,7 +8,6 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 public class MainGui extends JFrame {
@@ -50,7 +48,10 @@ public class MainGui extends JFrame {
 
     private MainGui(WorldAgent worldAgent) {
         mWorldAgent = worldAgent;
-        mWorldMapCanvas = new WorldMapCanvas(worldAgent.getWorld());
+        mWorldMapCanvas = new WorldMapCanvas(
+                worldAgent.getWorld(),
+                worldAgent.worldStatus
+        );
     }
 
 
@@ -65,7 +66,6 @@ public class MainGui extends JFrame {
 
     public void update(long ellapsedTime) {
         simulationTime.setText(String.format("%d s", ellapsedTime / DateUtils.MILLIS_PER_SECOND));
-//        mWorldMapCanvas.setStatus(carAgentStatus);
         worldMap.repaint();
     }
 
@@ -107,10 +107,5 @@ public class MainGui extends JFrame {
      */
     public JComponent $$$getRootComponent$$$() {
         return rootPanel;
-    }
-
-
-    public void updateStatus(CarStatus status) {
-        mWorldMapCanvas.setStatusNew(status);
     }
 }

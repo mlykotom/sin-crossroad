@@ -1,14 +1,14 @@
 package Agents;
 
-import Behaviours.Car.CarStatusBehaviour;
 import Behaviours.Car.CrossBehaviour;
 import Behaviours.Car.DriveBehaviour;
-import status.CarStatus;
+import Behaviours.state.AgentStatus;
+import Behaviours.state.ReportStateBehaviour;
+import Behaviours.state.StatefulAgent;
 import Map.CrossRoad;
 import Map.Place;
 import Map.Road;
 import jade.util.Logger;
-import Behaviours.state.*;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -48,8 +48,7 @@ public class CarAgent extends StatefulAgent {
         myLogger.log(Level.INFO, getLocalName() + " driving");
 
         addBehaviour(new DriveBehaviour(this));
-        addBehaviour(new CarStatusBehaviour(this));
-
+        addBehaviour(new ReportStateBehaviour(this));   // TODO put to base (didnt work o_O)
         //TODO: Model changed, car will receive full path
         //TODO: Use road.nextPlace with origin to navigate to next place
 //        if (args.length < 2) {
@@ -108,23 +107,17 @@ public class CarAgent extends StatefulAgent {
 
     protected void takeDown() {
         timestampEnd = System.currentTimeMillis();
-    }
-
-
-    public CarStatus getStatus() {
-        return new CarStatus(
-                getName(),
-                sourcePlace,
-                destinationPlace,
-                timestampStart,
-                timestampEnd,
-                (_currentRoadIdx - 1) >= 0 ? _path.get(_currentRoadIdx - 1) : null,
-                _path.get(_currentRoadIdx));
+        // TODO send car status
     }
 
 
     @Override
-    public AgentState getCurrentState() {
-        return null;
+    public AgentStatus getCurrentState() {
+        return new Behaviours.state.CarStatus(
+                getName(),
+                _path.get(_currentRoadIdx),
+                sourcePlace, destinationPlace,
+                timestampStart, timestampEnd
+        );
     }
 }
