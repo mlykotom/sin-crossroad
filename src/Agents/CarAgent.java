@@ -3,7 +3,7 @@ package Agents;
 import Behaviours.Car.CarStatusBehaviour;
 import Behaviours.Car.CrossBehaviour;
 import Behaviours.Car.DriveBehaviour;
-import Common.CarStatus;
+import status.CarStatus;
 import Map.CrossRoad;
 import Map.Place;
 import Map.Road;
@@ -12,6 +12,7 @@ import jade.util.Logger;
 
 import java.util.List;
 import java.util.logging.Level;
+
 
 /**
  * Created by adamj on 22.11.2016.
@@ -28,11 +29,13 @@ public class CarAgent extends Agent {
     private Place _origin;
     private int _currentRoadIdx = 0;
 
+
     public static String getAgentName(int id) {
 
         return String.format("%s%d", CAR_NAME_PREFIX, id);
 
     }
+
 
     @Override
     protected void setup() {
@@ -64,26 +67,29 @@ public class CarAgent extends Agent {
 //        destinationPlace = (Place) args[1];
     }
 
-    public int getCurrentRoadIndex() { return _currentRoadIdx; }
 
-    public List<Road> getPath()
-    {
+    public int getCurrentRoadIndex() {
+        return _currentRoadIdx;
+    }
+
+
+    public List<Road> getPath() {
         return _path;
     }
 
-    public Place getOrigin()
-    {
+
+    public Place getOrigin() {
         return _origin;
     }
 
-    public void delete()
-    {
+
+    public void delete() {
         myLogger.log(Level.INFO, getLocalName() + " arrived");
         doDelete();
     }
 
-    public void placePassed(Place passedPlace)
-    {
+
+    public void placePassed(Place passedPlace) {
         _origin = passedPlace;
         _currentRoadIdx++;
 
@@ -91,20 +97,28 @@ public class CarAgent extends Agent {
         myLogger.log(Level.INFO, getLocalName() + " crossRoad Passed!");
     }
 
-    public void crossRoadArrived(CrossRoad crossRoad)
-    {
+
+    public void crossRoadArrived(CrossRoad crossRoad) {
         myLogger.log(Level.INFO, "CrossRoad arrived!");
 
         addBehaviour(new CrossBehaviour(this, crossRoad,
                 _path.get(_currentRoadIdx), _path.get(_currentRoadIdx+1)));
     }
 
+
     protected void takeDown() {
         timestampEnd = System.currentTimeMillis();
     }
 
+
     public CarStatus getStatus() {
-        return new CarStatus(getName(), sourcePlace, destinationPlace,
-                timestampStart, timestampEnd, _path.get(_currentRoadIdx));
+        return new CarStatus(
+                getName(),
+                sourcePlace,
+                destinationPlace,
+                timestampStart,
+                timestampEnd,
+                (_currentRoadIdx - 1) >= 0 ? _path.get(_currentRoadIdx - 1) : null,
+                _path.get(_currentRoadIdx));
     }
 }

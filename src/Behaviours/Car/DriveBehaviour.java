@@ -1,7 +1,7 @@
 package Behaviours.Car;
 
 import Agents.CarAgent;
-import Common.Car;
+import model.Car;
 import Map.CrossRoad;
 import Map.Place;
 import Map.Road;

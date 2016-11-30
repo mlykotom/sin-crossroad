@@ -8,13 +8,13 @@ import Map.SpawnPoint;
 import jade.core.behaviours.TickerBehaviour;
 import jade.util.Logger;
 import jade.wrapper.AgentController;
-import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
+
 
 public class SpawnCarBehavior extends TickerBehaviour {
     private static Logger sLogger = Logger.getMyLogger(SpawnCarBehavior.class.getSimpleName());
@@ -28,13 +28,13 @@ public class SpawnCarBehavior extends TickerBehaviour {
     private static List<Road> createPath(SpawnPoint start) {
         List<Road> path = new LinkedList<>();
 
-        Road currentRoad = start.Road(), nextRoad;
+        Road currentRoad = start.getRoad(), nextRoad;
         Place currentPlace = start, nextPlace = currentRoad.nextPlace(currentPlace);
 
-        path.add(start.Road());
+        path.add(start.getRoad());
         while (!(nextPlace instanceof SpawnPoint)) {
             // Get all connections at the next place
-            List<Road> connections = currentRoad.nextPlace(currentPlace).Connections;
+            List<Road> connections = currentRoad.nextPlace(currentPlace).getRoads();
 
             // Pick randomly one connection that's not the same as current road
             nextRoad = currentRoad;
@@ -52,16 +52,19 @@ public class SpawnCarBehavior extends TickerBehaviour {
 
     @Override
     protected void onTick() {
-        sLogger.log(Level.INFO, "Spawning car at: " + mSpawnPoint.Name);
+        sLogger.log(Level.INFO, "Spawning car at: " + mSpawnPoint.getName());
+        setupCarAgent();
+    }
+
+    private void setupCarAgent() {
         Object[] args = {mSpawnPoint, createPath(mSpawnPoint)};
         WorldAgent worldAgent = (WorldAgent)myAgent;
 
         try {
             AgentController cont = worldAgent.getContainerController().createNewAgent(
-                    CarAgent.getAgentName(worldAgent.getCarAgents().size()),
+                    CarAgent.getAgentName(worldAgent.getCarAgentNewId()),
                     CarAgent.class.getName(),
                     args);
-            worldAgent.getCarAgents().add(cont);   // TODO not proper because agents are destroying itself and then it lays "dirty" in the list
             cont.start();
         } catch (StaleProxyException e) {
             e.printStackTrace();

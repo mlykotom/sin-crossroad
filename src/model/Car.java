@@ -1,4 +1,4 @@
-package Common;
+package model;
 
 /**
  * Created by raven on 25.11.2016.

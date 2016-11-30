@@ -4,23 +4,9 @@ import Agents.CarAgent;
 import Common.DirectionType;
 
 import java.util.List;
-
-/**
- * Created by raven on 23.11.2016.
- */
 public abstract class CrossRoad extends Place {
-    public String Name;
-
-    CrossRoad()
-    {
-        super();
-        Name = "";
-    }
-
-    CrossRoad(String name)
-    {
-        super();
-        Name = name;
+    public CrossRoad(String name, int coordX, int coordY) {
+        super(name, coordX, coordY);
     }
 
     public abstract DirectionType resolveDirection(Road roadFrom, Road roadTo);
