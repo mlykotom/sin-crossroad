@@ -7,9 +7,16 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 
 /**
- * Created by adamj on 26.11.2016.
+ * Behaviour responsible for changing traffic lights.
+ * It will periodically switch different traffic lights
+ * on and off to let all cars through crossroad in optimal
+ * time. Each configuration of traffic lights represents a
+ * state. States are preselected and will repeat in cycle.
+ * The cycle has specified time period.
+ * The time allotted for each state will be adjusted
+ * depending on how much cars are in each lane leading to
+ * crossroad
  */
-
 public class ControlBehaviour extends TickerBehaviour
 {
     private final CrossRoadAgent _agent;

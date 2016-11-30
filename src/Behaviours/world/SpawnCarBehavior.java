@@ -18,12 +18,10 @@ import java.util.logging.Level;
 
 public class SpawnCarBehavior extends TickerBehaviour {
     private static Logger sLogger = Logger.getMyLogger(SpawnCarBehavior.class.getSimpleName());
-    private final WorldAgent mWorldAgent;
     private final SpawnPoint mSpawnPoint;
 
     public SpawnCarBehavior(WorldAgent a, long t, SpawnPoint s) {
         super(a, t);
-        mWorldAgent = a;
         mSpawnPoint = s;
     }
 
@@ -56,13 +54,14 @@ public class SpawnCarBehavior extends TickerBehaviour {
     protected void onTick() {
         sLogger.log(Level.INFO, "Spawning car at: " + mSpawnPoint.Name);
         Object[] args = {mSpawnPoint, createPath(mSpawnPoint)};
+        WorldAgent worldAgent = (WorldAgent)myAgent;
 
         try {
-            AgentController cont = mWorldAgent.getContainerController().createNewAgent(
-                    CarAgent.getAgentName(mWorldAgent.getCarAgents().size()),
+            AgentController cont = worldAgent.getContainerController().createNewAgent(
+                    CarAgent.getAgentName(worldAgent.getCarAgents().size()),
                     CarAgent.class.getName(),
                     args);
-            mWorldAgent.getCarAgents().add(cont);   // TODO not proper because agents are destroying itself and then it lays "dirty" in the list
+            worldAgent.getCarAgents().add(cont);   // TODO not proper because agents are destroying itself and then it lays "dirty" in the list
             cont.start();
         } catch (StaleProxyException e) {
             e.printStackTrace();

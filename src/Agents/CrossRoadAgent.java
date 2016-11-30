@@ -5,13 +5,8 @@ import Behaviours.CrossRoad.*;
 import Common.CarInCrossRoad;
 import Common.DirectionType;
 import Map.CrossRoad;
-import Map.Road;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.Behaviour;
-import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.TickerBehaviour;
-import jade.lang.acl.ACLMessage;
 import jade.util.Logger;
 
 import java.util.LinkedList;
@@ -30,7 +25,7 @@ public class CrossRoadAgent extends Agent {
         Object[] args = getArguments();
         _crossRoad = (CrossRoad)args[0];
         addBehaviour(new ControlBehaviour(this, 6000));
-        addBehaviour(new MessagingBehaviour(this));
+        addBehaviour(new SemaphoreBehaviour(this));
         addBehaviour(new StartPassingBehaviour(this));
         addBehaviour(new EndPassingBehaviour(this));
         addBehaviour(new CrossRoadStateBehaviour(this));
@@ -92,7 +87,4 @@ public class CrossRoadAgent extends Agent {
     {
         return _green;
     }
-
-
-
 }
