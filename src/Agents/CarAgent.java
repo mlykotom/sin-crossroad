@@ -7,8 +7,8 @@ import status.CarStatus;
 import Map.CrossRoad;
 import Map.Place;
 import Map.Road;
-import jade.core.Agent;
 import jade.util.Logger;
+import Behaviours.state.*;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -17,7 +17,7 @@ import java.util.logging.Level;
 /**
  * Created by adamj on 22.11.2016.
  */
-public class CarAgent extends Agent {
+public class CarAgent extends StatefulAgent {
     public static final String CAR_NAME_PREFIX = "Car ";
     public Logger myLogger = Logger.getMyLogger(getClass().getName());
 
@@ -102,7 +102,7 @@ public class CarAgent extends Agent {
         myLogger.log(Level.INFO, "CrossRoad arrived!");
 
         addBehaviour(new CrossBehaviour(this, crossRoad,
-                _path.get(_currentRoadIdx), _path.get(_currentRoadIdx+1)));
+                _path.get(_currentRoadIdx), _path.get(_currentRoadIdx + 1)));
     }
 
 
@@ -120,5 +120,11 @@ public class CarAgent extends Agent {
                 timestampEnd,
                 (_currentRoadIdx - 1) >= 0 ? _path.get(_currentRoadIdx - 1) : null,
                 _path.get(_currentRoadIdx));
+    }
+
+
+    @Override
+    public AgentState getCurrentState() {
+        return null;
     }
 }

@@ -20,10 +20,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 public class WorldSimulationBehavior extends TickerBehaviour {
-    public static final String CONVERSATION_GET_CAR_STATUS = "conversation_get_car_status";
+    public static final String CONVERSATION_GET_AGENT_CURRENT_STATE = "conversation_get_car_status";
     private final WorldAgent mWorldAgent;
     private SearchConstraints mSearchConstraints = new SearchConstraints();
     private Date mSimulationStart;
+
 
     public WorldSimulationBehavior(WorldAgent a, long period) {
         super(a, period);
@@ -49,7 +50,7 @@ public class WorldSimulationBehavior extends TickerBehaviour {
         mWorldAgent.addBehaviour(new CyclicBehaviour() {
             @Override
             public void action() {
-                MessageTemplate mt = MessageTemplate.MatchConversationId(CONVERSATION_GET_CAR_STATUS);
+                MessageTemplate mt = MessageTemplate.MatchConversationId(CONVERSATION_GET_AGENT_CURRENT_STATE);
                 ACLMessage msg = myAgent.receive(mt);
                 if (msg == null) return;
 
@@ -67,7 +68,7 @@ public class WorldSimulationBehavior extends TickerBehaviour {
 
     private void requestCarStatus() {
         ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
-        request.setConversationId(CONVERSATION_GET_CAR_STATUS);
+        request.setConversationId(CONVERSATION_GET_AGENT_CURRENT_STATE);
 
         try {
             Arrays.stream(AMSService.search(mWorldAgent, new AMSAgentDescription(), mSearchConstraints))
