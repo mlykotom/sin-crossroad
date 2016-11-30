@@ -4,12 +4,27 @@ import Map.Road;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
-import java.util.Random;
 
 
 public class RoadRenderable extends PlaceRenderable<Road> {
+    public static final int ROAD_KNOWN_MAX_PER_LENGTH = 15;
+    protected long mCarsOnRoad = 0;
+
+
     public RoadRenderable(Road road) {
         super(road);
+    }
+
+
+    public void addCar() {
+        mCarsOnRoad++;
+        System.out.println("Cars in road: " + mCarsOnRoad);
+    }
+
+
+    public void removeCar() {
+        mCarsOnRoad--;
+        if (mCarsOnRoad < 0) mCarsOnRoad = 0;
     }
 
 
@@ -37,8 +52,14 @@ public class RoadRenderable extends PlaceRenderable<Road> {
         path2D.lineTo(realEndX, realEndY);
 
         context.setStroke(new BasicStroke(cellSize / 4));
-        context.setPaint(new Color(new Random().nextInt()));
+        context.setPaint(calculateGradient(mCarsOnRoad, mPlace.Length * ROAD_KNOWN_MAX_PER_LENGTH));
         context.draw(path2D);
+    }
+
+
+    private static Paint calculateGradient(long number, long knownMax) {
+        float tWithinBounds = (number / (float) knownMax) % 1.0f;
+        return new Color((int) (255 * tWithinBounds), (int) (255 * (1 - tWithinBounds)), 0);
     }
 
 

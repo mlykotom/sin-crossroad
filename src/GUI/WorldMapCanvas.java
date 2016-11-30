@@ -2,11 +2,12 @@ package GUI;
 
 import GUI.renderable.*;
 import model.BaseWorld;
+import status.CarStatus;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.UUID;
 
 
 public class WorldMapCanvas extends JPanel {
@@ -17,12 +18,12 @@ public class WorldMapCanvas extends JPanel {
     private int mCanvasSize;
     private float mCellSize;
     private GridRenderable mGrid;
-    private List<Renderable> mPlaces = new ArrayList<>();
+    private LinkedHashMap<UUID, Renderable> mPlaces = new LinkedHashMap<>();
 
 
     public WorldMapCanvas(BaseWorld world) {
         mCanvasSize = 500;
-        mGridSize = 10 + FIXES_OUT_OF_CANVAS; // TODO get from world
+        mGridSize = 5 + FIXES_OUT_OF_CANVAS; // TODO get from world
         mWorld = world;
 
         Dimension canvasDimension = new Dimension(mCanvasSize, mCanvasSize);
@@ -37,17 +38,15 @@ public class WorldMapCanvas extends JPanel {
     private void setupPlaces() {
         mGrid = new GridRenderable(mGridSize);
 
-        mWorld.Roads.stream()
-                .map(RoadRenderable::new)
-                .forEach(roadRenderable -> mPlaces.add(roadRenderable));
+        mWorld.Roads.forEach((id, road) -> mPlaces.put(id, new RoadRenderable(road)));
 
         mWorld.SpawnPoints.stream()
                 .map(SpawnPointRenderable::new)
-                .forEach(spawnPointRenderable -> mPlaces.add(spawnPointRenderable));
+                .forEach(spawnPointRenderable -> mPlaces.put(UUID.randomUUID(), spawnPointRenderable)); // TODO uuid to place
 
         mWorld.CrossRoads.stream()
                 .map(CrossRoadRenderable::new)
-                .forEach(crossRoadRenderable -> mPlaces.add(crossRoadRenderable));
+                .forEach(crossRoadRenderable -> mPlaces.put(UUID.randomUUID(), crossRoadRenderable)); // todo uuid to place
     }
 
 
@@ -67,7 +66,17 @@ public class WorldMapCanvas extends JPanel {
         super.paint(g);
         Graphics2D context = setupCanvas(g);
         // render
-        mPlaces.forEach(placeRenderable -> placeRenderable.render(context, mCellSize));
+        mPlaces.forEach((uuid, renderable) -> renderable.render(context, mCellSize));
         mGrid.render(context, mCellSize);
+    }
+
+
+    public void setStatusNew(CarStatus status) {
+        RoadRenderable road = (RoadRenderable) mPlaces.get(status.currentRoad.getId());
+        road.addCar();
+        if (status.previousRoad != null) {
+            RoadRenderable roadPrev = (RoadRenderable) mPlaces.get(status.previousRoad.getId());
+            roadPrev.removeCar();
+        }
     }
 }

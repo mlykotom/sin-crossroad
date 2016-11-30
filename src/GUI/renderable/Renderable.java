@@ -2,6 +2,7 @@ package GUI.renderable;
 
 import GUI.WorldMapCanvas;
 import com.sun.istack.internal.Nullable;
+import status.CarStatus;
 
 import java.awt.*;
 
@@ -9,7 +10,6 @@ import java.awt.*;
 public abstract class Renderable {
     private static final Stroke NO_STROKE = new BasicStroke(0);
     private static final Paint DEFAULT_COLOR = Color.WHITE;
-
 
     public static float getCanvasPosition(int cell, float cellSize) {
         return (cell + WorldMapCanvas.FIXES_OUT_OF_CANVAS) * cellSize;

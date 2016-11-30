@@ -58,20 +58,15 @@ public class MainGui extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Visualization of crossroads");
         setContentPane(rootPanel);
-
         worldMap.add(mWorldMapCanvas);
         pack();
     }
 
 
-    public void update(long ellapsedTime, final ConcurrentHashMap<String, CarStatus> carAgentStatus) {
+    public void update(long ellapsedTime) {
         simulationTime.setText(String.format("%d s", ellapsedTime / DateUtils.MILLIS_PER_SECOND));
+//        mWorldMapCanvas.setStatus(carAgentStatus);
         worldMap.repaint();
-    }
-
-
-    public void updateMapStatus(CarStatus status) {
-//        sLogger.log(Level.INFO, status.name);
     }
 
 
@@ -112,5 +107,10 @@ public class MainGui extends JFrame {
      */
     public JComponent $$$getRootComponent$$$() {
         return rootPanel;
+    }
+
+
+    public void updateStatus(CarStatus status) {
+        mWorldMapCanvas.setStatusNew(status);
     }
 }

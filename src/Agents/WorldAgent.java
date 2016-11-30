@@ -79,20 +79,26 @@ public class WorldAgent extends Agent {
 
 
     private void setupSpawnPoints() {
-        for (SpawnPoint spawnPoint : mWorld.SpawnPoints) {
+        mWorld.SpawnPoints.forEach(spawnPoint -> {
             addBehaviour(new SpawnCarBehavior(this, SPAWN_CAR_INTERVAL_MILLIS, spawnPoint));
             mSpawnPointsCount++;
-        }
+        });
     }
 
 
     /**
-     * TODO don't send the hashmap but have it as reference
-     *
      * @param ellapsedTime
-     * @param carAgentStatus
      */
-    public void updateWorld(long ellapsedTime, ConcurrentHashMap<String, CarStatus> carAgentStatus) {
-        mMainGui.update(ellapsedTime, carAgentStatus);
+    public void updateWorld(long ellapsedTime) {
+        mMainGui.update(ellapsedTime);
+    }
+
+
+    /**
+     * Extend for any status
+     * @param status
+     */
+    public void updateStatus(CarStatus status) {
+        mMainGui.updateStatus(status);
     }
 }

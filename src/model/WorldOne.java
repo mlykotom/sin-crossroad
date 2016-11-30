@@ -5,6 +5,7 @@ import Map.Road;
 import Map.SpawnPoint;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 
 public class WorldOne extends BaseWorld {
@@ -12,7 +13,7 @@ public class WorldOne extends BaseWorld {
         super("WorldOne");
         SpawnPoint spawnA = new SpawnPoint("SpawnA", 1, 0);
         SpawnPoint spawnB = new SpawnPoint("SpawnB", 0, 1);
-        SpawnPoint spawnC = new SpawnPoint("SpawnC", 1, 2);
+        SpawnPoint spawnC = new SpawnPoint("SpawnC", 1, 3);
         SpawnPoint spawnD = new SpawnPoint("SpawnD", 2, 1);
         SpawnPoints.addAll(Arrays.asList(spawnA, spawnB, spawnC, spawnD));
 
@@ -30,6 +31,6 @@ public class WorldOne extends BaseWorld {
         spawnC.setRoad(roadC);
         spawnD.setRoad(roadD);
 
-        Roads.addAll(Arrays.asList(roadA, roadB, roadC, roadD));
+        Stream.of(roadA, roadB, roadC, roadD).forEach(road -> Roads.put(road.getId(), road));
     }
 }

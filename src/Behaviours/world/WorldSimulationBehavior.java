@@ -25,9 +25,6 @@ public class WorldSimulationBehavior extends TickerBehaviour {
     private SearchConstraints mSearchConstraints = new SearchConstraints();
     private Date mSimulationStart;
 
-    private ConcurrentHashMap<String, CarStatus> mCarAgentStatus = new ConcurrentHashMap<>();
-
-
     public WorldSimulationBehavior(WorldAgent a, long period) {
         super(a, period);
         mWorldAgent = a;
@@ -43,9 +40,8 @@ public class WorldSimulationBehavior extends TickerBehaviour {
     @Override
     protected void onTick() {
         long ellapsedTime = calculateEllapsedTime();
-
         requestCarStatus();
-        mWorldAgent.updateWorld(ellapsedTime, mCarAgentStatus);
+        mWorldAgent.updateWorld(ellapsedTime);
     }
 
 
@@ -59,7 +55,8 @@ public class WorldSimulationBehavior extends TickerBehaviour {
 
                 try {
                     CarStatus status = (CarStatus) msg.getContentObject();
-                    mCarAgentStatus.put(status.name, status);
+//                    mCarAgentStatus.put(status.name, status);
+                    mWorldAgent.updateStatus(status);
                 } catch (UnreadableException e) {
                     e.printStackTrace();
                 }

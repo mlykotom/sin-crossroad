@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 
 public abstract class Place implements Serializable {
@@ -13,12 +14,19 @@ public abstract class Place implements Serializable {
     protected List<Road> mRoads = new ArrayList<>();
     protected int mCoordX;
     protected int mCoordY;
+    protected final UUID mId;
 
 
     public Place(String name, int coordX, int coordY) {
+        mId = UUID.randomUUID();
         mName = name;
         mCoordX = coordX;
         mCoordY = coordY;
+    }
+
+
+    public UUID getId() {
+        return mId;
     }
 
 
