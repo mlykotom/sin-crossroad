@@ -107,16 +107,16 @@ public class CrossRoadPlus extends CrossRoad {
     @Override
     public int resolveExitId(Road road)
     {
-        return Connections.indexOf(road);
+        return getRoads().indexOf(road);
     }
 
     public List<String> resolveExit(Road exit)
     {
-        if(exit == Connections.get(0))
+        if(exit == getRoads().get(0))
             return CarsExitA;
-        else if(exit == Connections.get(1))
+        else if(exit == getRoads().get(1))
             return CarsExitB;
-        else if(exit == Connections.get(2))
+        else if(exit == getRoads().get(2))
             return CarsExitC;
         else
             return CarsExitD;
@@ -124,11 +124,11 @@ public class CrossRoadPlus extends CrossRoad {
 
     public List<String> resolveDriving(Road roadFrom, Road roadTo)
     {
-        if(roadFrom == Connections.get(0))
+        if(roadFrom == getRoads().get(0))
             return DrivingFromA;
-        else if(roadFrom == Connections.get(1))
+        else if(roadFrom == getRoads().get(1))
             return DrivingFromB;
-        else if(roadFrom == Connections.get(2))
+        else if(roadFrom == getRoads().get(2))
             return DrivingFromC;
         else
             return DrivingFromD;
