@@ -73,12 +73,17 @@ public class CrossBehaviour extends Behaviour
             mt = MessageTemplate.MatchConversationId(CrossRoadAgent.FIRST_IN_QUEUE_RESPONSE);
             myAgent.blockingReceive(mt);
         }
-        _carAgent.myLogger.log(Level.WARNING, "Iam HEREEEEEEEE");
+        _carAgent.myLogger.log(Level.WARNING, "First in queeeee");
 
         while(true){
             ACLMessage semaphoreMsg = new ACLMessage(ACLMessage.QUERY_IF);
             semaphoreMsg.setConversationId(CrossRoadAgent.SEMAPHORE_CONVERSATION_REQUEST);
             semaphoreMsg.addReceiver(_crossRoadReceiver);
+            try {
+                semaphoreMsg.setContentObject(infoMessage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             myAgent.send(semaphoreMsg);
 
             mt = MessageTemplate.MatchConversationId(CrossRoadAgent.SEMAPHORE_CONVERSATION_RESPONSE);

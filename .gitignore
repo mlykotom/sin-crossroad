@@ -13,6 +13,7 @@ hs_err_pid*
 
 # Some IntelliJ project files
 .idea/workspace.xml
+.idea/*
 
 # built application files
 *.apk

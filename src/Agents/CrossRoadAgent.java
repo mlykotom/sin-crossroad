@@ -8,9 +8,11 @@ import Map.CrossRoad;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.util.Logger;
+import model.Semaphore;
 
 import java.util.LinkedList;
 import java.util.List;
+
 
 /**
  * Created by raven on 23.11.2016.
@@ -18,30 +20,22 @@ import java.util.List;
 public class CrossRoadAgent extends Agent {
     public Logger myLogger = Logger.getMyLogger(getClass().getName());
     private CrossRoad _crossRoad;
-    private boolean _green;
 
     @Override
     protected void setup() {
         Object[] args = getArguments();
         _crossRoad = (CrossRoad)args[0];
-        addBehaviour(new ControlBehaviour(this, 6000));
+        addBehaviour(new ControlBehaviour(this, 5));
         addBehaviour(new SemaphoreBehaviour(this));
         addBehaviour(new StartPassingBehaviour(this));
         addBehaviour(new EndPassingBehaviour(this));
         addBehaviour(new CrossRoadStateBehaviour(this));
         addBehaviour(new QueueBehaviour(this));
 
-        _green = true;
-        receivers = new LinkedList<>();
+        CarsWaitingForSemaphoreChange = new LinkedList<>();
     }
 
-    public List<AID> receivers;
-
-    public boolean changeGreen()
-    {
-        _green = !_green;
-        return _green;
-    }
+    public List<AID> CarsWaitingForSemaphoreChange;
 
     public static final String CAR_JOINING_QUEUE = "car_joining_queue";
     public static final String CROSSROAD_QUEUE_RESPONSE = "crossroad_queue_response";
@@ -83,8 +77,13 @@ public class CrossRoadAgent extends Agent {
             return direction == DirectionType.Left ? CarsExitDLeft : CarsExitD;
     }
 
-    public boolean getGreen()
+    public Semaphore getSemaphore(int exitId, DirectionType direction)
     {
-        return _green;
+        return _crossRoad.resolveSemaphore(exitId, direction);
+    }
+
+    public void turnAllSemaphoresRed()
+    {
+        _crossRoad.turnAllSemaphoresRed();
     }
 }

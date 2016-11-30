@@ -1,10 +1,14 @@
 package Behaviours.CrossRoad;
 
 import Agents.CrossRoadAgent;
+import Messages.CrossRoadArrivedMessage;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
 import jade.util.Logger;
+import model.Semaphore;
+
 
 /**
  * Receives messages from Cars with request to pass crossroad.
@@ -26,15 +30,23 @@ public class SemaphoreBehaviour extends CyclicBehaviour
         ACLMessage msg = myAgent.receive(mt);
 
         if(msg != null){
+            CrossRoadArrivedMessage content;
+            try {
+                content = (CrossRoadArrivedMessage) msg.getContentObject();
+            } catch (UnreadableException e) {
+                e.printStackTrace();
+                return;
+            }
+
             ACLMessage reply = msg.createReply();
             reply.setConversationId(CrossRoadAgent.SEMAPHORE_CONVERSATION_RESPONSE);
             if(msg.getPerformative() == ACLMessage.QUERY_IF){
-                if (_agent.getGreen()){
-                        reply.setPerformative(ACLMessage.AGREE);
-                    // Send only reply if agent can go
+                Semaphore semaphore = _agent.getSemaphore(content.exitId, content.direction);
+                if (semaphore.getLight() != Semaphore.Light.Red){
+                    reply.setPerformative(ACLMessage.AGREE);
                 }
                 else{
-                    _agent.receivers.add(msg.getSender());
+                    _agent.CarsWaitingForSemaphoreChange.add(msg.getSender());
                     reply.setPerformative(ACLMessage.REFUSE);
                 }
             }
