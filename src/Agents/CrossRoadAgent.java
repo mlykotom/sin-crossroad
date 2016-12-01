@@ -2,16 +2,13 @@ package Agents;
 
 
 import Behaviours.CrossRoad.*;
-import Behaviours.state.AgentStatus;
 import Behaviours.state.CrossRoadStatus;
 import Behaviours.state.ReportStateBehaviour;
 import Behaviours.state.StatefulAgent;
 import Common.CarInCrossRoad;
 import Common.DirectionType;
-import Map.CrossRoad;
 import Map.CrossRoadPlus;
 import jade.core.AID;
-import jade.core.Agent;
 import jade.util.Logger;
 import model.Semaphore;
 
@@ -24,13 +21,13 @@ import java.util.List;
  */
 public class CrossRoadAgent extends StatefulAgent {
     public Logger myLogger = Logger.getMyLogger(getClass().getName());
-    private CrossRoad _crossRoad;
+    private CrossRoadPlus _crossRoad;
 
 
     @Override
     protected void setup() {
         Object[] args = getArguments();
-        _crossRoad = (CrossRoad) args[0];
+        _crossRoad = (CrossRoadPlus) args[0];
         addBehaviour(new ControlBehaviour(this, 20)); //TODO: Parametrize cycle duration?
         addBehaviour(new SemaphoreBehaviour(this));
         addBehaviour(new StartPassingBehaviour(this));
@@ -60,31 +57,13 @@ public class CrossRoadAgent extends StatefulAgent {
     public static final String PASSING_CROSSROAD_INFORM = "passing_crossroad_inform";
     public static final String PASSED_CROSSROAD_INFORM = "passed_crossroad_inform";
 
-
-    public List<String> CarsExitA = new LinkedList<>();
-    public List<String> CarsExitB = new LinkedList<>();
-    public List<String> CarsExitC = new LinkedList<>();
-    public List<String> CarsExitD = new LinkedList<>();
-
-    public List<String> CarsExitALeft = new LinkedList<>();
-    public List<String> CarsExitBLeft = new LinkedList<>();
-    public List<String> CarsExitCLeft = new LinkedList<>();
-    public List<String> CarsExitDLeft = new LinkedList<>();
-
-    public List<CarInCrossRoad> CarsIn = new LinkedList<>();
-
-
     public List<String> resolveExit(int exitId, DirectionType direction) {
-        if (exitId == 0)
-            return direction == DirectionType.Left ? CarsExitALeft : CarsExitA;
-        else if (exitId == 1)
-            return direction == DirectionType.Left ? CarsExitBLeft : CarsExitB;
-        else if (exitId == 2)
-            return direction == DirectionType.Left ? CarsExitCLeft : CarsExitC;
-        else
-            return direction == DirectionType.Left ? CarsExitDLeft : CarsExitD;
+        return _crossRoad.resolveExit(exitId, direction);
     }
 
+    public List<CarInCrossRoad> getCarsIn() {
+        return _crossRoad.CarsIn;
+    }
 
     public Semaphore getSemaphore(int exitId, DirectionType direction) {
         return _crossRoad.resolveSemaphore(exitId, direction);

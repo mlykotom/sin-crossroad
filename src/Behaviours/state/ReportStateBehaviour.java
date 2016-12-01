@@ -8,6 +8,7 @@ import jade.lang.acl.MessageTemplate;
 import jade.util.Logger;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.logging.Level;
 
 
@@ -32,6 +33,7 @@ public class ReportStateBehaviour extends CyclicBehaviour {
             ACLMessage reply = msg.createReply();
             reply.setPerformative(ACLMessage.INFORM);
             reply.setConversationId(WorldSimulationBehavior.CONVERSATION_GET_AGENT_CURRENT_STATE);
+            Serializable test = mStatefulAgent.getCurrentState();
             reply.setContentObject(mStatefulAgent.getCurrentState());
             myAgent.send(reply);
         } catch (IOException e) {

@@ -1,6 +1,7 @@
 package Map;
 
 import Agents.CarAgent;
+import Common.CarInCrossRoad;
 import Common.DirectionType;
 import model.Semaphore;
 
@@ -67,6 +68,28 @@ public class CrossRoadPlus extends CrossRoad {
         return getRoads().indexOf(road);
     }
 
+    public List<String> resolveExit(int exitId, DirectionType direction) {
+        if (exitId == 0)
+            return direction == DirectionType.Left ? CarsExitALeft : CarsExitA;
+        else if (exitId == 1)
+            return direction == DirectionType.Left ? CarsExitBLeft : CarsExitB;
+        else if (exitId == 2)
+            return direction == DirectionType.Left ? CarsExitCLeft : CarsExitC;
+        else
+            return direction == DirectionType.Left ? CarsExitDLeft : CarsExitD;
+    }
+
+    public List<String> CarsExitA = new LinkedList<>();
+    public List<String> CarsExitB = new LinkedList<>();
+    public List<String> CarsExitC = new LinkedList<>();
+    public List<String> CarsExitD = new LinkedList<>();
+
+    public List<String> CarsExitALeft = new LinkedList<>();
+    public List<String> CarsExitBLeft = new LinkedList<>();
+    public List<String> CarsExitCLeft = new LinkedList<>();
+    public List<String> CarsExitDLeft = new LinkedList<>();
+
+    public List<CarInCrossRoad> CarsIn = new LinkedList<>();
 
     /**
      * @param exitId

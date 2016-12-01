@@ -2,6 +2,7 @@ package Behaviours.CrossRoad;
 
 import Agents.CrossRoadAgent;
 import Common.CarInCrossRoad;
+import Common.DirectionType;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -34,23 +35,24 @@ public class EndPassingBehaviour extends CyclicBehaviour
             return;
         }
 
-        Optional<CarInCrossRoad> exitingCar = _agent.CarsIn.stream()
+        Optional<CarInCrossRoad> exitingCar = _agent.getCarsIn().stream()
                 .filter((car) -> car.name == msg.getSender().getName())
                 .findFirst();
 
         if(exitingCar.isPresent())
         {
-            _agent.CarsIn.remove(exitingCar.get());
+            _agent.getCarsIn().remove(exitingCar.get());
 
             // Inform other cars
             ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
             inform.setConversationId(CrossRoadAgent.STATE_IN_CROSSROAD_CHANGED);
 
             List<String> carsToNotify = new LinkedList<>();
-            addToListFirst(_agent.CarsExitALeft, carsToNotify);
-            addToListFirst(_agent.CarsExitBLeft, carsToNotify);
-            addToListFirst(_agent.CarsExitCLeft, carsToNotify);
-            addToListFirst(_agent.CarsExitDLeft, carsToNotify);
+
+            for(int i = 0; i < 4; i++)
+            {
+                addToListFirst(_agent.resolveExit(i, DirectionType.Left), carsToNotify);
+            }
 
             for (String receiver : carsToNotify) {
                 inform.addReceiver(new AID(receiver));

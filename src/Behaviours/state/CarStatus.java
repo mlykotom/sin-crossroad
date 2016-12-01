@@ -9,7 +9,7 @@ import java.util.UUID;
 
 
 public class CarStatus extends AgentStatus {
-    public final Road currentRoad;
+    public final UUID currentRoadId;
     public final UUID sourcePlaceId;
     @Nullable public final UUID nextPlaceId;
     public final UUID destinationPlaceId;
@@ -19,7 +19,7 @@ public class CarStatus extends AgentStatus {
 
     public CarStatus(String agentId, List<Road> path, int currentRoad, Place origin, long timestampStart, long timestampEnd) {
         super(agentId);
-        this.currentRoad = path.get(currentRoad);
+        this.currentRoadId = path.get(currentRoad).getId();
         this.sourcePlaceId = origin.getId();
         this.nextPlaceId = (currentRoad + 1) >= path.size() ? null : path.get(currentRoad + 1).getId();
         this.destinationPlaceId = path.get(path.size() - 1).getId();

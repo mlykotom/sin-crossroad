@@ -49,7 +49,7 @@ public class StartPassingBehaviour extends CyclicBehaviour
 
         List<String> exitQueue = _agent.resolveExit(content.exitId, content.direction);
         // Add to current passing
-        _agent.CarsIn.add(new CarInCrossRoad(content.exitId, content.direction, msg.getSender().getName()));
+        _agent.getCarsIn().add(new CarInCrossRoad(content.exitId, content.direction, msg.getSender().getName()));
 
         exitQueue.remove(msg.getSender().getName());
 

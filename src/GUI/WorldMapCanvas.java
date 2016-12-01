@@ -75,11 +75,11 @@ public class WorldMapCanvas extends JPanel {
         mWorldStatus.forEach((agentName, agentStatus) -> {
             if (agentStatus instanceof CarStatus) {
                 CarStatus carStatus = ((CarStatus) agentStatus);
-                UUID roadId = carStatus.currentRoad.getId();
+                UUID roadId = carStatus.currentRoadId;
                 RoadRenderable road = (RoadRenderable) mPlaces.get(roadId);
                 road.addCar(carStatus.nextPlaceId);
             } else if (agentStatus instanceof CrossRoadStatus) {
-                System.out.println("CrossRoad: " + ((CrossRoadStatus) agentStatus).crossRoad.getName());
+                System.out.println("CrossRoad: " + ((CrossRoadStatus) agentStatus).getAgentId());
             }
         });
     }

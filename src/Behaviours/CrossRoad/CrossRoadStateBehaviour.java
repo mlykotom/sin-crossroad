@@ -50,7 +50,8 @@ public class CrossRoadStateBehaviour extends CyclicBehaviour
         reply.setConversationId(CrossRoadAgent.CROSSROAD_STATE_RESPONSE);
         reply.addReceiver(msg.getSender());
 
-        if(_agent.CarsIn.stream().anyMatch((car) -> car.exitId == oppositeExitId && car.direction == DirectionType.Straight))
+        if(_agent.getCarsIn().stream()
+                .anyMatch((car) -> car.exitId == oppositeExitId && car.direction == DirectionType.Straight))
         {
 
             reply.setPerformative(ACLMessage.REFUSE);
