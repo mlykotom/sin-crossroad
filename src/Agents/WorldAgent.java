@@ -4,6 +4,7 @@ import Behaviours.state.AgentStatus;
 import Behaviours.world.SpawnCarBehavior;
 import Behaviours.world.WorldSimulationBehavior;
 import GUI.MainGui;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.util.Logger;
 import jade.wrapper.AgentController;
@@ -16,6 +17,7 @@ import java.util.logging.Level;
 
 
 public class WorldAgent extends Agent {
+    public static AID sWorldAgentAID;//TODO not immutable, not good, change!
     public static final long WORLD_UPDATE_PERIOD_MILLIS = 500;  // TODO parametrized
     private static Logger sLogger = Logger.getMyLogger(WorldAgent.class.getSimpleName());
 
@@ -31,7 +33,8 @@ public class WorldAgent extends Agent {
 
     @Override
     protected void setup() {
-        mWorld = new WorldSimple(); //WorldOne();
+        sWorldAgentAID = getAID();
+        mWorld = new WorldOne();//WorldSimple()
         mContainerController = getContainerController();
         sLogger.log(Level.INFO, "Creating " + mWorld.name);
         mMainGui = MainGui.runGUI(this);

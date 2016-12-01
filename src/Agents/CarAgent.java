@@ -3,13 +3,19 @@ package Agents;
 import Behaviours.Car.CrossBehaviour;
 import Behaviours.Car.DriveBehaviour;
 import Behaviours.state.AgentStatus;
+import Behaviours.state.CarStatus;
 import Behaviours.state.ReportStateBehaviour;
 import Behaviours.state.StatefulAgent;
+import Behaviours.world.WorldSimulationBehavior;
 import Map.CrossRoad;
 import Map.Place;
 import Map.Road;
+import jade.core.AID;
+import jade.core.behaviours.OneShotBehaviour;
+import jade.lang.acl.ACLMessage;
 import jade.util.Logger;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -84,6 +90,10 @@ public class CarAgent extends StatefulAgent {
 
     public void delete() {
         myLogger.log(Level.INFO, getLocalName() + " arrived");
+        ACLMessage msg = new ACLMessage(ACLMessage.PROPAGATE);
+        msg.setConversationId(WorldSimulationBehavior.CONVERSATION_GET_AGENT_CURRENT_STATE);
+        msg.addReceiver(WorldAgent.sWorldAgentAID);
+        send(msg);
         doDelete();
     }
 
@@ -107,12 +117,11 @@ public class CarAgent extends StatefulAgent {
 
     protected void takeDown() {
         timestampEnd = System.currentTimeMillis();
-        // TODO send car status
     }
 
 
     @Override
-    public AgentStatus getCurrentState() {
+    public CarStatus getCurrentState() {
         return new Behaviours.state.CarStatus(
                 getName(),
                 _path.get(_currentRoadIdx),

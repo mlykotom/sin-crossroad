@@ -7,7 +7,7 @@ import java.awt.geom.Path2D;
 
 
 public class RoadRenderable extends PlaceRenderable<Road> {
-    public static final int ROAD_KNOWN_MAX_PER_LENGTH = 50;
+    public static final int ROAD_KNOWN_MAX_PER_LENGTH = 10;
     protected long mCarsOnRoad = 0;
 
 
@@ -46,7 +46,7 @@ public class RoadRenderable extends PlaceRenderable<Road> {
 
     @Override
     public void render(Graphics2D context, float cellSize) {
-        System.out.println("Cars in road: " + mCarsOnRoad);
+        System.out.println("Cars in road: " + mPlace.getName() + "|" + mCarsOnRoad);
 
         float realStartX = getRealPositionX(cellSize);
         float realStartY = getRealPositionY(cellSize);
@@ -60,6 +60,8 @@ public class RoadRenderable extends PlaceRenderable<Road> {
         context.setStroke(new BasicStroke(cellSize / 4));
         context.setPaint(calculateGradient(mCarsOnRoad, mPlace.Length * ROAD_KNOWN_MAX_PER_LENGTH));
         context.draw(path2D);
+
+        mCarsOnRoad = 0;    // TODO must be proper way
     }
 
 

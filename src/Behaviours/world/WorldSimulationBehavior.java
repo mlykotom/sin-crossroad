@@ -17,7 +17,7 @@ import jade.util.Logger;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 
 public class WorldSimulationBehavior extends TickerBehaviour {
@@ -55,6 +55,12 @@ public class WorldSimulationBehavior extends TickerBehaviour {
                 MessageTemplate mt = MessageTemplate.MatchConversationId(CONVERSATION_GET_AGENT_CURRENT_STATE);
                 ACLMessage msg = myAgent.receive(mt);
                 if (msg == null) return;
+
+                if (msg.getPerformative() == ACLMessage.PROPAGATE) {
+                    mWorldAgent.worldStatus.remove(msg.getSender().getName());
+                    sLogger.log(Level.INFO, "deleting agent " + msg.getSender().getLocalName());
+                    return;
+                }
 
                 try {
                     AgentStatus status = (AgentStatus) msg.getContentObject();

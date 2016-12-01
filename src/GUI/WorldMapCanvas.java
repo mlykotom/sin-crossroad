@@ -2,6 +2,7 @@ package GUI;
 
 import Behaviours.state.AgentStatus;
 import Behaviours.state.CarStatus;
+import Behaviours.state.CrossRoadStatus;
 import GUI.renderable.*;
 import model.BaseWorld;
 
@@ -76,6 +77,8 @@ public class WorldMapCanvas extends JPanel {
                 UUID roadId = ((Behaviours.state.CarStatus) agentStatus).currentRoad.getId();
                 RoadRenderable road = (RoadRenderable) mPlaces.get(roadId);
                 road.addCar();
+            } else if (agentStatus instanceof CrossRoadStatus) {
+                System.out.println("CrossRoad: " + ((CrossRoadStatus) agentStatus).crossRoad.getName());
             }
         });
     }
