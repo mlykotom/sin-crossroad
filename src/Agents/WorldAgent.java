@@ -9,8 +9,7 @@ import jade.util.Logger;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-import model.BaseWorld;
-import model.WorldSimple;
+import model.*;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;

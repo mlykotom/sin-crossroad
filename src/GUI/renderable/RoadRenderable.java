@@ -7,7 +7,7 @@ import java.awt.geom.Path2D;
 
 
 public class RoadRenderable extends PlaceRenderable<Road> {
-    public static final int ROAD_KNOWN_MAX_PER_LENGTH = 15;
+    public static final int ROAD_KNOWN_MAX_PER_LENGTH = 50;
     protected long mCarsOnRoad = 0;
 
 
@@ -18,13 +18,17 @@ public class RoadRenderable extends PlaceRenderable<Road> {
 
     public void addCar() {
         mCarsOnRoad++;
-        System.out.println("Cars in road: " + mCarsOnRoad);
     }
 
 
     public void removeCar() {
         mCarsOnRoad--;
         if (mCarsOnRoad < 0) mCarsOnRoad = 0;
+    }
+
+
+    public void setCars(long cars) {
+        mCarsOnRoad = cars;
     }
 
 
@@ -42,6 +46,8 @@ public class RoadRenderable extends PlaceRenderable<Road> {
 
     @Override
     public void render(Graphics2D context, float cellSize) {
+        System.out.println("Cars in road: " + mCarsOnRoad);
+
         float realStartX = getRealPositionX(cellSize);
         float realStartY = getRealPositionY(cellSize);
         float realEndX = getCanvasPosition(mPlace.getBCoordX(), cellSize);
@@ -58,8 +64,13 @@ public class RoadRenderable extends PlaceRenderable<Road> {
 
 
     private static Paint calculateGradient(long number, long knownMax) {
+        if (number > knownMax) {
+            return Color.DARK_GRAY;
+        }
+
         float tWithinBounds = (number / (float) knownMax) % 1.0f;
-        return new Color((int) (255 * tWithinBounds), (int) (255 * (1 - tWithinBounds)), 0);
+        float greenParam = 1 - tWithinBounds;
+        return new Color((int) (255 * tWithinBounds), (int) (255 * greenParam), 0); // TODO above knownmax turn black with gradient
     }
 
 
