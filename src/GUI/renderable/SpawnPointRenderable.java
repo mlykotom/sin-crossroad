@@ -14,7 +14,7 @@ public class SpawnPointRenderable extends PlaceRenderable<SpawnPoint> {
 
     @Override
     protected float getWidth(float cellSize) {
-        return cellSize / 3;
+        return cellSize / 2.5f;
     }
 
 

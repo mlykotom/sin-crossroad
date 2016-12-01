@@ -5,11 +5,12 @@ import Map.Road;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
-import java.util.UUID;
 
 
 public class RoadRenderable extends PlaceRenderable<Road> {
-    public static final int ROAD_KNOWN_MAX_PER_LENGTH = 10;
+    public static final int ROAD_KNOWN_MAX_PER_LENGTH = 5;
+    public static final int LANE_OFFSET_TO_ITSELF = 8;
+
     protected long mCarsOnRoadThere = 0;
     protected long mCarsOnRoadBack = 0;
     private long mKnownMax;
@@ -21,17 +22,6 @@ public class RoadRenderable extends PlaceRenderable<Road> {
     }
 
 
-    public void addCar(UUID sourcePlaceId) {
-        if (mPlace.getPlaceA().getId().equals(sourcePlaceId)) {
-            mCarsOnRoadThere++;
-        } else if (mPlace.getPlaceA().getId().equals(sourcePlaceId)) {
-            mCarsOnRoadBack++;
-        } else {
-            System.out.println("Unknown direction for road " + mPlace.getName());
-        }
-    }
-
-
     public synchronized void setCar(CarStatus status) {
         if (mPlace.getPlaceA().getId().equals(status.sourcePlaceId)) {
             if (status.isEntered) {
@@ -39,13 +29,14 @@ public class RoadRenderable extends PlaceRenderable<Road> {
             } else {
                 mCarsOnRoadThere--;
             }
-        } else {
-            // TODO what about 3rd option (unknown place start)
+        } else if (mPlace.getPlaceB().getId().equals(status.sourcePlaceId)) {
             if (status.isEntered) {
                 mCarsOnRoadBack++;
             } else {
                 mCarsOnRoadBack--;
             }
+        } else {
+            System.out.println("Unknown direction for road " + mPlace.getName());
         }
     }
 
@@ -72,34 +63,72 @@ public class RoadRenderable extends PlaceRenderable<Road> {
         Path2D wayThere = new Path2D.Float();
         Path2D wayBack = new Path2D.Float();
 
-        if (realStartX == realEndX) {
-            wayThere.moveTo(realStartX - 8, realStartY);
-            wayThere.lineTo(realEndX - 8, realEndY);
-            wayBack.moveTo(realStartX + 8, realStartY);
-            wayBack.lineTo(realEndX + 8, realEndY);
+        float wayThereXStart, wayThereXEnd, wayThereYStart, wayThereYEnd;
+        float wayBackXStart, wayBackXEnd, wayBackYStart, wayBackYEnd;
+
+        // vertical road
+        if (realStartY == realEndY) {
+            float laneOffset = LANE_OFFSET_TO_ITSELF * Math.signum(realEndX - realStartX);
+            wayThereXStart = realStartX;
+            wayThereXEnd = realEndX;
+            wayThereYStart = realStartY + laneOffset;
+            wayThereYEnd = realEndY + laneOffset;
+
+            wayBackXStart = realStartX;
+            wayBackXEnd = realEndX;
+            wayBackYStart = realStartY - laneOffset;
+            wayBackYEnd = realEndY - laneOffset;
         } else {
-            wayThere.moveTo(realStartX, realStartY - 8);
-            wayThere.lineTo(realEndX, realEndY - 8);
-            wayBack.moveTo(realStartX, realStartY + 8);
-            wayBack.lineTo(realEndX, realEndY + 8);
+            float laneOffset = LANE_OFFSET_TO_ITSELF * Math.signum(realEndY - realStartY);
+
+            wayThereXStart = realStartX - laneOffset;
+            wayThereXEnd = realEndX - laneOffset;
+            wayThereYStart = realStartY;
+            wayThereYEnd = realEndY;
+
+            wayBackXStart = realStartX + laneOffset;
+            wayBackXEnd = realEndX + laneOffset;
+            wayBackYStart = realStartY;
+            wayBackYEnd = realEndY;
         }
 
+        wayThere.moveTo(wayThereXStart, wayThereYStart);
+        wayThere.lineTo(wayThereXEnd, wayThereYEnd);
+        wayBack.moveTo(wayBackXStart, wayBackYStart);
+        wayBack.lineTo(wayBackXEnd, wayBackYEnd);
+
+
+        // draws lanes
         context.setStroke(new BasicStroke(cellSize / 6));
         context.setPaint(calculateGradient(mCarsOnRoadThere, mKnownMax));
         context.draw(wayThere);
-
         context.setPaint(calculateGradient(mCarsOnRoadBack, mKnownMax));
         context.draw(wayBack);
 
-        debugText(context, realStartX, realStartY, realEndX, realEndY);
+        drawNumber(context, mCarsOnRoadThere, wayThereXStart, wayThereYStart, wayThereXEnd, wayThereYEnd);
+        drawNumber(context, mCarsOnRoadBack, wayBackXStart, wayBackYStart, wayBackXEnd, wayBackYEnd);
+    }
+
+
+    private void drawNumber(Graphics2D context, long numberOfCars, float realStartX, float realStartY, float realEndX, float realEndY) {
+        FontMetrics fm = context.getFontMetrics();
+
+        String text = String.valueOf(numberOfCars);
+
+        float x = realStartX + (realEndX - fm.stringWidth(text) - realStartX) / 2;
+        float y = realStartY + (realEndY + fm.getHeight() / 2 - realStartY) / 2;
+
+        context.setFont(mDebugFont);
+        context.setPaint(Color.BLACK);
+        context.drawString(text, x, y);
     }
 
 
     private void debugText(Graphics2D context, float realStartX, float realStartY, float realEndX, float realEndY) {
         FontMetrics fm = context.getFontMetrics();
-        String text = "(" + mCarsOnRoadThere + "," + mCarsOnRoadBack + ")";
+        String text = mCarsOnRoadThere + "," + mCarsOnRoadBack;
         float x = realStartX + (realEndX - fm.stringWidth(text) - realStartX) / 2;
-        float y = realStartY + (realEndY - realStartY) / 2;
+        float y = realStartY + (realEndY + fm.getHeight() / 2 - realStartY) / 2;
 
         context.setFont(mDebugFont);
         context.setPaint(Color.BLACK);
@@ -112,9 +141,8 @@ public class RoadRenderable extends PlaceRenderable<Road> {
             return Color.DARK_GRAY;
         }
 
-        int redParam = (int) (255 * (number / knownMax));
-        int greenParam = 255 - redParam;
-        return new Color(redParam, greenParam, 0); // TODO above knownmax turn black with gradient
+        float t = (number / (float) knownMax);
+        return new Color(t, 1 - t, 0);
     }
 
 
