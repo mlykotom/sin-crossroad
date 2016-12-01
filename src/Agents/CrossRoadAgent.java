@@ -26,6 +26,7 @@ public class CrossRoadAgent extends StatefulAgent {
 
     @Override
     protected void setup() {
+        super.setup();
         Object[] args = getArguments();
         _crossRoad = (CrossRoadPlus) args[0];
         addBehaviour(new ControlBehaviour(this, 20)); //TODO: Parametrize cycle duration?
@@ -34,7 +35,6 @@ public class CrossRoadAgent extends StatefulAgent {
         addBehaviour(new EndPassingBehaviour(this));
         addBehaviour(new CrossRoadStateBehaviour(this));
         addBehaviour(new QueueBehaviour(this));
-        addBehaviour(new ReportStateBehaviour(this));
 
         CarsWaitingForSemaphoreChange = new LinkedList<>();
     }

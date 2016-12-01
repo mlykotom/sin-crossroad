@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public class WorldOne extends BaseWorld {
     public WorldOne() {
         super("WorldOne");
-        SpawnPoint spawnA = new SpawnPoint("SpawnA", 1, 0);
+        SpawnPoint spawnA = new SpawnPoint("SpawnA", 1, 0, 500, 500);
         SpawnPoint spawnB = new SpawnPoint("SpawnB", 0, 1);
         SpawnPoint spawnC = new SpawnPoint("SpawnC", 1, 3);
         SpawnPoint spawnD = new SpawnPoint("SpawnD", 2, 1);

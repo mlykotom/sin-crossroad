@@ -65,7 +65,7 @@ public class WorldMapCanvas extends JPanel {
         super.paint(g);
         Graphics2D context = setupCanvas(g);
         // render
-        parseWorldState();
+//        parseWorldState();
         mPlaces.forEach((uuid, renderable) -> renderable.render(context, mCellSize));
         mGrid.render(context, mCellSize);
     }
@@ -77,7 +77,7 @@ public class WorldMapCanvas extends JPanel {
                 CarStatus carStatus = ((CarStatus) agentStatus);
                 UUID roadId = carStatus.currentRoadId;
                 RoadRenderable road = (RoadRenderable) mPlaces.get(roadId);
-                road.addCar(carStatus.nextPlaceId);
+//                road.addCar(carStatus.sourcePlaceId);
             } else if (agentStatus instanceof CrossRoadStatus) {
                 System.out.println("CrossRoad: " + ((CrossRoadStatus) agentStatus).getAgentId());
             }
@@ -85,12 +85,8 @@ public class WorldMapCanvas extends JPanel {
     }
 
 
-//    public void setStatusNew(CarStatus status) {
-//        RoadRenderable road = (RoadRenderable) mPlaces.get(status.currentRoad.getId());
-//        road.addCar();
-//        if (status.previousRoad != null) {
-//            RoadRenderable roadPrev = (RoadRenderable) mPlaces.get(status.previousRoad.getId());
-//            roadPrev.removeCar();
-//        }
-//    }
+    public void setCarStatus(CarStatus status) {
+        RoadRenderable road = (RoadRenderable) mPlaces.get(status.currentRoad.getId());
+        road.setCar(status);
+    }
 }

@@ -1,5 +1,6 @@
 package GUI.renderable;
 
+import Behaviours.state.CarStatus;
 import Map.Road;
 
 import java.awt.*;
@@ -16,15 +17,35 @@ public class RoadRenderable extends PlaceRenderable<Road> {
 
     public RoadRenderable(Road road) {
         super(road);
-        mKnownMax = mPlace.Length * ROAD_KNOWN_MAX_PER_LENGTH;
+        mKnownMax = mPlace.getLengthInPoints() * ROAD_KNOWN_MAX_PER_LENGTH;
     }
 
 
-    public void addCar(UUID nextPlaceId) {
-        if (mPlace.getId().equals(nextPlaceId)) {
+    public void addCar(UUID sourcePlaceId) {
+        if (mPlace.getPlaceA().getId().equals(sourcePlaceId)) {
             mCarsOnRoadThere++;
-        } else {
+        } else if (mPlace.getPlaceA().getId().equals(sourcePlaceId)) {
             mCarsOnRoadBack++;
+        } else {
+            System.out.println("Unknown direction for road " + mPlace.getName());
+        }
+    }
+
+
+    public synchronized void setCar(CarStatus status) {
+        if (mPlace.getPlaceA().getId().equals(status.sourcePlaceId)) {
+            if (status.isEntered) {
+                mCarsOnRoadThere++;
+            } else {
+                mCarsOnRoadThere--;
+            }
+        } else {
+            // TODO what about 3rd option (unknown place start)
+            if (status.isEntered) {
+                mCarsOnRoadBack++;
+            } else {
+                mCarsOnRoadBack--;
+            }
         }
     }
 
@@ -39,9 +60,6 @@ public class RoadRenderable extends PlaceRenderable<Road> {
     protected float getHeight(float cellSize) {
         return 0;
     }
-
-
-    Font debugFont = new Font("DebugText", Font.PLAIN, 10);
 
 
     @Override
@@ -73,21 +91,17 @@ public class RoadRenderable extends PlaceRenderable<Road> {
         context.setPaint(calculateGradient(mCarsOnRoadBack, mKnownMax));
         context.draw(wayBack);
 
-
         debugText(context, realStartX, realStartY, realEndX, realEndY);
-
-        mCarsOnRoadThere = 0;    // TODO must be proper way
-        mCarsOnRoadBack = 0;    // TODO must be proper way
     }
 
 
     private void debugText(Graphics2D context, float realStartX, float realStartY, float realEndX, float realEndY) {
         FontMetrics fm = context.getFontMetrics();
-        String text = "(" + mCarsOnRoadThere + "," + mCarsOnRoadBack + ")" + "/" + mKnownMax;
+        String text = "(" + mCarsOnRoadThere + "," + mCarsOnRoadBack + ")";
         float x = realStartX + (realEndX - fm.stringWidth(text) - realStartX) / 2;
         float y = realStartY + (realEndY - realStartY) / 2;
 
-        context.setFont(debugFont);
+        context.setFont(mDebugFont);
         context.setPaint(Color.BLACK);
         context.drawString(text, x, y);
     }
@@ -98,9 +112,9 @@ public class RoadRenderable extends PlaceRenderable<Road> {
             return Color.DARK_GRAY;
         }
 
-        float tWithinBounds = (number / (float) knownMax) % 1.0f;
-        float greenParam = 1 - tWithinBounds;
-        return new Color((int) (255 * tWithinBounds), (int) (255 * greenParam), 0); // TODO above knownmax turn black with gradient
+        int redParam = (int) (255 * (number / knownMax));
+        int greenParam = 255 - redParam;
+        return new Color(redParam, greenParam, 0); // TODO above knownmax turn black with gradient
     }
 
 

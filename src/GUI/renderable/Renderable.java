@@ -9,6 +9,8 @@ import java.awt.*;
 public abstract class Renderable {
     private static final Stroke NO_STROKE = new BasicStroke(0);
     private static final Paint DEFAULT_COLOR = Color.WHITE;
+    protected Font mDebugFont = new Font("DebugText", Font.PLAIN, 10);
+
 
     public static float getCanvasPosition(int cell, float cellSize) {
         return (cell + WorldMapCanvas.FIXES_OUT_OF_CANVAS) * cellSize;

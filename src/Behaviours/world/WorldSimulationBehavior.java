@@ -17,7 +17,6 @@ import jade.util.Logger;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.logging.Level;
 
 
 public class WorldSimulationBehavior extends TickerBehaviour {
@@ -26,6 +25,7 @@ public class WorldSimulationBehavior extends TickerBehaviour {
     private final WorldAgent mWorldAgent;
     private SearchConstraints mSearchConstraints = new SearchConstraints();
     private Date mSimulationStart;
+    private AMSAgentDescription[] mAllFoundAgents;
 
 
     public WorldSimulationBehavior(WorldAgent a, long period) {
@@ -43,7 +43,8 @@ public class WorldSimulationBehavior extends TickerBehaviour {
     @Override
     protected void onTick() {
         long ellapsedTime = calculateEllapsedTime();
-        requestCarStatus();
+//        requestCarStatus();
+        // TODO wait till all agents response
         mWorldAgent.updateWorld(ellapsedTime);
     }
 
@@ -56,15 +57,15 @@ public class WorldSimulationBehavior extends TickerBehaviour {
                 ACLMessage msg = myAgent.receive(mt);
                 if (msg == null) return;
 
-                if (msg.getPerformative() == ACLMessage.PROPAGATE) {
-                    mWorldAgent.worldStatus.remove(msg.getSender().getName());
-                    sLogger.log(Level.INFO, "deleting agent " + msg.getSender().getLocalName());
-                    return;
-                }
+//                if (msg.getPerformative() == ACLMessage.PROPAGATE) {
+//                    mWorldAgent.worldStatus.remove(msg.getSender().getName());
+//                    sLogger.log(Level.INFO, "deleting agent " + msg.getSender().getLocalName());
+//                    return;
+//                }
 
                 try {
                     AgentStatus status = (AgentStatus) msg.getContentObject();
-                    mWorldAgent.worldStatus.put(status.getAgentId(), status);
+                    mWorldAgent.setAgentStatus(status);
                 } catch (UnreadableException e) {
                     e.printStackTrace();
                 }
@@ -73,12 +74,16 @@ public class WorldSimulationBehavior extends TickerBehaviour {
     }
 
 
+    /**
+     * @deprecated
+     */
     private void requestCarStatus() {
         ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
         request.setConversationId(CONVERSATION_GET_AGENT_CURRENT_STATE);
 
         try {
-            Arrays.stream(AMSService.search(mWorldAgent, new AMSAgentDescription(), mSearchConstraints))
+            mAllFoundAgents = AMSService.search(mWorldAgent, new AMSAgentDescription(), mSearchConstraints);
+            Arrays.stream(mAllFoundAgents)
                     .filter(amsAgentDescription -> amsAgentDescription.getName().getLocalName().startsWith(CarAgent.CAR_NAME_PREFIX))
                     .forEach(amsAgentDescription -> {
                         AID agentId = amsAgentDescription.getName();
