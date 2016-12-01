@@ -9,10 +9,12 @@ import java.awt.geom.Path2D;
 public class RoadRenderable extends PlaceRenderable<Road> {
     public static final int ROAD_KNOWN_MAX_PER_LENGTH = 10;
     protected long mCarsOnRoad = 0;
+    private long mKnownMax;
 
 
     public RoadRenderable(Road road) {
         super(road);
+        mKnownMax = mPlace.Length * ROAD_KNOWN_MAX_PER_LENGTH;
     }
 
 
@@ -46,8 +48,6 @@ public class RoadRenderable extends PlaceRenderable<Road> {
 
     @Override
     public void render(Graphics2D context, float cellSize) {
-        System.out.println("Cars in road: " + mPlace.getName() + "|" + mCarsOnRoad);
-
         float realStartX = getRealPositionX(cellSize);
         float realStartY = getRealPositionY(cellSize);
         float realEndX = getCanvasPosition(mPlace.getBCoordX(), cellSize);
@@ -58,10 +58,24 @@ public class RoadRenderable extends PlaceRenderable<Road> {
         path2D.lineTo(realEndX, realEndY);
 
         context.setStroke(new BasicStroke(cellSize / 4));
-        context.setPaint(calculateGradient(mCarsOnRoad, mPlace.Length * ROAD_KNOWN_MAX_PER_LENGTH));
+        context.setPaint(calculateGradient(mCarsOnRoad, mKnownMax));
         context.draw(path2D);
 
+
+        debugText(context, realStartX, realStartY, realEndX, realEndY);
+
         mCarsOnRoad = 0;    // TODO must be proper way
+    }
+
+
+    private void debugText(Graphics2D context, float realStartX, float realStartY, float realEndX, float realEndY) {
+        FontMetrics fm = context.getFontMetrics();
+        String text = mCarsOnRoad + "/" + mKnownMax;
+        float x = realStartX + (realEndX - fm.stringWidth(text) - realStartX) / 2;
+        float y = realStartY + (realEndY - realStartY) / 2;
+
+        context.setPaint(Color.BLACK);
+        context.drawString(text, x, y);
     }
 
 
