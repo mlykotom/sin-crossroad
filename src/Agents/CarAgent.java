@@ -124,8 +124,9 @@ public class CarAgent extends StatefulAgent {
     public CarStatus getCurrentState() {
         return new Behaviours.state.CarStatus(
                 getName(),
-                _path.get(_currentRoadIdx),
-                sourcePlace, destinationPlace,
+                _path,
+                _currentRoadIdx,
+                _origin,
                 timestampStart, timestampEnd
         );
     }
