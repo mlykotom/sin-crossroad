@@ -10,15 +10,13 @@ import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import model.BaseWorld;
-import model.WorldOne;
+import model.WorldSimple;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 
 public class WorldAgent extends Agent {
-    public static final int MIN_SPAWN_CAR_INTERVAL_MILLIS = 1000;
-    public static final int MAX_SPAWN_CAR_INTERVAL_MILLIS = 10000;
     public static final long WORLD_UPDATE_PERIOD_MILLIS = 500;  // TODO parametrized
     private static Logger sLogger = Logger.getMyLogger(WorldAgent.class.getSimpleName());
 
@@ -34,7 +32,7 @@ public class WorldAgent extends Agent {
 
     @Override
     protected void setup() {
-        mWorld = new WorldOne();
+        mWorld = new WorldSimple(); //WorldOne();
         mContainerController = getContainerController();
         sLogger.log(Level.INFO, "Creating " + mWorld.name);
         mMainGui = MainGui.runGUI(this);
@@ -78,7 +76,7 @@ public class WorldAgent extends Agent {
 
     private void setupSpawnPoints() {
         mWorld.SpawnPoints.forEach((uuid, spawnPoint) -> {
-            addBehaviour(new SpawnCarBehavior(this, spawnPoint, MIN_SPAWN_CAR_INTERVAL_MILLIS, MAX_SPAWN_CAR_INTERVAL_MILLIS));
+            addBehaviour(new SpawnCarBehavior(this, spawnPoint));
             mSpawnPointsCount++;
         });
     }

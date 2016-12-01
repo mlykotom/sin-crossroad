@@ -25,17 +25,15 @@ public class SpawnCarBehavior extends TickerBehaviour {
 
 
     /**
-     * @param a             Agent running this behaviour.
-     * @param s             Spawn point from which the cars will originate.
-     * @param minSpawnDelay Minimum time to wait before spawning next car (in ms).
-     * @param maxSpawnDelay Maximum time to wait before spawning next car (in ms).
+     * @param a Agent running this behaviour.
+     * @param s Spawn point from which the cars will originate.
      */
-    public SpawnCarBehavior(WorldAgent a, SpawnPoint s, int minSpawnDelay, int maxSpawnDelay) {
+    public SpawnCarBehavior(WorldAgent a, SpawnPoint s) {
         super(a, Integer.MAX_VALUE);
         mRandom = new Random();
         mSpawnPoint = s;
-        mMinSpawnDelay = minSpawnDelay;
-        mMaxSpawnDelay = maxSpawnDelay;
+        mMinSpawnDelay = s.getMinSpawnDelay();
+        mMaxSpawnDelay = s.getMaxSpawnDelay();
 
         planNextSpawn();
     }
