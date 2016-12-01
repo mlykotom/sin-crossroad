@@ -23,4 +23,10 @@ public class WorldSimple extends BaseWorld {
 //        setupCrossRoads(crossroad);
         setupRoads(roadA);
     }
+
+
+    @Override
+    public int getGridSize() {
+        return 3;
+    }
 }

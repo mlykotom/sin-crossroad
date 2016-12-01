@@ -27,7 +27,7 @@ public class WorldMapCanvas extends JPanel {
 
     public WorldMapCanvas(BaseWorld world, ConcurrentHashMap<String, AgentStatus> worldStatus) {
         mCanvasSize = 500;
-        mGridSize = 5 + FIXES_OUT_OF_CANVAS; // TODO get from world
+        mGridSize = world.getGridSize() + FIXES_OUT_OF_CANVAS;
         mWorld = world;
         mWorldStatus = worldStatus;
 

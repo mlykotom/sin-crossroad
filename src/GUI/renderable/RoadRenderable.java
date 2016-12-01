@@ -60,6 +60,8 @@ public class RoadRenderable extends PlaceRenderable<Road> {
         float realEndX = getCanvasPosition(mPlace.getBCoordX(), cellSize);
         float realEndY = getCanvasPosition(mPlace.getBCoordY(), cellSize);
 
+        float roadOffsetMargin = cellSize / 10;
+
         Path2D wayThere = new Path2D.Float();
         Path2D wayBack = new Path2D.Float();
 
@@ -68,7 +70,7 @@ public class RoadRenderable extends PlaceRenderable<Road> {
 
         // vertical road
         if (realStartY == realEndY) {
-            float laneOffset = LANE_OFFSET_TO_ITSELF * Math.signum(realEndX - realStartX);
+            float laneOffset = roadOffsetMargin * Math.signum(realEndX - realStartX);
             wayThereXStart = realStartX;
             wayThereXEnd = realEndX;
             wayThereYStart = realStartY + laneOffset;
@@ -79,7 +81,7 @@ public class RoadRenderable extends PlaceRenderable<Road> {
             wayBackYStart = realStartY - laneOffset;
             wayBackYEnd = realEndY - laneOffset;
         } else {
-            float laneOffset = LANE_OFFSET_TO_ITSELF * Math.signum(realEndY - realStartY);
+            float laneOffset = roadOffsetMargin * Math.signum(realEndY - realStartY);
 
             wayThereXStart = realStartX - laneOffset;
             wayThereXEnd = realEndX - laneOffset;

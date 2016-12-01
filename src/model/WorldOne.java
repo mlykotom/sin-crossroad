@@ -33,4 +33,10 @@ public class WorldOne extends BaseWorld {
         setupCrossRoads(crossroad);
         setupRoads(roadA, roadB, roadC, roadD);
     }
+
+
+    @Override
+    public int getGridSize() {
+        return 4;
+    }
 }
