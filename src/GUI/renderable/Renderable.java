@@ -2,7 +2,6 @@ package GUI.renderable;
 
 import GUI.WorldMapCanvas;
 import com.sun.istack.internal.Nullable;
-import status.CarStatus;
 
 import java.awt.*;
 

@@ -1,15 +1,21 @@
 package Agents;
 
-import Behaviours.Car.CarStatusBehaviour;
 import Behaviours.Car.CrossBehaviour;
 import Behaviours.Car.DriveBehaviour;
-import status.CarStatus;
+import Behaviours.state.AgentStatus;
+import Behaviours.state.CarStatus;
+import Behaviours.state.ReportStateBehaviour;
+import Behaviours.state.StatefulAgent;
+import Behaviours.world.WorldSimulationBehavior;
 import Map.CrossRoad;
 import Map.Place;
 import Map.Road;
-import jade.core.Agent;
+import jade.core.AID;
+import jade.core.behaviours.OneShotBehaviour;
+import jade.lang.acl.ACLMessage;
 import jade.util.Logger;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -17,7 +23,7 @@ import java.util.logging.Level;
 /**
  * Created by adamj on 22.11.2016.
  */
-public class CarAgent extends Agent {
+public class CarAgent extends StatefulAgent {
     public static final String CAR_NAME_PREFIX = "Car ";
     public Logger myLogger = Logger.getMyLogger(getClass().getName());
 
@@ -48,8 +54,7 @@ public class CarAgent extends Agent {
         myLogger.log(Level.INFO, getLocalName() + " driving");
 
         addBehaviour(new DriveBehaviour(this));
-        addBehaviour(new CarStatusBehaviour(this));
-
+        addBehaviour(new ReportStateBehaviour(this));   // TODO put to base (didnt work o_O)
         //TODO: Model changed, car will receive full path
         //TODO: Use road.nextPlace with origin to navigate to next place
 //        if (args.length < 2) {
@@ -85,6 +90,10 @@ public class CarAgent extends Agent {
 
     public void delete() {
         myLogger.log(Level.INFO, getLocalName() + " arrived");
+        ACLMessage msg = new ACLMessage(ACLMessage.PROPAGATE);
+        msg.setConversationId(WorldSimulationBehavior.CONVERSATION_GET_AGENT_CURRENT_STATE);
+        msg.addReceiver(WorldAgent.sWorldAgentAID);
+        send(msg);
         doDelete();
     }
 
@@ -102,7 +111,7 @@ public class CarAgent extends Agent {
         myLogger.log(Level.INFO, "CrossRoad arrived!");
 
         addBehaviour(new CrossBehaviour(this, crossRoad,
-                _path.get(_currentRoadIdx), _path.get(_currentRoadIdx+1)));
+                _path.get(_currentRoadIdx), _path.get(_currentRoadIdx + 1)));
     }
 
 
@@ -111,14 +120,14 @@ public class CarAgent extends Agent {
     }
 
 
-    public CarStatus getStatus() {
-        return new CarStatus(
+    @Override
+    public CarStatus getCurrentState() {
+        return new Behaviours.state.CarStatus(
                 getName(),
-                sourcePlace,
-                destinationPlace,
-                timestampStart,
-                timestampEnd,
-                (_currentRoadIdx - 1) >= 0 ? _path.get(_currentRoadIdx - 1) : null,
-                _path.get(_currentRoadIdx));
+                _path,
+                _currentRoadIdx,
+                _origin,
+                timestampStart, timestampEnd
+        );
     }
 }

@@ -2,28 +2,31 @@ package Behaviours.world;
 
 import Agents.CarAgent;
 import Agents.WorldAgent;
-import jade.core.behaviours.CyclicBehaviour;
-import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
-import status.CarStatus;
+import Behaviours.state.AgentStatus;
 import jade.core.AID;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.domain.AMSService;
 import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
+import jade.util.Logger;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 
 public class WorldSimulationBehavior extends TickerBehaviour {
-    public static final String CONVERSATION_GET_CAR_STATUS = "conversation_get_car_status";
+    private static Logger sLogger = Logger.getMyLogger(WorldSimulationBehavior.class.getSimpleName());
+    public static final String CONVERSATION_GET_AGENT_CURRENT_STATE = "conversation_get_car_status";
     private final WorldAgent mWorldAgent;
     private SearchConstraints mSearchConstraints = new SearchConstraints();
     private Date mSimulationStart;
+
 
     public WorldSimulationBehavior(WorldAgent a, long period) {
         super(a, period);
@@ -49,14 +52,19 @@ public class WorldSimulationBehavior extends TickerBehaviour {
         mWorldAgent.addBehaviour(new CyclicBehaviour() {
             @Override
             public void action() {
-                MessageTemplate mt = MessageTemplate.MatchConversationId(CONVERSATION_GET_CAR_STATUS);
+                MessageTemplate mt = MessageTemplate.MatchConversationId(CONVERSATION_GET_AGENT_CURRENT_STATE);
                 ACLMessage msg = myAgent.receive(mt);
                 if (msg == null) return;
 
+                if (msg.getPerformative() == ACLMessage.PROPAGATE) {
+                    mWorldAgent.worldStatus.remove(msg.getSender().getName());
+                    sLogger.log(Level.INFO, "deleting agent " + msg.getSender().getLocalName());
+                    return;
+                }
+
                 try {
-                    CarStatus status = (CarStatus) msg.getContentObject();
-//                    mCarAgentStatus.put(status.name, status);
-                    mWorldAgent.updateStatus(status);
+                    AgentStatus status = (AgentStatus) msg.getContentObject();
+                    mWorldAgent.worldStatus.put(status.getAgentId(), status);
                 } catch (UnreadableException e) {
                     e.printStackTrace();
                 }
@@ -67,7 +75,7 @@ public class WorldSimulationBehavior extends TickerBehaviour {
 
     private void requestCarStatus() {
         ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
-        request.setConversationId(CONVERSATION_GET_CAR_STATUS);
+        request.setConversationId(CONVERSATION_GET_AGENT_CURRENT_STATE);
 
         try {
             Arrays.stream(AMSService.search(mWorldAgent, new AMSAgentDescription(), mSearchConstraints))

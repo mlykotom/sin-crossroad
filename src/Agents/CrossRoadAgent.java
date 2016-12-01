@@ -2,9 +2,14 @@ package Agents;
 
 
 import Behaviours.CrossRoad.*;
+import Behaviours.state.AgentStatus;
+import Behaviours.state.CrossRoadStatus;
+import Behaviours.state.ReportStateBehaviour;
+import Behaviours.state.StatefulAgent;
 import Common.CarInCrossRoad;
 import Common.DirectionType;
 import Map.CrossRoad;
+import Map.CrossRoadPlus;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.util.Logger;
@@ -17,23 +22,26 @@ import java.util.List;
 /**
  * Created by raven on 23.11.2016.
  */
-public class CrossRoadAgent extends Agent {
+public class CrossRoadAgent extends StatefulAgent {
     public Logger myLogger = Logger.getMyLogger(getClass().getName());
     private CrossRoad _crossRoad;
+
 
     @Override
     protected void setup() {
         Object[] args = getArguments();
-        _crossRoad = (CrossRoad)args[0];
+        _crossRoad = (CrossRoad) args[0];
         addBehaviour(new ControlBehaviour(this, 20)); //TODO: Parametrize cycle duration?
         addBehaviour(new SemaphoreBehaviour(this));
         addBehaviour(new StartPassingBehaviour(this));
         addBehaviour(new EndPassingBehaviour(this));
         addBehaviour(new CrossRoadStateBehaviour(this));
         addBehaviour(new QueueBehaviour(this));
+        addBehaviour(new ReportStateBehaviour(this));
 
         CarsWaitingForSemaphoreChange = new LinkedList<>();
     }
+
 
     public List<AID> CarsWaitingForSemaphoreChange;
 
@@ -65,25 +73,31 @@ public class CrossRoadAgent extends Agent {
 
     public List<CarInCrossRoad> CarsIn = new LinkedList<>();
 
-    public List<String> resolveExit(int exitId, DirectionType direction)
-    {
-        if(exitId == 0)
+
+    public List<String> resolveExit(int exitId, DirectionType direction) {
+        if (exitId == 0)
             return direction == DirectionType.Left ? CarsExitALeft : CarsExitA;
-        else if(exitId == 1)
+        else if (exitId == 1)
             return direction == DirectionType.Left ? CarsExitBLeft : CarsExitB;
-        else if(exitId == 2)
+        else if (exitId == 2)
             return direction == DirectionType.Left ? CarsExitCLeft : CarsExitC;
         else
             return direction == DirectionType.Left ? CarsExitDLeft : CarsExitD;
     }
 
-    public Semaphore getSemaphore(int exitId, DirectionType direction)
-    {
+
+    public Semaphore getSemaphore(int exitId, DirectionType direction) {
         return _crossRoad.resolveSemaphore(exitId, direction);
     }
 
-    public void turnAllSemaphoresRed()
-    {
+
+    public void turnAllSemaphoresRed() {
         _crossRoad.turnAllSemaphoresRed();
+    }
+
+
+    @Override
+    public CrossRoadStatus getCurrentState() {
+        return new CrossRoadStatus(getName(), _crossRoad);
     }
 }

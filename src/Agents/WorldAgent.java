@@ -1,43 +1,40 @@
 package Agents;
 
+import Behaviours.state.AgentStatus;
 import Behaviours.world.SpawnCarBehavior;
 import Behaviours.world.WorldSimulationBehavior;
 import GUI.MainGui;
-import Map.*;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.util.Logger;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-import model.BaseWorld;
-import model.WorldOne;
-import org.apache.commons.lang3.time.DateUtils;
-import status.CarStatus;
+import model.*;
 
-import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 
 public class WorldAgent extends Agent {
-    public static final int MIN_SPAWN_CAR_INTERVAL_MILLIS =  1000;
-    public static final int MAX_SPAWN_CAR_INTERVAL_MILLIS =  10000;
+    public static AID sWorldAgentAID;//TODO not immutable, not good, change!
     public static final long WORLD_UPDATE_PERIOD_MILLIS = 500;  // TODO parametrized
     private static Logger sLogger = Logger.getMyLogger(WorldAgent.class.getSimpleName());
 
     private BaseWorld mWorld;
-    private List<AgentController> mCarAgents;
     private int mCrossRoadsAgentsCount = 0;
     private int mCarAgentsCount = 0;
     private int mSpawnPointsCount = 0;
     private MainGui mMainGui;
 
     private ContainerController mContainerController;
+    public final ConcurrentHashMap<String, AgentStatus> worldStatus = new ConcurrentHashMap<>();
 
 
     @Override
     protected void setup() {
-        mWorld = new WorldOne();
+        sWorldAgentAID = getAID();
+        mWorld = new WorldOne();//WorldSimple()
         mContainerController = getContainerController();
         sLogger.log(Level.INFO, "Creating " + mWorld.name);
         mMainGui = MainGui.runGUI(this);
@@ -56,16 +53,16 @@ public class WorldAgent extends Agent {
 
 
     private void setupCrossRoads() {
-        for (CrossRoad crossRoad : mWorld.CrossRoads) {
+        mWorld.CrossRoads.forEach((uuid, crossRoad) -> {
             try {
                 Object[] args = {crossRoad};
                 AgentController cont = mContainerController.createNewAgent(crossRoad.getName(), CrossRoadAgent.class.getName(), args);
-                mCrossRoadsAgentsCount++;
                 cont.start();
+                mCrossRoadsAgentsCount++;
             } catch (StaleProxyException e) {
                 e.printStackTrace();
             }
-        }
+        });
     }
 
 
@@ -80,9 +77,8 @@ public class WorldAgent extends Agent {
 
 
     private void setupSpawnPoints() {
-        mWorld.SpawnPoints.forEach(spawnPoint -> {
-            addBehaviour(new SpawnCarBehavior(this, spawnPoint,
-                    MIN_SPAWN_CAR_INTERVAL_MILLIS, MAX_SPAWN_CAR_INTERVAL_MILLIS));
+        mWorld.SpawnPoints.forEach((uuid, spawnPoint) -> {
+            addBehaviour(new SpawnCarBehavior(this, spawnPoint));
             mSpawnPointsCount++;
         });
     }
@@ -93,14 +89,5 @@ public class WorldAgent extends Agent {
      */
     public void updateWorld(long ellapsedTime) {
         mMainGui.update(ellapsedTime);
-    }
-
-
-    /**
-     * Extend for any status
-     * @param status
-     */
-    public void updateStatus(CarStatus status) {
-        mMainGui.updateStatus(status);
     }
 }
