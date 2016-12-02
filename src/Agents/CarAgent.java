@@ -20,7 +20,7 @@ import java.util.logging.Level;
  * Created by adamj on 22.11.2016.
  */
 public class CarAgent extends Agent {
-    public static final String CAR_NAME_PREFIX = "Car ";
+    public static final String CAR_NAME_PREFIX = "Car::";
     public Logger myLogger = Logger.getMyLogger(getClass().getName());
 
     private long timestampStart = 0;

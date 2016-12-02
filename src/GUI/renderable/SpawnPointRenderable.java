@@ -33,6 +33,6 @@ public class SpawnPointRenderable extends PlaceRenderable<SpawnPoint> {
                 getHeight(cellSize)
         );
 
-        drawShape(g2D, ellipse2D, Color.RED);
+        drawShape(g2D, ellipse2D, Color.BLUE);
     }
 }

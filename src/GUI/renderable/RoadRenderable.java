@@ -113,6 +113,7 @@ public class RoadRenderable extends PlaceRenderable<Road> {
 
 
     private void drawNumber(Graphics2D context, long numberOfCars, float realStartX, float realStartY, float realEndX, float realEndY) {
+        context.setFont(mDebugFont);
         FontMetrics fm = context.getFontMetrics();
 
         String text = String.valueOf(numberOfCars);
@@ -120,19 +121,6 @@ public class RoadRenderable extends PlaceRenderable<Road> {
         float x = realStartX + (realEndX - fm.stringWidth(text) - realStartX) / 2;
         float y = realStartY + (realEndY + fm.getHeight() / 2 - realStartY) / 2;
 
-        context.setFont(mDebugFont);
-        context.setPaint(Color.BLACK);
-        context.drawString(text, x, y);
-    }
-
-
-    private void debugText(Graphics2D context, float realStartX, float realStartY, float realEndX, float realEndY) {
-        FontMetrics fm = context.getFontMetrics();
-        String text = mCarsOnRoadThere + "," + mCarsOnRoadBack;
-        float x = realStartX + (realEndX - fm.stringWidth(text) - realStartX) / 2;
-        float y = realStartY + (realEndY + fm.getHeight() / 2 - realStartY) / 2;
-
-        context.setFont(mDebugFont);
         context.setPaint(Color.BLACK);
         context.drawString(text, x, y);
     }

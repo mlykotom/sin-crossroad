@@ -12,6 +12,4 @@ public abstract class StatefulAgent extends Agent {
         super.setup();
         addBehaviour(new ReportStateBehaviour(this));
     }
-
-
 }

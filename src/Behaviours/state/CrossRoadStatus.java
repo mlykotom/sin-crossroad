@@ -4,6 +4,8 @@ import Common.DirectionType;
 import Map.CrossRoadPlus;
 
 import java.util.ArrayList;
+import java.util.UUID;
+
 
 public class CrossRoadStatus extends AgentStatus {
     // Lanes Structure
@@ -16,14 +18,15 @@ public class CrossRoadStatus extends AgentStatus {
     // ExitId: 3 - Straight
     // ExitId: 3 - Left
     public ArrayList<LaneState> lanes;
+    public final UUID crossroadId;
 
 
     public CrossRoadStatus(String agentId, CrossRoadPlus crossRoad) {
         super(agentId);
-
+        crossroadId = crossRoad.getId();
         lanes = new ArrayList<LaneState>(8);
 
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             LaneState lane = new LaneState();
             lane.carsCount = crossRoad.resolveExit(i, DirectionType.Straight).size();
             lane.semaphore = crossRoad.resolveSemaphore(i, DirectionType.Straight);

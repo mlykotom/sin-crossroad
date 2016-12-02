@@ -57,13 +57,16 @@ public class CrossRoadAgent extends StatefulAgent {
     public static final String PASSING_CROSSROAD_INFORM = "passing_crossroad_inform";
     public static final String PASSED_CROSSROAD_INFORM = "passed_crossroad_inform";
 
+
     public List<String> resolveExit(int exitId, DirectionType direction) {
         return _crossRoad.resolveExit(exitId, direction);
     }
 
+
     public List<CarInCrossRoad> getCarsIn() {
         return _crossRoad.CarsIn;
     }
+
 
     public Semaphore getSemaphore(int exitId, DirectionType direction) {
         return _crossRoad.resolveSemaphore(exitId, direction);

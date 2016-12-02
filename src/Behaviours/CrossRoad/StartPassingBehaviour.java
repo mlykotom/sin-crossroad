@@ -17,25 +17,26 @@ import jade.lang.acl.UnreadableException;
 import java.util.List;
 import java.util.logging.Level;
 
+
 /**
  * Created by adamj on 28.11.2016.
  */
-public class StartPassingBehaviour extends CyclicBehaviour
-{
+public class StartPassingBehaviour extends CyclicBehaviour {
     private final CrossRoadAgent _agent;
 
-    public StartPassingBehaviour(CrossRoadAgent agent)
-    {
+
+    public StartPassingBehaviour(CrossRoadAgent agent) {
         super(agent);
         _agent = agent;
     }
+
+
     @Override
     public void action() {
         MessageTemplate mt = MessageTemplate.MatchConversationId(CrossRoadAgent.PASSING_CROSSROAD_INFORM);
         ACLMessage msg = myAgent.receive(mt);
 
-        if(msg == null)
-        {
+        if (msg == null) {
             return;
         }
 
@@ -53,20 +54,18 @@ public class StartPassingBehaviour extends CyclicBehaviour
 
         exitQueue.remove(msg.getSender().getName());
 
-        if(!exitQueue.isEmpty())
-        {
+        if (!exitQueue.isEmpty()) {
             // Wake up second car after first in queue
             // ToDo Change constant to some parameter
             _agent.addBehaviour(new WakerBehaviour(_agent, 500) {
                 @Override
                 protected void onWake() {
                     super.onWake();
-                    if(!exitQueue.isEmpty())
-                    {
+                    if (!exitQueue.isEmpty()) {
                         String carAgent = exitQueue.get(0);
                         ACLMessage semaphoreMsg = new ACLMessage(ACLMessage.INFORM);
                         semaphoreMsg.setConversationId(CrossRoadAgent.FIRST_IN_QUEUE_RESPONSE);
-                        semaphoreMsg.addReceiver(new AID(carAgent));
+                        semaphoreMsg.addReceiver(new AID(carAgent, false));
                         myAgent.send(semaphoreMsg);
                     }
                 }

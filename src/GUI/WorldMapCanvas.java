@@ -86,7 +86,13 @@ public class WorldMapCanvas extends JPanel {
 
 
     public void setCarStatus(CarStatus status) {
-        RoadRenderable road = (RoadRenderable) mPlaces.get(status.currentRoad.getId());
+        RoadRenderable road = (RoadRenderable) mPlaces.get(status.currentRoadId);
         road.setCar(status);
+    }
+
+
+    public void setCrossRoadStatus(CrossRoadStatus status) {
+        CrossRoadRenderable crossRoad = (CrossRoadRenderable) mPlaces.get(status.crossroadId);
+        crossRoad.setStatus(status);
     }
 }

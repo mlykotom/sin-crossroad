@@ -97,7 +97,7 @@ public class WorldAgent extends Agent {
         if (agentStatus instanceof CarStatus) {
             mMainGui.getWorldMap().setCarStatus((CarStatus) agentStatus);
         } else if (agentStatus instanceof CrossRoadStatus) {
-            System.out.println("CrossRoad: " + ((CrossRoadStatus) agentStatus).crossRoad.getName());
+            mMainGui.getWorldMap().setCrossRoadStatus((CrossRoadStatus) agentStatus);
         }
     }
 }

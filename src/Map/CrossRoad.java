@@ -1,17 +1,22 @@
 package Map;
 
-import Agents.CarAgent;
 import Common.DirectionType;
 import model.Semaphore;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
 public abstract class CrossRoad extends Place {
+    public static final String CROSSROAD_NAME_PREFIX = "Crossroad::";
+
     protected List<Semaphore> mSemaphores = new ArrayList<>();
+
 
     public CrossRoad(String name, int coordX, int coordY) {
         super(name, coordX, coordY);
     }
+
 
     public abstract DirectionType resolveDirection(Road roadFrom, Road roadTo);
 
@@ -20,9 +25,15 @@ public abstract class CrossRoad extends Place {
     public abstract Semaphore resolveSemaphore(int exitId, DirectionType direction);
 
 
+    @Override
+    public String getName() {
+        String name = super.getName();
+        return CROSSROAD_NAME_PREFIX.concat(name);
+    }
+
+
     public void turnAllSemaphoresRed() {
-        for (Semaphore sem : mSemaphores)
-        {
+        for (Semaphore sem : mSemaphores) {
             sem.setLight(Semaphore.Light.Red);
         }
     }

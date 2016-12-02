@@ -29,7 +29,7 @@ public class CarStatus extends AgentStatus {
 
     public CarStatus(String agentId, Road currentRoad, Place sourcePlace, Place destinationPlace, long timestampStart, long timestampEnd, boolean isEntered) {
         super(agentId);
-        this.currentRoad = currentRoad;
+        this.currentRoadId = currentRoad.getId();
         this.sourcePlaceId = sourcePlace.getId();
         this.destinationPlaceId = destinationPlace.getId();
         this.timestampStart = timestampStart;
