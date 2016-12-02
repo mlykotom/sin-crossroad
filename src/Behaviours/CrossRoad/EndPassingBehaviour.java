@@ -54,7 +54,7 @@ public class EndPassingBehaviour extends CyclicBehaviour {
             }
 
             for (String receiver : carsToNotify) {
-                inform.addReceiver(new AID(receiver, false));
+                inform.addReceiver(new AID(receiver, true));
             }
             myAgent.send(inform);
         }
