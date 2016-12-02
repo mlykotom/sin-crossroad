@@ -41,7 +41,8 @@ public class CrossRoadRenderable extends PlaceRenderable<CrossRoad> {
         Rectangle2D innerCross = new Rectangle2D.Float(realX, realY, width, height);
         drawShape(g2D, innerCross, Color.DARK_GRAY);
 
-        drawAllSemaphores(g2D, realX, realY, width, height);
+        if(mStatus != null)
+            drawAllSemaphores(g2D, realX, realY, width, height);
     }
 
 

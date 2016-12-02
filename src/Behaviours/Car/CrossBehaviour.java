@@ -68,14 +68,17 @@ public class CrossBehaviour extends Behaviour
         ACLMessage queueResponse = myAgent.blockingReceive(mt);
 
         if(queueResponse.getPerformative() != ACLMessage.AGREE) {
-            _carAgent.myLogger.log(Level.WARNING, "wating in queueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+            _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + "wating in queueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 
             mt = MessageTemplate.MatchConversationId(CrossRoadAgent.FIRST_IN_QUEUE_RESPONSE);
             myAgent.blockingReceive(mt);
         }
-        _carAgent.myLogger.log(Level.WARNING, "First in queeeee");
+        _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " First in queeeee");
 
         while(true){
+
+            _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + "IN WHILEEEEEEEEEEEEEEEE LOOOOOOOOOOOOOOOOOOOOOOOOOOP");
+
             ACLMessage semaphoreMsg = new ACLMessage(ACLMessage.QUERY_IF);
             semaphoreMsg.setConversationId(CrossRoadAgent.SEMAPHORE_CONVERSATION_REQUEST);
             semaphoreMsg.addReceiver(_crossRoadReceiver);
@@ -137,7 +140,7 @@ public class CrossBehaviour extends Behaviour
             }
         }
 
-        _carAgent.myLogger.log(Level.WARNING, "Yuhuuuu Im driving thourg crossroad");
+        _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Yuhuuuu Im driving thourg crossroad");
 
 
         // Sending message that car is passing crossroad

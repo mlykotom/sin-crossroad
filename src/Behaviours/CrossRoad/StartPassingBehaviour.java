@@ -65,7 +65,7 @@ public class StartPassingBehaviour extends CyclicBehaviour {
                         String carAgent = exitQueue.get(0);
                         ACLMessage semaphoreMsg = new ACLMessage(ACLMessage.INFORM);
                         semaphoreMsg.setConversationId(CrossRoadAgent.FIRST_IN_QUEUE_RESPONSE);
-                        semaphoreMsg.addReceiver(new AID(carAgent, false));
+                        semaphoreMsg.addReceiver(new AID(carAgent, true));
                         myAgent.send(semaphoreMsg);
                     }
                 }

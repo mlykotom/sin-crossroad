@@ -33,7 +33,6 @@ public class ReportStateBehaviour extends CyclicBehaviour {
             ACLMessage reply = msg.createReply();
             reply.setPerformative(ACLMessage.INFORM);
             reply.setConversationId(WorldSimulationBehavior.CONVERSATION_GET_AGENT_CURRENT_STATE);
-            Serializable test = mStatefulAgent.getCurrentState();
             reply.setContentObject(mStatefulAgent.getCurrentState());
             myAgent.send(reply);
         } catch (IOException e) {
