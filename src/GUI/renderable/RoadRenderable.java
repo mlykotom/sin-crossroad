@@ -107,22 +107,8 @@ public class RoadRenderable extends PlaceRenderable<Road> {
         context.setPaint(calculateGradient(mCarsOnRoadBack, mKnownMax));
         context.draw(wayBack);
 
-        drawNumber(context, mCarsOnRoadThere, wayThereXStart, wayThereYStart, wayThereXEnd, wayThereYEnd);
-        drawNumber(context, mCarsOnRoadBack, wayBackXStart, wayBackYStart, wayBackXEnd, wayBackYEnd);
-    }
-
-
-    private void drawNumber(Graphics2D context, long numberOfCars, float realStartX, float realStartY, float realEndX, float realEndY) {
-        context.setFont(mDebugFont);
-        FontMetrics fm = context.getFontMetrics();
-
-        String text = String.valueOf(numberOfCars);
-
-        float x = realStartX + (realEndX - fm.stringWidth(text) - realStartX) / 2;
-        float y = realStartY + (realEndY + fm.getHeight() / 2 - realStartY) / 2;
-
-        context.setPaint(Color.BLACK);
-        context.drawString(text, x, y);
+        drawNumber(context, Color.BLACK, mCarsOnRoadThere, wayThereXStart, wayThereYStart, wayThereXEnd, wayThereYEnd);
+        drawNumber(context, Color.BLACK, mCarsOnRoadBack, wayBackXStart, wayBackYStart, wayBackXEnd, wayBackYEnd);
     }
 
 

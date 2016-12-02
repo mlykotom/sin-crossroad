@@ -12,11 +12,11 @@ import java.util.List;
 /**
  * Created by raven on 23.11.2016.
  * Crossroad of following shape:
- * | D3 |
+ *   | D3 |
  * --      --
  * A0      C2
  * --      --
- * | B1 |
+ *   | B1 |
  * <p>
  * Each exit (road) has 2 directions (to and from)
  * and each direction has 2 lanes. The left lane
