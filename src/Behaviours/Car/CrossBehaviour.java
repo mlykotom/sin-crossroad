@@ -68,7 +68,7 @@ public class CrossBehaviour extends Behaviour
         ACLMessage queueResponse = myAgent.blockingReceive(mt);
 
         if(queueResponse.getPerformative() != ACLMessage.AGREE) {
-            _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + "wating in queueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+            _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " wating in queueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 
             mt = MessageTemplate.MatchConversationId(CrossRoadAgent.FIRST_IN_QUEUE_RESPONSE);
             myAgent.blockingReceive(mt);
@@ -76,9 +76,6 @@ public class CrossBehaviour extends Behaviour
         _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " First in queeeee");
 
         while(true){
-
-            _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + "IN WHILEEEEEEEEEEEEEEEE LOOOOOOOOOOOOOOOOOOOOOOOOOOP");
-
             ACLMessage semaphoreMsg = new ACLMessage(ACLMessage.QUERY_IF);
             semaphoreMsg.setConversationId(CrossRoadAgent.SEMAPHORE_CONVERSATION_REQUEST);
             semaphoreMsg.addReceiver(_crossRoadReceiver);
@@ -96,7 +93,7 @@ public class CrossBehaviour extends Behaviour
             int carCanGo = received.getPerformative();
             if(carCanGo != ACLMessage.AGREE)
             {
-                _carAgent.myLogger.log(Level.WARNING, "wating for GREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN");
+                _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " wating for GREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN");
 
                 // Wait For Receiving message to go
                 mt = MessageTemplate.MatchConversationId(CrossRoadAgent.SEMAPHORE_CHANGED);
@@ -122,20 +119,20 @@ public class CrossBehaviour extends Behaviour
                 received = myAgent.blockingReceive(mt);
                 if(received.getPerformative() == ACLMessage.AGREE)
                 {
-                    _carAgent.myLogger.log(Level.WARNING, "LEAAAVING TURNING LEEEEEEEEEEEFT");
+                    _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " LEAAAVING TURNING LEEEEEEEEEEEFT");
                     break;
                 }
 
-                _carAgent.myLogger.log(Level.WARNING, "Beeing blocked and trying to turn left. BLOOOOOOOOOOOOOOOOCKEEEEEEEEEEEEEEDDDDDDDDDDDDDDDDDD");
+                _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Beeing blocked and trying to turn left. BLOOOOOOOOOOOOOOOOCKEEEEEEEEEEEEEEDDDDDDDDDDDDDDDDDD");
 
                 mt = MessageTemplate.MatchConversationId(CrossRoadAgent.STATE_IN_CROSSROAD_CHANGED);
                 myAgent.blockingReceive(mt);
 
-                _carAgent.myLogger.log(Level.WARNING, "Igot unblocked: maybe");
+                _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Igot unblocked: maybe");
             }
             else
             {
-                _carAgent.myLogger.log(Level.WARNING, "Leaving this shitTTTTTTTTTTTTT");
+                _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Leaving this shitTTTTTTTTTTTTT");
                 break;
             }
         }
