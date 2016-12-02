@@ -2,16 +2,12 @@ package Agents;
 
 import Behaviours.Car.CrossBehaviour;
 import Behaviours.Car.DriveBehaviour;
-import Behaviours.state.AgentStatus;
 import Behaviours.state.CarStatus;
-import Behaviours.state.ReportStateBehaviour;
-import Behaviours.state.StatefulAgent;
 import Behaviours.world.WorldSimulationBehavior;
 import Map.CrossRoad;
 import Map.Place;
 import Map.Road;
-import jade.core.AID;
-import jade.core.behaviours.OneShotBehaviour;
+import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import jade.util.Logger;
 
@@ -23,12 +19,10 @@ import java.util.logging.Level;
 /**
  * Created by adamj on 22.11.2016.
  */
-public class CarAgent extends StatefulAgent {
-    public static final String CAR_NAME_PREFIX = "Car ";
+public class CarAgent extends Agent {
+    public static final String CAR_NAME_PREFIX = "Car::";
     public Logger myLogger = Logger.getMyLogger(getClass().getName());
 
-    private Place sourcePlace;
-    private Place destinationPlace;
     private long timestampStart = 0;
     private long timestampEnd = 0;
     private List<Road> _path;
@@ -37,39 +31,21 @@ public class CarAgent extends StatefulAgent {
 
 
     public static String getAgentName(int id) {
-
         return String.format("%s%d", CAR_NAME_PREFIX, id);
-
     }
 
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void setup() {
+        super.setup();
         Object args[] = getArguments();
 
         timestampStart = System.currentTimeMillis();
-
         _origin = (Place) args[0];
         _path = (List<Road>) args[1];
-        myLogger.log(Level.INFO, getLocalName() + " driving");
 
         addBehaviour(new DriveBehaviour(this));
-        addBehaviour(new ReportStateBehaviour(this));   // TODO put to base (didnt work o_O)
-        //TODO: Model changed, car will receive full path
-        //TODO: Use road.nextPlace with origin to navigate to next place
-//        if (args.length < 2) {
-//            System.err.println("Unexpected arguments for CarAgent. Call with <src> <dst>");
-//            doDelete();
-//        }
-//
-//
-//        if(!(args[0] instanceof Place) || !(args[1] instanceof Place)) {
-//            System.err.println("Malformed arguments for CarAgent.");
-//            doDelete();
-//        }
-//
-//        sourcePlace = (Place) args[0];
-//        destinationPlace = (Place) args[1];
     }
 
 
@@ -90,11 +66,20 @@ public class CarAgent extends StatefulAgent {
 
     public void delete() {
         myLogger.log(Level.INFO, getLocalName() + " arrived");
+//        reportRoad(false);
+        doDelete();
+    }
+
+
+    /**
+     * @deprecated
+     */
+    private void sendDeleteMsg() {
+        // send ending status to world about end
         ACLMessage msg = new ACLMessage(ACLMessage.PROPAGATE);
         msg.setConversationId(WorldSimulationBehavior.CONVERSATION_GET_AGENT_CURRENT_STATE);
         msg.addReceiver(WorldAgent.sWorldAgentAID);
         send(msg);
-        doDelete();
     }
 
 
@@ -120,14 +105,17 @@ public class CarAgent extends StatefulAgent {
     }
 
 
-    @Override
-    public CarStatus getCurrentState() {
-        return new Behaviours.state.CarStatus(
-                getName(),
-                _path,
-                _currentRoadIdx,
-                _origin,
-                timestampStart, timestampEnd
-        );
+    public void reportRoad(boolean enteredRoad) {
+        try {
+            CarStatus carStatus = new CarStatus(getName(), _path, _currentRoadIdx, _origin, enteredRoad, timestampStart, timestampEnd);
+
+            ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+            msg.setConversationId(WorldSimulationBehavior.CONVERSATION_GET_AGENT_CURRENT_STATE);
+            msg.addReceiver(WorldAgent.sWorldAgentAID);
+            msg.setContentObject(carStatus);
+            send(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

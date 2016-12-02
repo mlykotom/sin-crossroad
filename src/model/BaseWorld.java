@@ -15,6 +15,9 @@ public abstract class BaseWorld {
     public final String name;
 
 
+    public abstract int getGridSize();
+
+
     public BaseWorld(String name) {
         this.name = name;
     }

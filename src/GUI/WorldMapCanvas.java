@@ -27,7 +27,7 @@ public class WorldMapCanvas extends JPanel {
 
     public WorldMapCanvas(BaseWorld world, ConcurrentHashMap<String, AgentStatus> worldStatus) {
         mCanvasSize = 500;
-        mGridSize = 5 + FIXES_OUT_OF_CANVAS; // TODO get from world
+        mGridSize = world.getGridSize() + FIXES_OUT_OF_CANVAS;
         mWorld = world;
         mWorldStatus = worldStatus;
 
@@ -65,7 +65,7 @@ public class WorldMapCanvas extends JPanel {
         super.paint(g);
         Graphics2D context = setupCanvas(g);
         // render
-        parseWorldState();
+//        parseWorldState();
         mPlaces.forEach((uuid, renderable) -> renderable.render(context, mCellSize));
         mGrid.render(context, mCellSize);
     }
@@ -77,7 +77,7 @@ public class WorldMapCanvas extends JPanel {
                 CarStatus carStatus = ((CarStatus) agentStatus);
                 UUID roadId = carStatus.currentRoadId;
                 RoadRenderable road = (RoadRenderable) mPlaces.get(roadId);
-                road.addCar(carStatus.nextPlaceId);
+//                road.addCar(carStatus.sourcePlaceId);
             } else if (agentStatus instanceof CrossRoadStatus) {
                 System.out.println("CrossRoad: " + ((CrossRoadStatus) agentStatus).getAgentId());
             }
@@ -85,12 +85,14 @@ public class WorldMapCanvas extends JPanel {
     }
 
 
-//    public void setStatusNew(CarStatus status) {
-//        RoadRenderable road = (RoadRenderable) mPlaces.get(status.currentRoad.getId());
-//        road.addCar();
-//        if (status.previousRoad != null) {
-//            RoadRenderable roadPrev = (RoadRenderable) mPlaces.get(status.previousRoad.getId());
-//            roadPrev.removeCar();
-//        }
-//    }
+    public void setCarStatus(CarStatus status) {
+        RoadRenderable road = (RoadRenderable) mPlaces.get(status.currentRoadId);
+        road.setCar(status);
+    }
+
+
+    public void setCrossRoadStatus(CrossRoadStatus status) {
+        CrossRoadRenderable crossRoad = (CrossRoadRenderable) mPlaces.get(status.crossroadId);
+        crossRoad.setStatus(status);
+    }
 }

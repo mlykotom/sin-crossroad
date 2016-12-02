@@ -66,7 +66,10 @@ public class SpawnCarBehavior extends TickerBehaviour {
 
 
     private void planNextSpawn() {
-        int randomDelay = mRandom.nextInt(mMaxSpawnDelay - mMinSpawnDelay) + mMinSpawnDelay;
+        int range = mMaxSpawnDelay - mMinSpawnDelay;
+        int randomDelay = mMinSpawnDelay;
+        if (range > 0) randomDelay += mRandom.nextInt(range);
+
         reset(randomDelay);
     }
 

@@ -11,9 +11,9 @@ import java.util.stream.Stream;
 public class WorldOne extends BaseWorld {
     public WorldOne() {
         super("WorldOne");
-        SpawnPoint spawnA = new SpawnPoint("SpawnA", 1, 0);
-        SpawnPoint spawnB = new SpawnPoint("SpawnB", 0, 1);
-        SpawnPoint spawnC = new SpawnPoint("SpawnC", 1, 3);
+        SpawnPoint spawnA = new SpawnPoint("SpawnA", 1, 0,1000000,1000000);
+        SpawnPoint spawnB = new SpawnPoint("SpawnB", 0, 1,1000000,1000000);
+        SpawnPoint spawnC = new SpawnPoint("SpawnC", 1, 3,1000000,1000000);
         SpawnPoint spawnD = new SpawnPoint("SpawnD", 2, 1);
 
         CrossRoadPlus crossroad = new CrossRoadPlus("MainCrossroad", 1, 1);
@@ -32,5 +32,11 @@ public class WorldOne extends BaseWorld {
         setupSpawnPoints(spawnA, spawnB, spawnC, spawnD);
         setupCrossRoads(crossroad);
         setupRoads(roadA, roadB, roadC, roadD);
+    }
+
+
+    @Override
+    public int getGridSize() {
+        return 4;
     }
 }

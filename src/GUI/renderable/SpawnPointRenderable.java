@@ -14,7 +14,7 @@ public class SpawnPointRenderable extends PlaceRenderable<SpawnPoint> {
 
     @Override
     protected float getWidth(float cellSize) {
-        return cellSize / 3;
+        return cellSize / 2.5f;
     }
 
 
@@ -33,6 +33,6 @@ public class SpawnPointRenderable extends PlaceRenderable<SpawnPoint> {
                 getHeight(cellSize)
         );
 
-        drawShape(g2D, ellipse2D, Color.RED);
+        drawShape(g2D, ellipse2D, Color.BLUE);
     }
 }

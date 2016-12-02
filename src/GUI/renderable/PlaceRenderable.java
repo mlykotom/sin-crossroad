@@ -2,8 +2,6 @@ package GUI.renderable;
 
 import Map.Place;
 
-import java.util.UUID;
-
 
 public abstract class PlaceRenderable<T extends Place> extends Renderable {
     protected final T mPlace;

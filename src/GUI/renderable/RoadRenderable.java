@@ -1,14 +1,16 @@
 package GUI.renderable;
 
+import Behaviours.state.CarStatus;
 import Map.Road;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
-import java.util.UUID;
 
 
 public class RoadRenderable extends PlaceRenderable<Road> {
-    public static final int ROAD_KNOWN_MAX_PER_LENGTH = 10;
+    public static final int ROAD_KNOWN_MAX_PER_LENGTH = 5;
+    public static final int LANE_OFFSET_TO_ITSELF = 8;
+
     protected long mCarsOnRoadThere = 0;
     protected long mCarsOnRoadBack = 0;
     private long mKnownMax;
@@ -16,15 +18,25 @@ public class RoadRenderable extends PlaceRenderable<Road> {
 
     public RoadRenderable(Road road) {
         super(road);
-        mKnownMax = mPlace.Length * ROAD_KNOWN_MAX_PER_LENGTH;
+        mKnownMax = mPlace.getLengthInPoints() * ROAD_KNOWN_MAX_PER_LENGTH;
     }
 
 
-    public void addCar(UUID nextPlaceId) {
-        if (mPlace.getId().equals(nextPlaceId)) {
-            mCarsOnRoadThere++;
+    public synchronized void setCar(CarStatus status) {
+        if (mPlace.getPlaceA().getId().equals(status.sourcePlaceId)) {
+            if (status.isEntered) {
+                mCarsOnRoadThere++;
+            } else {
+                mCarsOnRoadThere--;
+            }
+        } else if (mPlace.getPlaceB().getId().equals(status.sourcePlaceId)) {
+            if (status.isEntered) {
+                mCarsOnRoadBack++;
+            } else {
+                mCarsOnRoadBack--;
+            }
         } else {
-            mCarsOnRoadBack++;
+            System.out.println("Unknown direction for road " + mPlace.getName());
         }
     }
 
@@ -41,9 +53,6 @@ public class RoadRenderable extends PlaceRenderable<Road> {
     }
 
 
-    Font debugFont = new Font("DebugText", Font.PLAIN, 10);
-
-
     @Override
     public void render(Graphics2D context, float cellSize) {
         float realStartX = getRealPositionX(cellSize);
@@ -51,43 +60,67 @@ public class RoadRenderable extends PlaceRenderable<Road> {
         float realEndX = getCanvasPosition(mPlace.getBCoordX(), cellSize);
         float realEndY = getCanvasPosition(mPlace.getBCoordY(), cellSize);
 
+        float roadOffsetMargin = cellSize / 10;
+
         Path2D wayThere = new Path2D.Float();
         Path2D wayBack = new Path2D.Float();
 
-        if (realStartX == realEndX) {
-            wayThere.moveTo(realStartX - 8, realStartY);
-            wayThere.lineTo(realEndX - 8, realEndY);
-            wayBack.moveTo(realStartX + 8, realStartY);
-            wayBack.lineTo(realEndX + 8, realEndY);
+        float wayThereXStart, wayThereXEnd, wayThereYStart, wayThereYEnd;
+        float wayBackXStart, wayBackXEnd, wayBackYStart, wayBackYEnd;
+
+        // vertical road
+        if (realStartY == realEndY) {
+            float laneOffset = roadOffsetMargin * Math.signum(realEndX - realStartX);
+            wayThereXStart = realStartX;
+            wayThereXEnd = realEndX;
+            wayThereYStart = realStartY + laneOffset;
+            wayThereYEnd = realEndY + laneOffset;
+
+            wayBackXStart = realStartX;
+            wayBackXEnd = realEndX;
+            wayBackYStart = realStartY - laneOffset;
+            wayBackYEnd = realEndY - laneOffset;
         } else {
-            wayThere.moveTo(realStartX, realStartY - 8);
-            wayThere.lineTo(realEndX, realEndY - 8);
-            wayBack.moveTo(realStartX, realStartY + 8);
-            wayBack.lineTo(realEndX, realEndY + 8);
+            float laneOffset = roadOffsetMargin * Math.signum(realEndY - realStartY);
+
+            wayThereXStart = realStartX - laneOffset;
+            wayThereXEnd = realEndX - laneOffset;
+            wayThereYStart = realStartY;
+            wayThereYEnd = realEndY;
+
+            wayBackXStart = realStartX + laneOffset;
+            wayBackXEnd = realEndX + laneOffset;
+            wayBackYStart = realStartY;
+            wayBackYEnd = realEndY;
         }
 
+        wayThere.moveTo(wayThereXStart, wayThereYStart);
+        wayThere.lineTo(wayThereXEnd, wayThereYEnd);
+        wayBack.moveTo(wayBackXStart, wayBackYStart);
+        wayBack.lineTo(wayBackXEnd, wayBackYEnd);
+
+
+        // draws lanes
         context.setStroke(new BasicStroke(cellSize / 6));
         context.setPaint(calculateGradient(mCarsOnRoadThere, mKnownMax));
         context.draw(wayThere);
-
         context.setPaint(calculateGradient(mCarsOnRoadBack, mKnownMax));
         context.draw(wayBack);
 
-
-        debugText(context, realStartX, realStartY, realEndX, realEndY);
-
-        mCarsOnRoadThere = 0;    // TODO must be proper way
-        mCarsOnRoadBack = 0;    // TODO must be proper way
+        drawNumber(context, mCarsOnRoadThere, wayThereXStart, wayThereYStart, wayThereXEnd, wayThereYEnd);
+        drawNumber(context, mCarsOnRoadBack, wayBackXStart, wayBackYStart, wayBackXEnd, wayBackYEnd);
     }
 
 
-    private void debugText(Graphics2D context, float realStartX, float realStartY, float realEndX, float realEndY) {
+    private void drawNumber(Graphics2D context, long numberOfCars, float realStartX, float realStartY, float realEndX, float realEndY) {
+        context.setFont(mDebugFont);
         FontMetrics fm = context.getFontMetrics();
-        String text = "(" + mCarsOnRoadThere + "," + mCarsOnRoadBack + ")" + "/" + mKnownMax;
-        float x = realStartX + (realEndX - fm.stringWidth(text) - realStartX) / 2;
-        float y = realStartY + (realEndY - realStartY) / 2;
 
-        context.setFont(debugFont);
+        String text = String.valueOf(numberOfCars);
+
+        float x = realStartX + (realEndX - fm.stringWidth(text) - realStartX) / 2;
+        float y = realStartY + (realEndY + fm.getHeight() / 2 - realStartY) / 2;
+
         context.setPaint(Color.BLACK);
         context.drawString(text, x, y);
     }
@@ -98,9 +131,8 @@ public class RoadRenderable extends PlaceRenderable<Road> {
             return Color.DARK_GRAY;
         }
 
-        float tWithinBounds = (number / (float) knownMax) % 1.0f;
-        float greenParam = 1 - tWithinBounds;
-        return new Color((int) (255 * tWithinBounds), (int) (255 * greenParam), 0); // TODO above knownmax turn black with gradient
+        float t = (number / (float) knownMax);
+        return new Color(t, 1 - t, 0);
     }
 
 

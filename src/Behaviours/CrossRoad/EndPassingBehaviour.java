@@ -13,25 +13,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
+
 /**
  * Created by adamj on 28.11.2016.
  */
-public class EndPassingBehaviour extends CyclicBehaviour
-{
+public class EndPassingBehaviour extends CyclicBehaviour {
     private final CrossRoadAgent _agent;
 
-    public EndPassingBehaviour(CrossRoadAgent agent)
-    {
+
+    public EndPassingBehaviour(CrossRoadAgent agent) {
         super(agent);
         _agent = agent;
     }
+
+
     @Override
     public void action() {
         MessageTemplate mt = MessageTemplate.MatchConversationId(CrossRoadAgent.PASSED_CROSSROAD_INFORM);
         ACLMessage msg = myAgent.receive(mt);
 
-        if(msg == null)
-        {
+        if (msg == null) {
             return;
         }
 
@@ -39,8 +40,7 @@ public class EndPassingBehaviour extends CyclicBehaviour
                 .filter((car) -> car.name == msg.getSender().getName())
                 .findFirst();
 
-        if(exitingCar.isPresent())
-        {
+        if (exitingCar.isPresent()) {
             _agent.getCarsIn().remove(exitingCar.get());
 
             // Inform other cars
@@ -49,20 +49,19 @@ public class EndPassingBehaviour extends CyclicBehaviour
 
             List<String> carsToNotify = new LinkedList<>();
 
-            for(int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 addToListFirst(_agent.resolveExit(i, DirectionType.Left), carsToNotify);
             }
 
             for (String receiver : carsToNotify) {
-                inform.addReceiver(new AID(receiver));
+                inform.addReceiver(new AID(receiver, false));
             }
             myAgent.send(inform);
         }
     }
 
-    public void addToListFirst(List<String> source, List<String> result)
-    {
+
+    public void addToListFirst(List<String> source, List<String> result) {
         if (!source.isEmpty())
             result.add(source.get(0));
     }
