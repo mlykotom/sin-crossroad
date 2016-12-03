@@ -1,5 +1,6 @@
 package GUI.renderable;
 
+import Behaviours.state.SpawnPointStatus;
 import Map.SpawnPoint;
 
 import java.awt.*;
@@ -7,6 +8,9 @@ import java.awt.geom.Ellipse2D;
 
 
 public class SpawnPointRenderable extends PlaceRenderable<SpawnPoint> {
+    protected long mProducedCars = 0;
+
+
     public SpawnPointRenderable(SpawnPoint place) {
         super(place);
     }
@@ -34,6 +38,11 @@ public class SpawnPointRenderable extends PlaceRenderable<SpawnPoint> {
         Ellipse2D ellipse2D = new Ellipse2D.Float(realX, realY, width, height);
 
         drawShape(g2D, ellipse2D, new Color(60, 158, 215));
-//        drawNumber(g2D, Color.BLACK, 5, realX, realY, realX + width, realY + height);
+        drawNumber(g2D, Color.BLACK, mProducedCars, realX, realY, realX + width, realY + height);
+    }
+
+
+    public void setStatus(SpawnPointStatus status) {
+        mProducedCars = status.producedCars;
     }
 }

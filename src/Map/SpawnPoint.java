@@ -1,6 +1,8 @@
 package Map;
 
 public class SpawnPoint extends Place {
+    public static final String NAME_PREFIX = "SpawnPoint::";
+
     public static final int MIN_SPAWN_CAR_INTERVAL_MILLIS = 1000;
     public static final int MAX_SPAWN_CAR_INTERVAL_MILLIS = 10000;
     private final int mMinSpawnDelay;
@@ -9,6 +11,13 @@ public class SpawnPoint extends Place {
 
     public SpawnPoint(String name, int coordX, int coordY) {
         this(name, coordX, coordY, MIN_SPAWN_CAR_INTERVAL_MILLIS, MAX_SPAWN_CAR_INTERVAL_MILLIS);
+    }
+
+
+    @Override
+    public String getName() {
+        String name = super.getName();
+        return NAME_PREFIX.concat(name);
     }
 
 

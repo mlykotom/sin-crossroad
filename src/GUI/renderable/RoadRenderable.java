@@ -22,7 +22,7 @@ public class RoadRenderable extends PlaceRenderable<Road> {
     }
 
 
-    public synchronized void setCar(CarStatus status) {
+    public void setCar(CarStatus status) {
         if (mPlace.getPlaceA().getId().equals(status.sourcePlaceId)) {
             if (status.isEntered) {
                 mCarsOnRoadThere++;

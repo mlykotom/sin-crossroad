@@ -2,6 +2,7 @@ package GUI;
 
 import Behaviours.state.CarStatus;
 import Behaviours.state.CrossRoadStatus;
+import Behaviours.state.SpawnPointStatus;
 import GUI.renderable.*;
 import model.BaseWorld;
 
@@ -23,7 +24,7 @@ public class WorldMapCanvas extends JPanel {
 
 
     public WorldMapCanvas(BaseWorld world) {
-        mCanvasSize = 500;
+        mCanvasSize = 700;
         mGridSize = world.getGridSize() + FIXES_OUT_OF_CANVAS;
         mWorld = world;
 
@@ -61,19 +62,25 @@ public class WorldMapCanvas extends JPanel {
         super.paint(g);
         Graphics2D context = setupCanvas(g);
         // render
-        mPlaces.forEach((uuid, renderable) -> renderable.prepareAndRender(context, mCellSize));
         mGrid.prepareAndRender(context, mCellSize);
+        mPlaces.forEach((uuid, renderable) -> renderable.prepareAndRender(context, mCellSize));
     }
 
 
-    public void setCarStatus(CarStatus status) {
+    public synchronized void setCarStatus(CarStatus status) {
         RoadRenderable road = (RoadRenderable) mPlaces.get(status.currentRoadId);
         road.setCar(status);
     }
 
 
-    public void setCrossRoadStatus(CrossRoadStatus status) {
+    public synchronized void setCrossRoadStatus(CrossRoadStatus status) {
         CrossRoadRenderable crossRoad = (CrossRoadRenderable) mPlaces.get(status.crossroadId);
         crossRoad.setStatus(status);
+    }
+
+
+    public synchronized void setSpawnPointStatus(SpawnPointStatus status) {
+        SpawnPointRenderable place = (SpawnPointRenderable) mPlaces.get(status.spawnPointId);
+        place.setStatus(status);
     }
 }
