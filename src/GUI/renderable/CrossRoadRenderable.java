@@ -39,6 +39,9 @@ public class CrossRoadRenderable extends PlaceRenderable<CrossRoad> {
 
     @Override
     public void render(Graphics2D g2D) {
+        if(mStatus == null)
+            return;
+
         float width = getWidth(mCellSize);
         float height = getHeight(mCellSize);
         float strokeSize = width / 6;

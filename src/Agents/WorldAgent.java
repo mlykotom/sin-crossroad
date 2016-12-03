@@ -38,7 +38,7 @@ public class WorldAgent extends Agent {
     protected void setup() {
         sWorldAgentAID = getAID();
         sInstance = this;
-        mWorld = new WorldOne();//WorldSimple()
+        mWorld = new WorldThree();
         mContainerController = getContainerController();
         sLogger.log(Level.INFO, "Creating " + mWorld.name);
         mMainGui = MainGui.runGUI(this);

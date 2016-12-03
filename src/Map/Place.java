@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public abstract class Place implements Serializable {
+public class Place implements Serializable {
     protected String mName;
     protected List<Road> mRoads = new ArrayList<>();
     protected int mCoordX;
@@ -33,7 +33,7 @@ public abstract class Place implements Serializable {
     }
 
 
-    protected void addRoads(Road... roads) {
+    public void addRoads(Road... roads) {
         mRoads.addAll(Arrays.asList(roads));
     }
 

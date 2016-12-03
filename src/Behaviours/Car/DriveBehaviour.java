@@ -56,6 +56,8 @@ public class DriveBehaviour extends OneShotBehaviour {
                     _carAgent.delete();
                 } else if (destination instanceof CrossRoad) {
                     _carAgent.crossRoadArrived((CrossRoad) destination);
+                } else {
+                    _carAgent.placePassed(destination);
                 }
             }
         });
