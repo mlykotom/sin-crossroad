@@ -19,13 +19,13 @@ public class CrossRoadStatus extends AgentStatus {
     // ExitId: 3 - Left
     public ArrayList<LaneState> lanes;
     public final UUID crossroadId;
-
+    public int CarsInsideCount;
 
     public CrossRoadStatus(String agentId, CrossRoadPlus crossRoad) {
         super(agentId);
         crossroadId = crossRoad.getId();
         lanes = new ArrayList<LaneState>(8);
-
+        CarsInsideCount = crossRoad.CarsIn.size();
         for (int i = 0; i < 4; i++) {
             LaneState lane = new LaneState();
             lane.carsCount = crossRoad.resolveExit(i, DirectionType.Straight).size();
