@@ -50,14 +50,18 @@ public class CrossRoadRenderable extends PlaceRenderable<CrossRoad> {
     private void drawAllSemaphores(Graphics2D g2D, float realX, float realY, float width, float height) {
         if (mStatus == null) return;
 
-        float semSize = width / 5, semOffset;
+        float semSize = width / 5;
+        float correctOffset = semSize / 3;
+        float semOffset;
 
         // left bottom
         semOffset = height / 4;
         drawSemaphores(g2D,
                 2, 3,
-                realX, realY + 3 * semOffset,
-                realX, realY + 2 * semOffset,
+                realX,
+                realY + 3 * semOffset - correctOffset,
+                realX,
+                realY + 2 * semOffset - correctOffset,
                 semSize
         );
 
@@ -65,8 +69,10 @@ public class CrossRoadRenderable extends PlaceRenderable<CrossRoad> {
         // right top
         drawSemaphores(g2D,
                 6, 7,
-                realX + width - semSize, realY,
-                realX + width - semSize, realY + semOffset,
+                realX + width - semSize,
+                realY + correctOffset,
+                realX + width - semSize,
+                realY + semOffset + correctOffset,
                 semSize
         );
 
@@ -75,8 +81,10 @@ public class CrossRoadRenderable extends PlaceRenderable<CrossRoad> {
         semOffset = width / 4;
         drawSemaphores(g2D,
                 0, 1,
-                realX, realY,
-                realX + semOffset, realY,
+                realX + correctOffset,
+                realY,
+                realX + semOffset + correctOffset,
+                realY,
                 semSize
         );
 
@@ -84,8 +92,10 @@ public class CrossRoadRenderable extends PlaceRenderable<CrossRoad> {
         // bottom right
         drawSemaphores(g2D,
                 4, 5,
-                realX + 3 * semOffset, realY + height - semSize,
-                realX + 2 * semOffset, realY + height - semSize,
+                realX + 3 * semOffset-correctOffset,
+                realY + height - semSize,
+                realX + 2 * semOffset-correctOffset,
+                realY + height - semSize,
                 semSize
         );
     }
