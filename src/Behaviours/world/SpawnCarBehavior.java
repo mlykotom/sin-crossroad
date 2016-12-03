@@ -49,6 +49,7 @@ public class SpawnCarBehavior extends TickerBehaviour {
         Place currentPlace = start, nextPlace = currentRoad.nextPlace(currentPlace);
 
         path.add(start.getRoad());
+
         while (!(nextPlace instanceof SpawnPoint)) {
             // Get all connections at the next place
             List<Road> connections = currentRoad.nextPlace(currentPlace).getRoads();
@@ -62,6 +63,8 @@ public class SpawnCarBehavior extends TickerBehaviour {
             path.add(nextRoad);
             currentRoad = nextRoad;
             nextPlace = currentRoad.nextPlace(currentPlace);
+
+            currentPlace = nextPlace;
         }
 
         return path;

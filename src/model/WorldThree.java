@@ -44,7 +44,7 @@ public class WorldThree extends BaseWorld {
         Road roadI = new Road(spawnH, thirdCrossroad);
         Road roadJ = new Road(placeD, thirdCrossroad);
 
-        placeD.addRoads(roadJ, roadD);
+        placeD.addRoads(roadD, roadJ);
 
         mainCrossroad.setRoads(roadA, roadB, roadC, roadD);
         minorCrossroad.setRoads(roadC, roadE, roadF, roadG);
