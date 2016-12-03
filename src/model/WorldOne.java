@@ -12,9 +12,9 @@ public class WorldOne extends BaseWorld {
     public WorldOne() {
         super("WorldOne");
         SpawnPoint spawnA = new SpawnPoint("SpawnA", 1, 0);
-        SpawnPoint spawnB = new SpawnPoint("SpawnB", 0, 1,1000000,1000000);
-        SpawnPoint spawnC = new SpawnPoint("SpawnC", 1, 3,1000000,1000000);
-        SpawnPoint spawnD = new SpawnPoint("SpawnD", 2, 1,1000000,1000000);
+        SpawnPoint spawnB = new SpawnPoint("SpawnB", 0, 1);
+        SpawnPoint spawnC = new SpawnPoint("SpawnC", 1, 3);
+        SpawnPoint spawnD = new SpawnPoint("SpawnD", 2, 1);
 
         CrossRoadPlus crossroad = new CrossRoadPlus("MainCrossroad", 1, 1);
 
@@ -37,6 +37,6 @@ public class WorldOne extends BaseWorld {
 
     @Override
     public int getGridSize() {
-        return 4;
+        return 8;
     }
 }

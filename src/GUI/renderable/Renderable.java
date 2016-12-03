@@ -9,7 +9,8 @@ import java.awt.*;
 public abstract class Renderable {
     private static final Stroke NO_STROKE = new BasicStroke(0);
     private static final Paint DEFAULT_COLOR = Color.WHITE;
-    protected Font mDebugFont = new Font("DebugText", Font.PLAIN, 10);
+    protected float mCellSize;
+    protected Font mDebugFont;
 
 
     public static float getCanvasPosition(int cell, float cellSize) {
@@ -17,7 +18,7 @@ public abstract class Renderable {
     }
 
 
-    public abstract void render(Graphics2D g2D, float cellSize);
+    protected abstract void render(Graphics2D g2D);
 
 
     protected void drawShape(Graphics2D g2D, Shape shape, Paint color, @Nullable Stroke stroke, @Nullable Paint borderColor) {
@@ -31,5 +32,12 @@ public abstract class Renderable {
 
     protected void drawShape(Graphics2D g2D, Shape shape, Paint color) {
         drawShape(g2D, shape, color, null, null);
+    }
+
+
+    public final void prepareAndRender(Graphics2D context, float cellSize) {
+        mDebugFont = new Font("DebugText", Font.PLAIN, (int) (cellSize / 7));
+        mCellSize = cellSize;
+        render(context);
     }
 }

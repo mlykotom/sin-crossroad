@@ -25,14 +25,15 @@ public class SpawnPointRenderable extends PlaceRenderable<SpawnPoint> {
 
 
     @Override
-    public void render(Graphics2D g2D, float cellSize) {
-        Ellipse2D ellipse2D = new Ellipse2D.Float(
-                getRealPositionX(cellSize),
-                getRealPositionY(cellSize),
-                getWidth(cellSize),
-                getHeight(cellSize)
-        );
+    public void render(Graphics2D g2D) {
+        float realX = getRealPositionX();
+        float realY = getRealPositionY();
+        float width = getWidth(mCellSize);
+        float height = getHeight(mCellSize);
 
-        drawShape(g2D, ellipse2D, Color.BLUE);
+        Ellipse2D ellipse2D = new Ellipse2D.Float(realX, realY, width, height);
+
+        drawShape(g2D, ellipse2D, new Color(60, 158, 215));
+//        drawNumber(g2D, Color.BLACK, 5, realX, realY, realX + width, realY + height);
     }
 }

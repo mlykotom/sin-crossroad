@@ -19,13 +19,13 @@ public abstract class PlaceRenderable<T extends Place> extends Renderable {
     protected abstract float getHeight(float cellSize);
 
 
-    protected float getRealPositionX(float cellSize) {
-        return getCanvasPosition(mPlace.getCoordX(), cellSize) - getWidth(cellSize) / 2;
+    protected float getRealPositionX() {
+        return getCanvasPosition(mPlace.getCoordX(), mCellSize) - getWidth(mCellSize) / 2;
     }
 
 
-    protected float getRealPositionY(float cellSize) {
-        return getCanvasPosition(mPlace.getCoordY(), cellSize) - getHeight(cellSize) / 2;
+    protected float getRealPositionY() {
+        return getCanvasPosition(mPlace.getCoordY(), mCellSize) - getHeight(mCellSize) / 2;
     }
 
     protected void drawNumber(Graphics2D context, Paint color, long numberOfCars, float realStartX, float realStartY, float realEndX, float realEndY) {
