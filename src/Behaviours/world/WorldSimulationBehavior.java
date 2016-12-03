@@ -1,9 +1,9 @@
 package Behaviours.world;
 
-import Agents.CarAgent;
 import Agents.WorldAgent;
 import Behaviours.state.AgentStatus;
 import Map.CrossRoad;
+import Map.SpawnPoint;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.TickerBehaviour;
@@ -44,19 +44,22 @@ public class WorldSimulationBehavior extends TickerBehaviour {
     @Override
     protected void onTick() {
         long ellapsedTime = calculateEllapsedTime();
-        requestCrossRoadsStatus();
+        requestStaticStatus();
         mWorldAgent.updateWorld(ellapsedTime);
     }
 
 
-    private void requestCrossRoadsStatus() {
+    private void requestStaticStatus() {
         ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
         request.setConversationId(CONVERSATION_GET_AGENT_CURRENT_STATE);
 
         try {
             AMSAgentDescription[] allFoundAgents = AMSService.search(mWorldAgent, new AMSAgentDescription(), mSearchConstraints);
             Arrays.stream(allFoundAgents)
-                    .filter(amsAgentDescription -> amsAgentDescription.getName().getLocalName().startsWith(CrossRoad.CROSSROAD_NAME_PREFIX))
+                    .filter(amsAgentDescription -> {
+                        String name = amsAgentDescription.getName().getLocalName();
+                        return name.startsWith(CrossRoad.NAME_PREFIX) || name.startsWith(SpawnPoint.NAME_PREFIX);
+                    })
                     .forEach(amsAgentDescription -> {
                         AID agentId = amsAgentDescription.getName();
                         request.addReceiver(agentId);

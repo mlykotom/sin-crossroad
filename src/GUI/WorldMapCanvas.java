@@ -1,8 +1,8 @@
 package GUI;
 
-import Behaviours.state.AgentStatus;
 import Behaviours.state.CarStatus;
 import Behaviours.state.CrossRoadStatus;
+import Behaviours.state.SpawnPointStatus;
 import GUI.renderable.*;
 import model.BaseWorld;
 
@@ -10,12 +10,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 public class WorldMapCanvas extends JPanel {
     public static final int FIXES_OUT_OF_CANVAS = 1;
-    private final ConcurrentHashMap<String, AgentStatus> mWorldStatus;
     private int mGridSize;
     private static final Color CANVAS_DEFAULT_COLOR = Color.WHITE;
     private final BaseWorld mWorld;
@@ -25,11 +23,10 @@ public class WorldMapCanvas extends JPanel {
     private LinkedHashMap<UUID, Renderable> mPlaces = new LinkedHashMap<>();
 
 
-    public WorldMapCanvas(BaseWorld world, ConcurrentHashMap<String, AgentStatus> worldStatus) {
-        mCanvasSize = 500;
+    public WorldMapCanvas(BaseWorld world) {
+        mCanvasSize = 700;
         mGridSize = world.getGridSize() + FIXES_OUT_OF_CANVAS;
         mWorld = world;
-        mWorldStatus = worldStatus;
 
         Dimension canvasDimension = new Dimension(mCanvasSize, mCanvasSize);
         setBackground(CANVAS_DEFAULT_COLOR);
@@ -65,34 +62,25 @@ public class WorldMapCanvas extends JPanel {
         super.paint(g);
         Graphics2D context = setupCanvas(g);
         // render
-//        parseWorldState();
-        mPlaces.forEach((uuid, renderable) -> renderable.render(context, mCellSize));
-        mGrid.render(context, mCellSize);
+        mGrid.prepareAndRender(context, mCellSize);
+        mPlaces.forEach((uuid, renderable) -> renderable.prepareAndRender(context, mCellSize));
     }
 
 
-    private void parseWorldState() {
-        mWorldStatus.forEach((agentName, agentStatus) -> {
-            if (agentStatus instanceof CarStatus) {
-                CarStatus carStatus = ((CarStatus) agentStatus);
-                UUID roadId = carStatus.currentRoadId;
-                RoadRenderable road = (RoadRenderable) mPlaces.get(roadId);
-//                road.addCar(carStatus.sourcePlaceId);
-            } else if (agentStatus instanceof CrossRoadStatus) {
-                System.out.println("CrossRoad: " + ((CrossRoadStatus) agentStatus).getAgentId());
-            }
-        });
-    }
-
-
-    public void setCarStatus(CarStatus status) {
+    public synchronized void setCarStatus(CarStatus status) {
         RoadRenderable road = (RoadRenderable) mPlaces.get(status.currentRoadId);
         road.setCar(status);
     }
 
 
-    public void setCrossRoadStatus(CrossRoadStatus status) {
+    public synchronized void setCrossRoadStatus(CrossRoadStatus status) {
         CrossRoadRenderable crossRoad = (CrossRoadRenderable) mPlaces.get(status.crossroadId);
         crossRoad.setStatus(status);
+    }
+
+
+    public synchronized void setSpawnPointStatus(SpawnPointStatus status) {
+        SpawnPointRenderable place = (SpawnPointRenderable) mPlaces.get(status.spawnPointId);
+        place.setStatus(status);
     }
 }

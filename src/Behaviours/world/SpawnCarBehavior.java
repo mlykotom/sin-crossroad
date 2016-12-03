@@ -1,6 +1,7 @@
 package Behaviours.world;
 
 import Agents.CarAgent;
+import Agents.SpawnPointAgent;
 import Agents.WorldAgent;
 import Map.Place;
 import Map.Road;
@@ -20,6 +21,7 @@ import java.util.logging.Level;
 public class SpawnCarBehavior extends TickerBehaviour {
     private static Logger sLogger = Logger.getMyLogger(SpawnCarBehavior.class.getSimpleName());
     private final SpawnPoint mSpawnPoint;
+    private final SpawnPointAgent mSpawnAgent;
     private Random mRandom;
     private int mMaxSpawnDelay, mMinSpawnDelay;
 
@@ -28,8 +30,9 @@ public class SpawnCarBehavior extends TickerBehaviour {
      * @param a Agent running this behaviour.
      * @param s Spawn point from which the cars will originate.
      */
-    public SpawnCarBehavior(WorldAgent a, SpawnPoint s) {
+    public SpawnCarBehavior(SpawnPointAgent a, SpawnPoint s) {
         super(a, Integer.MAX_VALUE);
+        mSpawnAgent = a;
         mRandom = new Random();
         mSpawnPoint = s;
         mMinSpawnDelay = s.getMinSpawnDelay();
@@ -83,14 +86,14 @@ public class SpawnCarBehavior extends TickerBehaviour {
 
     private void setupCarAgent() {
         Object[] args = {mSpawnPoint, createPath(mSpawnPoint)};
-        WorldAgent worldAgent = (WorldAgent) myAgent;
 
         try {
-            AgentController cont = worldAgent.getContainerController().createNewAgent(
-                    CarAgent.getAgentName(worldAgent.getCarAgentNewId()),
+            AgentController cont = myAgent.getContainerController().createNewAgent(
+                    CarAgent.getAgentName(WorldAgent.sInstance.getCarAgentNewId()),
                     CarAgent.class.getName(),
                     args);
             cont.start();
+            mSpawnAgent.addProducedCar();
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }

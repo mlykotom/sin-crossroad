@@ -17,7 +17,6 @@ public class MainGui extends JFrame {
     private WorldMapCanvas mWorldMapCanvas;
 
     private JPanel rootPanel;
-    private JButton button1;
     private JPanel worldMap;
     private JLabel simulationTime;
 
@@ -48,10 +47,7 @@ public class MainGui extends JFrame {
 
     private MainGui(WorldAgent worldAgent) {
         mWorldAgent = worldAgent;
-        mWorldMapCanvas = new WorldMapCanvas(
-                worldAgent.getWorld(),
-                worldAgent.worldStatus
-        );
+        mWorldMapCanvas = new WorldMapCanvas(worldAgent.getWorld());
     }
 
 
@@ -92,9 +88,6 @@ public class MainGui extends JFrame {
     private void $$$setupUI$$$() {
         rootPanel = new JPanel();
         rootPanel.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
-        button1 = new JButton();
-        button1.setText("Button");
-        rootPanel.add(button1, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         worldMap = new JPanel();
         worldMap.setLayout(new GridBagLayout());
         rootPanel.add(worldMap, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(400, 400), null, null, 1, false));
