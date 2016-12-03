@@ -11,7 +11,7 @@ import java.awt.geom.Rectangle2D;
 
 
 public class CrossRoadRenderable extends PlaceRenderable<CrossRoad> {
-
+    private int mKnownMaxInCrossRoad = 20;
     private CrossRoadStatus mStatus;
 
 
@@ -32,94 +32,62 @@ public class CrossRoadRenderable extends PlaceRenderable<CrossRoad> {
     }
 
 
+    public void setStatus(CrossRoadStatus status) {
+        mStatus = status;
+    }
+
+
     @Override
     public void render(Graphics2D g2D) {
-        float realX = getRealPositionX();
-        float realY = getRealPositionY();
         float width = getWidth(mCellSize);
         float height = getHeight(mCellSize);
+        float strokeSize = width / 6;
+        float realX = getRealPositionX();
+        float realY = getRealPositionY();
 
         Rectangle2D innerCross = new Rectangle2D.Float(realX, realY, width, height);
-        drawShape(g2D, innerCross, Color.DARK_GRAY);
+        drawShape(g2D, innerCross, calculateGradient(mStatus.CarsInsideCount, mKnownMaxInCrossRoad), new BasicStroke(strokeSize), Color.DARK_GRAY);
+        drawNumber(g2D, Color.BLACK, mStatus.CarsInsideCount, realX, realY, realX + width, realY + width);
 
-        if (mStatus != null)
-            drawAllSemaphores(g2D, realX, realY, width, height);
+        float corr = width / 8;
+        drawAllSemaphores(g2D, realX - corr, realY - corr, width + 2 * corr, height + 2 * corr);
     }
 
 
     private void drawAllSemaphores(Graphics2D g2D, float realX, float realY, float width, float height) {
         if (mStatus == null) return;
 
-        float semSize = width / 5;
+        float semSize = width / 4.2f;
         float correctOffset = semSize / 3;
         float semOffset;
 
-        // left bottom
         semOffset = height / 4;
-        drawSemaphores(g2D,
-                2, 3,
-                realX,
-                realY + 3 * semOffset - correctOffset,
-                realX,
-                realY + 2 * semOffset - correctOffset,
-                semSize
-        );
-
+        // left bottom
+        drawOneSemaphore(g2D, 2, realX, realY + 3 * semOffset - correctOffset, semSize);
+        drawOneSemaphore(g2D, 3, realX, realY + 2 * semOffset - correctOffset, semSize);
 
         // right top
-        drawSemaphores(g2D,
-                6, 7,
-                realX + width - semSize,
-                realY + correctOffset,
-                realX + width - semSize,
-                realY + semOffset + correctOffset,
-                semSize
-        );
+        drawOneSemaphore(g2D, 6, realX + width - semSize, realY + correctOffset, semSize);
+        drawOneSemaphore(g2D, 7, realX + width - semSize, realY + semOffset + correctOffset, semSize);
 
-
-        // top left
         semOffset = width / 4;
-        drawSemaphores(g2D,
-                0, 1,
-                realX + correctOffset,
-                realY,
-                realX + semOffset + correctOffset,
-                realY,
-                semSize
-        );
-
+        // top left
+        drawOneSemaphore(g2D, 0, realX + correctOffset, realY, semSize);
+        drawOneSemaphore(g2D, 1, realX + semOffset + correctOffset, realY, semSize);
 
         // bottom right
-        drawSemaphores(g2D,
-                4, 5,
-                realX + 3 * semOffset-correctOffset,
-                realY + height - semSize,
-                realX + 2 * semOffset-correctOffset,
-                realY + height - semSize,
-                semSize
-        );
+        drawOneSemaphore(g2D, 4, realX + 3 * semOffset - correctOffset, realY + height - semSize, semSize);
+        drawOneSemaphore(g2D, 5, realX + 2 * semOffset - correctOffset, realY + height - semSize, semSize);
     }
 
 
-    private void drawSemaphores(Graphics2D g2D, int lStraight, int lLeft, float XStraight, float yStraight, float xLeft, float yLeft, float semSize) {
-        LaneState laneStraight = mStatus.lanes.get(lStraight);
-        LaneState laneLeft = mStatus.lanes.get(lLeft);
+    private void drawOneSemaphore(Graphics2D g2D, int index, float x, float y, float size) {
+        LaneState lane = mStatus.lanes.get(index);
+        Semaphore.Light light = lane.semaphore.getLight();
 
-        Semaphore.Light lightStraight = laneStraight.semaphore.getLight();
-        Semaphore.Light lightLeft = laneLeft.semaphore.getLight();
+        Ellipse2D semaphore = new Ellipse2D.Float(x, y, size, size);
+        drawShape(g2D, semaphore, light.color);
 
-        Ellipse2D semaphoreStraight = new Ellipse2D.Float(XStraight, yStraight, semSize, semSize);
-        drawShape(g2D, semaphoreStraight, laneStraight.semaphore.getLight().color);
-
-        Ellipse2D semaphoreLeft = new Ellipse2D.Float(xLeft, yLeft, semSize, semSize);
-        drawShape(g2D, semaphoreLeft, laneLeft.semaphore.getLight().color);
-
-        drawNumber(g2D, lightStraight == Semaphore.Light.Red ? Color.WHITE : Color.BLACK, laneStraight.carsCount, XStraight, yStraight, XStraight + semSize, yStraight + semSize);
-        drawNumber(g2D, lightLeft == Semaphore.Light.Red ? Color.WHITE : Color.BLACK, laneLeft.carsCount, xLeft, yLeft, xLeft + semSize, yLeft + semSize);
-    }
-
-
-    public void setStatus(CrossRoadStatus status) {
-        mStatus = status;
+        drawNumber(g2D, light == Semaphore.Light.Red ? Color.CYAN : Color.BLACK, lane.carsCount, x, y, x + size, y + size);
     }
 }

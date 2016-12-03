@@ -112,16 +112,6 @@ public class RoadRenderable extends PlaceRenderable<Road> {
     }
 
 
-    private static Paint calculateGradient(long number, long knownMax) {
-        if (number > knownMax) {
-            return Color.DARK_GRAY;
-        }
-
-        float t = (number / (float) knownMax);
-        return new Color(t, 1 - t, 0);
-    }
-
-
     protected float getRealPositionX() {
         return getCanvasPosition(mPlace.getCoordX(), mCellSize);
     }

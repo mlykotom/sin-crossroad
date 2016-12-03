@@ -18,6 +18,16 @@ public abstract class Renderable {
     }
 
 
+    static Paint calculateGradient(long number, long knownMax) {
+        if (number > knownMax) {
+            return Color.MAGENTA;
+        }
+
+        float t = (number / (float) knownMax);
+        return new Color(t, 1 - t, 0);
+    }
+
+
     protected abstract void render(Graphics2D g2D);
 
 
