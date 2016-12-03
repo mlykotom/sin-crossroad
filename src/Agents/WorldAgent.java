@@ -3,10 +3,9 @@ package Agents;
 import Behaviours.state.AgentStatus;
 import Behaviours.state.CarStatus;
 import Behaviours.state.CrossRoadStatus;
-import Behaviours.world.SpawnCarBehavior;
+import Behaviours.state.SpawnPointStatus;
 import Behaviours.world.WorldSimulationBehavior;
 import GUI.MainGui;
-import GUI.renderable.RoadRenderable;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.util.Logger;
@@ -15,13 +14,13 @@ import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import model.*;
 
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 
 public class WorldAgent extends Agent {
     public static AID sWorldAgentAID;//TODO not immutable, not good, change!
+    public static WorldAgent sInstance;
     public static final long WORLD_UPDATE_PERIOD_MILLIS = 500;  // TODO parametrized
     private static Logger sLogger = Logger.getMyLogger(WorldAgent.class.getSimpleName());
 
@@ -38,6 +37,7 @@ public class WorldAgent extends Agent {
     @Override
     protected void setup() {
         sWorldAgentAID = getAID();
+        sInstance = this;
         mWorld = new WorldOne();//WorldSimple()
         mContainerController = getContainerController();
         sLogger.log(Level.INFO, "Creating " + mWorld.name);
@@ -82,8 +82,14 @@ public class WorldAgent extends Agent {
 
     private void setupSpawnPoints() {
         mWorld.SpawnPoints.forEach((uuid, spawnPoint) -> {
-            addBehaviour(new SpawnCarBehavior(this, spawnPoint));
-            mSpawnPointsCount++;
+            try {
+                Object[] args = {spawnPoint};
+                AgentController cont = mContainerController.createNewAgent(spawnPoint.getName(), SpawnPointAgent.class.getName(), args);
+                cont.start();
+                mSpawnPointsCount++;
+            } catch (StaleProxyException e) {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -98,6 +104,8 @@ public class WorldAgent extends Agent {
             mMainGui.getWorldMap().setCarStatus((CarStatus) agentStatus);
         } else if (agentStatus instanceof CrossRoadStatus) {
             mMainGui.getWorldMap().setCrossRoadStatus((CrossRoadStatus) agentStatus);
+        } else if (agentStatus instanceof SpawnPointStatus) {
+            mMainGui.getWorldMap().setSpawnPointStatus((SpawnPointStatus) agentStatus);
         }
     }
 }

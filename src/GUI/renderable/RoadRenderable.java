@@ -22,7 +22,7 @@ public class RoadRenderable extends PlaceRenderable<Road> {
     }
 
 
-    public synchronized void setCar(CarStatus status) {
+    public void setCar(CarStatus status) {
         if (mPlace.getPlaceA().getId().equals(status.sourcePlaceId)) {
             if (status.isEntered) {
                 mCarsOnRoadThere++;
@@ -54,13 +54,13 @@ public class RoadRenderable extends PlaceRenderable<Road> {
 
 
     @Override
-    public void render(Graphics2D context, float cellSize) {
-        float realStartX = getRealPositionX(cellSize);
-        float realStartY = getRealPositionY(cellSize);
-        float realEndX = getCanvasPosition(mPlace.getBCoordX(), cellSize);
-        float realEndY = getCanvasPosition(mPlace.getBCoordY(), cellSize);
+    public void render(Graphics2D context) {
+        float realStartX = getRealPositionX();
+        float realStartY = getRealPositionY();
+        float realEndX = getCanvasPosition(mPlace.getBCoordX(), mCellSize);
+        float realEndY = getCanvasPosition(mPlace.getBCoordY(), mCellSize);
 
-        float roadOffsetMargin = cellSize / 10;
+        float roadOffsetMargin = mCellSize / 10;
 
         Path2D wayThere = new Path2D.Float();
         Path2D wayBack = new Path2D.Float();
@@ -101,7 +101,7 @@ public class RoadRenderable extends PlaceRenderable<Road> {
 
 
         // draws lanes
-        context.setStroke(new BasicStroke(cellSize / 6));
+        context.setStroke(new BasicStroke(mCellSize / 6));
         context.setPaint(calculateGradient(mCarsOnRoadThere, mKnownMax));
         context.draw(wayThere);
         context.setPaint(calculateGradient(mCarsOnRoadBack, mKnownMax));
@@ -122,12 +122,12 @@ public class RoadRenderable extends PlaceRenderable<Road> {
     }
 
 
-    protected float getRealPositionX(float cellSize) {
-        return getCanvasPosition(mPlace.getCoordX(), cellSize);
+    protected float getRealPositionX() {
+        return getCanvasPosition(mPlace.getCoordX(), mCellSize);
     }
 
 
-    protected float getRealPositionY(float cellSize) {
-        return getCanvasPosition(mPlace.getCoordY(), cellSize);
+    protected float getRealPositionY() {
+        return getCanvasPosition(mPlace.getCoordY(), mCellSize);
     }
 }

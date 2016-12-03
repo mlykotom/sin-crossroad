@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public abstract class CrossRoad extends Place {
-    public static final String CROSSROAD_NAME_PREFIX = "Crossroad::";
+    public static final String NAME_PREFIX = "Crossroad::";
 
     protected List<Semaphore> mSemaphores = new ArrayList<>();
 
@@ -28,7 +28,7 @@ public abstract class CrossRoad extends Place {
     @Override
     public String getName() {
         String name = super.getName();
-        return CROSSROAD_NAME_PREFIX.concat(name);
+        return NAME_PREFIX.concat(name);
     }
 
 
