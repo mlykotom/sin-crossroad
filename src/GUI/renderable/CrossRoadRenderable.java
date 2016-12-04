@@ -66,21 +66,21 @@ public class CrossRoadRenderable extends PlaceRenderable<CrossRoad> {
 
         semOffset = height / 4;
         // left bottom
-        drawOneSemaphore(g2D, 2, realX, realY + 3 * semOffset - correctOffset, semSize);
-        drawOneSemaphore(g2D, 3, realX, realY + 2 * semOffset - correctOffset, semSize);
+        drawOneSemaphore(g2D, 0, realX, realY + 3 * semOffset - correctOffset, semSize); // straight
+        drawOneSemaphore(g2D, 1, realX, realY + 2 * semOffset - correctOffset, semSize); // left
 
         // right top
-        drawOneSemaphore(g2D, 6, realX + width - semSize, realY + correctOffset, semSize);
-        drawOneSemaphore(g2D, 7, realX + width - semSize, realY + semOffset + correctOffset, semSize);
+        drawOneSemaphore(g2D, 4, realX + width - semSize, realY + correctOffset, semSize); // straight
+        drawOneSemaphore(g2D, 5, realX + width - semSize, realY + semOffset + correctOffset, semSize); // left
 
         semOffset = width / 4;
         // top left
-        drawOneSemaphore(g2D, 0, realX + correctOffset, realY, semSize);
-        drawOneSemaphore(g2D, 1, realX + semOffset + correctOffset, realY, semSize);
+        drawOneSemaphore(g2D, 6, realX + correctOffset, realY, semSize); // straight
+        drawOneSemaphore(g2D, 7, realX + semOffset + correctOffset, realY, semSize); // left
 
         // bottom right
-        drawOneSemaphore(g2D, 4, realX + 3 * semOffset - correctOffset, realY + height - semSize, semSize);
-        drawOneSemaphore(g2D, 5, realX + 2 * semOffset - correctOffset, realY + height - semSize, semSize);
+        drawOneSemaphore(g2D, 2, realX + 3 * semOffset - correctOffset, realY + height - semSize, semSize); // straight
+        drawOneSemaphore(g2D, 3, realX + 2 * semOffset - correctOffset, realY + height - semSize, semSize); // left
     }
 
 

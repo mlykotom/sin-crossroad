@@ -8,6 +8,7 @@ import jade.lang.acl.ACLMessage;
 import model.Semaphore;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -168,6 +169,28 @@ public class ControlBehaviour extends TickerBehaviour
             _agent.CarsWaitingForSemaphoreChange.clear();
             myAgent.send(msg);
         }
+
+        // Inform other cars
+        ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
+        inform.setConversationId(CrossRoadAgent.STATE_IN_CROSSROAD_CHANGED);
+
+        List<String> carsToNotify = new LinkedList<>();
+
+        for (int i = 0; i < 4; i++) {
+            addToListFirst(_agent.resolveExit(i, DirectionType.Left), carsToNotify);
+        }
+
+        if (!carsToNotify.isEmpty()) {
+            for (String receiver : carsToNotify) {
+                inform.addReceiver(new AID(receiver, true));
+            }
+            myAgent.send(inform);
+        }
+    }
+
+    private void addToListFirst(List<String> source, List<String> result) {
+        if (!source.isEmpty())
+            result.add(source.get(0));
     }
 
     @Override

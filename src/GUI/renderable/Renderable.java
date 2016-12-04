@@ -46,7 +46,7 @@ public abstract class Renderable {
 
 
     public final void prepareAndRender(Graphics2D context, float cellSize) {
-        mDebugFont = new Font("DebugText", Font.PLAIN, (int) (cellSize / 7));
+        mDebugFont = new Font("DebugText", Font.PLAIN, (int) (cellSize / 6));
         mCellSize = cellSize;
         render(context);
     }

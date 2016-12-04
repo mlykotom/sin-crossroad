@@ -52,7 +52,7 @@ public class SpawnCarBehavior extends TickerBehaviour {
 
         while (!(nextPlace instanceof SpawnPoint)) {
             // Get all connections at the next place
-            List<Road> connections = currentRoad.nextPlace(currentPlace).getRoads();
+            List<Road> connections = nextPlace.getRoads();
 
             // Pick randomly one connection that's not the same as current road
             nextRoad = currentRoad;
@@ -62,9 +62,8 @@ public class SpawnCarBehavior extends TickerBehaviour {
 
             path.add(nextRoad);
             currentRoad = nextRoad;
-            nextPlace = currentRoad.nextPlace(currentPlace);
-
             currentPlace = nextPlace;
+            nextPlace = currentRoad.nextPlace(currentPlace);
         }
 
         return path;
@@ -84,6 +83,7 @@ public class SpawnCarBehavior extends TickerBehaviour {
     protected void onTick() {
         sLogger.log(Level.INFO, "Spawning car at: " + mSpawnPoint.getName());
         setupCarAgent();
+        planNextSpawn();
     }
 
 

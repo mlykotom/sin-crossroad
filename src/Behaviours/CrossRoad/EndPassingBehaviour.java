@@ -10,6 +10,7 @@ import jade.lang.acl.MessageTemplate;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -37,7 +38,7 @@ public class EndPassingBehaviour extends CyclicBehaviour {
         }
 
         Optional<CarInCrossRoad> exitingCar = _agent.getCarsIn().stream()
-                .filter((car) -> car.name == msg.getSender().getName())
+                .filter((car) -> Objects.equals(car.name, msg.getSender().getName()))
                 .findFirst();
 
         if (exitingCar.isPresent()) {
@@ -53,10 +54,12 @@ public class EndPassingBehaviour extends CyclicBehaviour {
                 addToListFirst(_agent.resolveExit(i, DirectionType.Left), carsToNotify);
             }
 
-            for (String receiver : carsToNotify) {
-                inform.addReceiver(new AID(receiver, true));
+            if (!carsToNotify.isEmpty()) {
+                for (String receiver : carsToNotify) {
+                    inform.addReceiver(new AID(receiver, true));
+                }
+                myAgent.send(inform);
             }
-            myAgent.send(inform);
         }
     }
 

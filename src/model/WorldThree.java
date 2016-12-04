@@ -12,12 +12,12 @@ import Map.SpawnPoint;
 public class WorldThree extends BaseWorld {
     public WorldThree() {
         super("WorldThree");
-        SpawnPoint spawnA = new SpawnPoint("SpawnA", 1, 0);
+        SpawnPoint spawnA = new SpawnPoint("SpawnA", 1, 0, 500, 2000);
         SpawnPoint spawnB = new SpawnPoint("SpawnB", 0, 1);
         SpawnPoint spawnC = new SpawnPoint("SpawnC", 1, 4);
-        SpawnPoint spawnF = new SpawnPoint("SpawnF", 0, 3);
+        SpawnPoint spawnF = new SpawnPoint("SpawnF", 0, 3, 1000, 3000);
         SpawnPoint spawnG = new SpawnPoint("spawnG", 5, 3);
-        SpawnPoint spawnH = new SpawnPoint("spawnH", 4, 5);
+        SpawnPoint spawnH = new SpawnPoint("spawnH", 4, 5, 1000, 3000);
 
         Place placeD = new Place("placeD", 4, 1);
         //SpawnPoint spawnJ = new SpawnPoint("spawnJ", 4, 1);
@@ -46,9 +46,9 @@ public class WorldThree extends BaseWorld {
 
         placeD.addRoads(roadD, roadJ);
 
-        mainCrossroad.setRoads(roadA, roadB, roadC, roadD);
-        minorCrossroad.setRoads(roadC, roadE, roadF, roadG);
-        thirdCrossroad.setRoads(roadF, roadH, roadI, roadJ);
+        mainCrossroad.setRoads(roadB, roadC, roadD, roadA);
+        minorCrossroad.setRoads(roadG, roadE, roadF, roadC);
+        thirdCrossroad.setRoads(roadF, roadI, roadH, roadJ);
 
         spawnA.setRoad(roadA);
         spawnB.setRoad(roadB);
@@ -66,6 +66,6 @@ public class WorldThree extends BaseWorld {
 
     @Override
     public int getGridSize() {
-        return 8;
+        return 6;
     }
 }
