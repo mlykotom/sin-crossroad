@@ -23,6 +23,7 @@ import java.util.Date;
 public class WorldSimulationBehavior extends TickerBehaviour {
     private static Logger sLogger = Logger.getMyLogger(WorldSimulationBehavior.class.getSimpleName());
     public static final String CONVERSATION_GET_AGENT_CURRENT_STATE = "conversation_get_car_status";
+    public static final String CONVERSATION_GET_AGENT_CROSSROAD_TIME = "conversation_get_crossroad_time";
     private final WorldAgent mWorldAgent;
     private SearchConstraints mSearchConstraints = new SearchConstraints();
     private Date mSimulationStart;
@@ -83,6 +84,22 @@ public class WorldSimulationBehavior extends TickerBehaviour {
                 try {
                     AgentStatus status = (AgentStatus) msg.getContentObject();
                     mWorldAgent.setAgentStatus(status);
+                } catch (UnreadableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        mWorldAgent.addBehaviour(new CyclicBehaviour() {
+            @Override
+            public void action() {
+                MessageTemplate mt = MessageTemplate.MatchConversationId(CONVERSATION_GET_AGENT_CROSSROAD_TIME);
+                ACLMessage msg = myAgent.receive(mt);
+                if (msg == null) return;
+
+                try {
+                    float time = (float) msg.getContentObject();
+                    mWorldAgent.updateAverageWaitingTime(time);
                 } catch (UnreadableException e) {
                     e.printStackTrace();
                 }

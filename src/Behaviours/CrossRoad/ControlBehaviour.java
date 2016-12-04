@@ -25,6 +25,14 @@ import java.util.List;
  */
 public class ControlBehaviour extends TickerBehaviour
 {
+    private static final long SWITCH_TIME = 2000; // in ms
+
+    private enum Phases
+    {
+        ALL_RED_PHASE,
+        TURN_GREEN_PHASE
+    }
+
     private class Lane
     {
         public int ExitId;
@@ -51,6 +59,7 @@ public class ControlBehaviour extends TickerBehaviour
 
     private final CrossRoadAgent _agent;
     private List<State> _states;
+    private Phases _phase;
     private int _currentState;
     private float _cycleDuration;
 
@@ -64,6 +73,7 @@ public class ControlBehaviour extends TickerBehaviour
         super(agent, Integer.MAX_VALUE);
         _agent = agent;
         _cycleDuration = cycleDuration;
+        _phase = Phases.TURN_GREEN_PHASE;
 
         // Configuration
         _states = new ArrayList<>();
@@ -89,6 +99,7 @@ public class ControlBehaviour extends TickerBehaviour
         _states.add(state);
 
         _currentState = 0;
+        _phase = Phases.ALL_RED_PHASE;
         updateTimeAllocations();
         recordCarCounts(_currentState);
         setState(_currentState);
@@ -129,20 +140,37 @@ public class ControlBehaviour extends TickerBehaviour
     private void setState(int stateIdx)
     {
         State state = _states.get(stateIdx);
-        if ((int)(state.AllocatedTime * 1000) <= 0) {
+        if ((int) (state.AllocatedTime * 1000) <= 0) {
             nextState();
             return;
         }
         // Change traffic lights according to state
         _agent.turnAllSemaphoresRed();
-        for (Lane lane : state.AllowedLanes)
-        {
+
+
+        if (state.AllowedLanes.size() == 4) {
+            // If the direction of green lanes is changing,
+            // wait for a while letting no traffic through.
+            // This helps to empty the crossroad.
+            _phase = Phases.TURN_GREEN_PHASE;
+            reset(SWITCH_TIME);
+        }
+        else {
+            turnSemaphores(stateIdx);
+        }
+    }
+
+    private void turnSemaphores(int stateIdx)
+    {
+        State state = _states.get(stateIdx);
+        for (Lane lane : state.AllowedLanes) {
             Semaphore sem = _agent.getSemaphore(lane.ExitId, lane.Direction);
             sem.setLight(Semaphore.Light.Green);
         }
 
         // Plan next change
-        reset((int)(state.AllocatedTime * 1000));
+        _phase = Phases.ALL_RED_PHASE;
+        reset((int) (state.AllocatedTime * 1000));
     }
 
     private void nextState()
@@ -195,7 +223,16 @@ public class ControlBehaviour extends TickerBehaviour
 
     @Override
     protected void onTick() {
-        nextState();
-        informWaitingCars();
+        switch (_phase)
+        {
+            case ALL_RED_PHASE:
+                nextState();
+                break;
+
+            case TURN_GREEN_PHASE:
+                turnSemaphores(_currentState);
+                informWaitingCars();
+                break;
+        }
     }
 }

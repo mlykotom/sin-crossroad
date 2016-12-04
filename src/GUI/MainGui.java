@@ -19,6 +19,7 @@ public class MainGui extends JFrame {
     private JPanel rootPanel;
     private JPanel worldMap;
     private JLabel simulationTime;
+    private JLabel averageWaitingTime;
 
 
     public static MainGui runGUI(WorldAgent worldAgent) {
@@ -65,6 +66,10 @@ public class MainGui extends JFrame {
         worldMap.repaint();
     }
 
+    public void updateAverageWaitingTime(float time) {
+        averageWaitingTime.setText(String.format("%.2f s", time));
+        worldMap.repaint();
+    }
 
     public WorldMapCanvas getWorldMap() {
         return mWorldMapCanvas;

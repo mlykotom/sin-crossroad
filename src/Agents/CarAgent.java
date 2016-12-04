@@ -118,4 +118,17 @@ public class CarAgent extends Agent {
             e.printStackTrace();
         }
     }
+
+    public void reportCrossRoadWaitingTime(float time)
+    {
+        try {
+            ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+            msg.setConversationId(WorldSimulationBehavior.CONVERSATION_GET_AGENT_CROSSROAD_TIME);
+            msg.addReceiver(WorldAgent.sWorldAgentAID);
+            msg.setContentObject(time);
+            send(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

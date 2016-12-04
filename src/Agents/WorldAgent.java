@@ -21,13 +21,15 @@ import java.util.logging.Level;
 public class WorldAgent extends Agent {
     public static AID sWorldAgentAID;//TODO not immutable, not good, change!
     public static WorldAgent sInstance;
-    public static final long WORLD_UPDATE_PERIOD_MILLIS = 500;  // TODO parametrized
+    public static final long WORLD_UPDATE_PERIOD_MILLIS = 100;
+    public static final long AVERAGE_TIME_SAMPLE_COUNT = 100;
     private static Logger sLogger = Logger.getMyLogger(WorldAgent.class.getSimpleName());
 
     private BaseWorld mWorld;
     private int mCrossRoadsAgentsCount = 0;
     private int mCarAgentsCount = 0;
     private int mSpawnPointsCount = 0;
+    private float mAverageWaitingTime = 0;
     private MainGui mMainGui;
 
     private ContainerController mContainerController;
@@ -107,5 +109,13 @@ public class WorldAgent extends Agent {
         } else if (agentStatus instanceof SpawnPointStatus) {
             mMainGui.getWorldMap().setSpawnPointStatus((SpawnPointStatus) agentStatus);
         }
+    }
+
+    public void updateAverageWaitingTime(float time)
+    {
+        mAverageWaitingTime = mAverageWaitingTime
+                * (AVERAGE_TIME_SAMPLE_COUNT - 1) / AVERAGE_TIME_SAMPLE_COUNT
+                + time / AVERAGE_TIME_SAMPLE_COUNT;
+        mMainGui.updateAverageWaitingTime(mAverageWaitingTime);
     }
 }

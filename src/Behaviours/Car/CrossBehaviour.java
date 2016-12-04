@@ -75,6 +75,7 @@ public class CrossBehaviour extends Behaviour
         }
         _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " First in queeeee");
 
+        long starPassingTime = System.currentTimeMillis();
         while(true){
             ACLMessage semaphoreMsg = new ACLMessage(ACLMessage.QUERY_IF);
             semaphoreMsg.setConversationId(CrossRoadAgent.SEMAPHORE_CONVERSATION_REQUEST);
@@ -136,6 +137,7 @@ public class CrossBehaviour extends Behaviour
                 break;
             }
         }
+        _carAgent.reportCrossRoadWaitingTime((System.currentTimeMillis() - starPassingTime) / 1000.0f);
 
         _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Yuhuuuu Im driving thourg crossroad");
 
