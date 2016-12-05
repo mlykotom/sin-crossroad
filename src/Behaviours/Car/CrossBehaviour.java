@@ -133,13 +133,13 @@ public class CrossBehaviour extends Behaviour
             }
             else
             {
-                //_carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Leaving this shitTTTTTTTTTTTTT");
+                //_carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Leaving this crossoooooooad");
                 break;
             }
         }
         _carAgent.reportCrossRoadWaitingTime((System.currentTimeMillis() - starPassingTime) / 1000.0f);
 
-        //_carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Yuhuuuu Im driving thourg crossroad");
+        //_carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Yuhuuuu Im driving through crossroad");
 
 
         // Sending message that car is passing crossroad
