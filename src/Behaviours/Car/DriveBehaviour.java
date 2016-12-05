@@ -42,7 +42,7 @@ public class DriveBehaviour extends OneShotBehaviour {
 
         double drivingTime = currentRoad.getLengthInMeters() / Car.getSpeedInMeters(); // In seconds
         long wakeUpTime = (long) (drivingTime * DateUtils.MILLIS_PER_SECOND);
-        sLogger.log(Level.INFO, _carAgent.getLocalName() + " driving for " + drivingTime + "seconds");
+        //sLogger.log(Level.INFO, _carAgent.getLocalName() + " driving for " + drivingTime + "seconds");
 
         // TODO parameters
         _carAgent.addBehaviour(new WakerBehaviour(_carAgent, wakeUpTime) {

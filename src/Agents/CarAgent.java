@@ -65,7 +65,7 @@ public class CarAgent extends Agent {
 
 
     public void delete() {
-        myLogger.log(Level.INFO, getLocalName() + " arrived");
+        //myLogger.log(Level.INFO, getLocalName() + " arrived");
 //        reportRoad(false);
         doDelete();
     }
@@ -88,12 +88,12 @@ public class CarAgent extends Agent {
         _currentRoadIdx++;
 
         addBehaviour(new DriveBehaviour(this));
-        myLogger.log(Level.INFO, getLocalName() + " crossRoad Passed!");
+        //myLogger.log(Level.INFO, getLocalName() + " crossRoad Passed!");
     }
 
 
     public void crossRoadArrived(CrossRoad crossRoad) {
-        myLogger.log(Level.INFO, "CrossRoad arrived!");
+        //myLogger.log(Level.INFO, "CrossRoad arrived!");
 
         addBehaviour(new CrossBehaviour(this, crossRoad,
                 _path.get(_currentRoadIdx), _path.get(_currentRoadIdx + 1)));

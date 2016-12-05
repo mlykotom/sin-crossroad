@@ -81,7 +81,7 @@ public class SpawnCarBehavior extends TickerBehaviour {
 
     @Override
     protected void onTick() {
-        sLogger.log(Level.INFO, "Spawning car at: " + mSpawnPoint.getName());
+        //sLogger.log(Level.INFO, "Spawning car at: " + mSpawnPoint.getName());
         setupCarAgent();
         planNextSpawn();
     }

@@ -68,12 +68,12 @@ public class CrossBehaviour extends Behaviour
         ACLMessage queueResponse = myAgent.blockingReceive(mt);
 
         if(queueResponse.getPerformative() != ACLMessage.AGREE) {
-            _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " wating in queueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+            //_carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " wating in queueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 
             mt = MessageTemplate.MatchConversationId(CrossRoadAgent.FIRST_IN_QUEUE_RESPONSE);
             myAgent.blockingReceive(mt);
         }
-        _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " First in queeeee");
+        //_carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " First in queeeee");
 
         long starPassingTime = System.currentTimeMillis();
         while(true){
@@ -94,7 +94,7 @@ public class CrossBehaviour extends Behaviour
             int carCanGo = received.getPerformative();
             if(carCanGo != ACLMessage.AGREE)
             {
-                _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " wating for GREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN");
+                //_carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " wating for GREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN");
 
                 // Wait For Receiving message to go
                 mt = MessageTemplate.MatchConversationId(CrossRoadAgent.SEMAPHORE_CHANGED);
@@ -120,26 +120,26 @@ public class CrossBehaviour extends Behaviour
                 received = myAgent.blockingReceive(mt);
                 if(received.getPerformative() == ACLMessage.AGREE)
                 {
-                    _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " LEAAAVING TURNING LEEEEEEEEEEEFT");
+                    //_carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " LEAAAVING TURNING LEEEEEEEEEEEFT");
                     break;
                 }
 
-                _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Beeing blocked and trying to turn left. BLOOOOOOOOOOOOOOOOCKEEEEEEEEEEEEEEDDDDDDDDDDDDDDDDDD");
+                //_carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Beeing blocked and trying to turn left. BLOOOOOOOOOOOOOOOOCKEEEEEEEEEEEEEEDDDDDDDDDDDDDDDDDD");
 
                 mt = MessageTemplate.MatchConversationId(CrossRoadAgent.STATE_IN_CROSSROAD_CHANGED);
                 myAgent.blockingReceive(mt);
 
-                _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Igot unblocked: maybe");
+                //_carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Igot unblocked: maybe");
             }
             else
             {
-                _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Leaving this shitTTTTTTTTTTTTT");
+                //_carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Leaving this shitTTTTTTTTTTTTT");
                 break;
             }
         }
         _carAgent.reportCrossRoadWaitingTime((System.currentTimeMillis() - starPassingTime) / 1000.0f);
 
-        _carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Yuhuuuu Im driving thourg crossroad");
+        //_carAgent.myLogger.log(Level.WARNING, _carAgent.getLocalName() + " Yuhuuuu Im driving thourg crossroad");
 
 
         // Sending message that car is passing crossroad
@@ -157,7 +157,7 @@ public class CrossBehaviour extends Behaviour
         }
         myAgent.send(msg);
 
-        // TODO driving through crossroad time
+        // TODO Parametrize driving through crossroad time
         _carAgent.addBehaviour(new WakerBehaviour(_carAgent, 2000) {
             @Override
             protected void onWake() {
@@ -169,14 +169,13 @@ public class CrossBehaviour extends Behaviour
                 msg.addReceiver(_crossRoadReceiver);
                 myAgent.send(msg);
 
-                _carAgent.myLogger.log(Level.WARNING, "I LOOOOOVE");
+                //_carAgent.myLogger.log(Level.WARNING, "I LOOOOOVE");
                 // Start Behaviour for crossing next road
                 _carAgent.placePassed(_crossRoad);
             }
         });
 
         _crossed = true;
-        //TODO: Maybe use ReceiverBehaviour from JADE.
     }
 
     @Override
