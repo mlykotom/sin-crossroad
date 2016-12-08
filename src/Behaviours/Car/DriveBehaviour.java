@@ -2,7 +2,6 @@ package Behaviours.Car;
 
 import Agents.CarAgent;
 import jade.util.Logger;
-import model.Car;
 import Map.CrossRoad;
 import Map.Place;
 import Map.Road;
@@ -12,7 +11,6 @@ import jade.core.behaviours.WakerBehaviour;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.List;
-import java.util.logging.Level;
 
 
 /**
@@ -40,7 +38,7 @@ public class DriveBehaviour extends OneShotBehaviour {
 
         _carAgent.reportRoad(true);
 
-        double drivingTime = currentRoad.getLengthInMeters() / Car.getSpeedInMeters(); // In seconds
+        double drivingTime = currentRoad.getLengthInMeters() / _carAgent.getSpeedInMeters(); // In seconds
         long wakeUpTime = (long) (drivingTime * DateUtils.MILLIS_PER_SECOND);
         //sLogger.log(Level.INFO, _carAgent.getLocalName() + " driving for " + drivingTime + "seconds");
 

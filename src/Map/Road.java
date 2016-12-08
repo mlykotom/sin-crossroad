@@ -20,10 +20,6 @@ public class Road extends Place implements Serializable {
 
 
     private int calculateLengthInPoints(Place a, Place b) {
-        if (a.getCoordX() != b.getCoordX() && a.getCoordY() != b.getCoordY()) {
-            throw new IllegalArgumentException("Road must be perpendicular to X or Y!");
-        }
-
         return (int) Math.sqrt(Math.pow((a.getCoordX() - b.getCoordX()), 2) + Math.pow((a.getCoordY() - b.getCoordY()), 2));
     }
 
