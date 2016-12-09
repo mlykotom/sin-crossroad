@@ -33,8 +33,8 @@ public class WorldTwo extends BaseWorld {
         Road roadG = new Road(spawnF, minorCrossroad);
 
 
-        mainCrossroad.setRoads(roadA, roadB, roadC, roadD);
-        minorCrossroad.setRoads(roadC, roadE, roadF, roadG);
+        mainCrossroad.setRoads(roadB, roadC, roadD, roadA);
+        minorCrossroad.setRoads(roadG, roadE, roadF, roadC);
 
         spawnA.setRoad(roadA);
         spawnB.setRoad(roadB);

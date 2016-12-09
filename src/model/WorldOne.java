@@ -24,10 +24,10 @@ public class WorldOne extends BaseWorld {
         Road roadD = new Road(spawnD, crossroad);
 
         crossroad.setRoads(roadA, roadB, roadC, roadD);
-        spawnA.setRoad(roadA);
-        spawnB.setRoad(roadB);
-        spawnC.setRoad(roadC);
-        spawnD.setRoad(roadD);
+        spawnA.setRoad(roadB);
+        spawnB.setRoad(roadC);
+        spawnC.setRoad(roadD);
+        spawnD.setRoad(roadA);
 
         setupSpawnPoints(spawnA, spawnB, spawnC, spawnD);
         setupCrossRoads(crossroad);

@@ -1,6 +1,7 @@
 package Behaviours.CrossRoad;
 
 import Agents.CrossRoadAgent;
+import Common.ArrayIndexComparator;
 import Common.DirectionType;
 import jade.core.AID;
 import jade.core.behaviours.TickerBehaviour;
@@ -8,6 +9,7 @@ import jade.lang.acl.ACLMessage;
 import model.Semaphore;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,18 +39,20 @@ public class ControlBehaviour extends TickerBehaviour
     {
         public int ExitId;
         public DirectionType Direction;
+        public float Weight;
 
-        public Lane(int exitId, DirectionType direction)
+        public Lane(int exitId, DirectionType direction, float weight)
         {
             ExitId = exitId;
             Direction = direction;
+            Weight = weight;
         }
     }
 
     private class State
     {
         public List<Lane> AllowedLanes; // Lanes allowed by this state
-        public int WaitingCarsCount; // Number of cars waiting in lanes allowed by this state
+        public float WaitingCarsCount; // Number of cars waiting in lanes allowed by this state
         public float AllocatedTime; // Time allocated during cycle
 
         State()
@@ -78,24 +82,24 @@ public class ControlBehaviour extends TickerBehaviour
         // Configuration
         _states = new ArrayList<>();
         State state = new State();
-        state.AllowedLanes.add(new Lane(0, DirectionType.Straight));
-        state.AllowedLanes.add(new Lane(0, DirectionType.Left));
-        state.AllowedLanes.add(new Lane(2, DirectionType.Straight));
-        state.AllowedLanes.add(new Lane(2, DirectionType.Left));
+        state.AllowedLanes.add(new Lane(0, DirectionType.Straight, 1.0f));
+        state.AllowedLanes.add(new Lane(0, DirectionType.Left, 0.5f));
+        state.AllowedLanes.add(new Lane(2, DirectionType.Straight, 1.0f));
+        state.AllowedLanes.add(new Lane(2, DirectionType.Left, 0.5f));
         _states.add(state);
         state = new State();
-        state.AllowedLanes.add(new Lane(0, DirectionType.Left));
-        state.AllowedLanes.add(new Lane(2, DirectionType.Left));
+        state.AllowedLanes.add(new Lane(0, DirectionType.Left, 1.0f));
+        state.AllowedLanes.add(new Lane(2, DirectionType.Left, 1.0f));
         _states.add(state);
         state = new State();
-        state.AllowedLanes.add(new Lane(1, DirectionType.Straight));
-        state.AllowedLanes.add(new Lane(1, DirectionType.Left));
-        state.AllowedLanes.add(new Lane(3, DirectionType.Straight));
-        state.AllowedLanes.add(new Lane(3, DirectionType.Left));
+        state.AllowedLanes.add(new Lane(1, DirectionType.Straight, 1.0f));
+        state.AllowedLanes.add(new Lane(1, DirectionType.Left, 0.5f));
+        state.AllowedLanes.add(new Lane(3, DirectionType.Straight, 1.0f));
+        state.AllowedLanes.add(new Lane(3, DirectionType.Left, 0.5f));
         _states.add(state);
         state = new State();
-        state.AllowedLanes.add(new Lane(1, DirectionType.Left));
-        state.AllowedLanes.add(new Lane(3, DirectionType.Left));
+        state.AllowedLanes.add(new Lane(1, DirectionType.Left, 1.0f));
+        state.AllowedLanes.add(new Lane(3, DirectionType.Left, 1.0f));
         _states.add(state);
 
         _currentState = 0;
@@ -107,32 +111,62 @@ public class ControlBehaviour extends TickerBehaviour
 
     private void updateTimeAllocations()
     {
+        int weight = 1;
         int totalCarCount = 0;
+        float minAllocatedTime = _cycleDuration / 10;
         for (State state : _states)
         {
             totalCarCount += state.WaitingCarsCount;
         }
 
+        // Construct and resize list
+        List<Float> updatedTimes = new ArrayList<>();
+        Float[] waitingCars = new Float[_states.size()];
+        for (int i = 0; i < _states.size(); i++) {
+            updatedTimes.add(0.f);
+            waitingCars[i] = _states.get(i).WaitingCarsCount;
+        }
+
         if (totalCarCount == 0)
         { // If there were no cars, allocate time evenly
-            for (State s : _states)
-                s.AllocatedTime = _cycleDuration / _states.size();
+            for (int i = 0; i < _states.size(); i++)
+                updatedTimes.set(i, _cycleDuration / _states.size());
         }
         else {
-            for (State state : _states) {
-                state.AllocatedTime = ((float)state.WaitingCarsCount) / totalCarCount * _cycleDuration;
+            float remainingTime = _cycleDuration;
+
+            ArrayIndexComparator comparator = new ArrayIndexComparator(waitingCars);
+            Integer[] indexes = comparator.createIndexArray();
+            Arrays.sort(indexes, comparator);
+
+            for (Integer idx : indexes) {
+                float allocatedTime = waitingCars[idx] / totalCarCount * remainingTime;
+                if (allocatedTime < minAllocatedTime) {
+                    updatedTimes.set(idx, minAllocatedTime);
+                    remainingTime -= minAllocatedTime;
+                    totalCarCount -= waitingCars[idx];
+                } else {
+                    updatedTimes.set(idx, allocatedTime);
+                }
             }
+        }
+
+        for (int i = 0; i < _states.size(); i++)
+        {
+            float allocatedTime = _states.get(i).AllocatedTime;
+            allocatedTime = (weight - 1) / weight * allocatedTime + 1/weight * updatedTimes.get(i);
+            _states.get(i).AllocatedTime = allocatedTime;
         }
     }
 
     private void recordCarCounts(int stateIdx)
     {
         State state = _states.get(stateIdx);
-        int totalCarCount = 0;
+        float totalCarCount = 0;
         for (Lane lane : state.AllowedLanes)
         {
             List<String> exit = _agent.resolveExit(lane.ExitId, lane.Direction);
-            totalCarCount += exit.size();
+            totalCarCount += lane.Weight * exit.size();
         }
         state.WaitingCarsCount = totalCarCount;
     }

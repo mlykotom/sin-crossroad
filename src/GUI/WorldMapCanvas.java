@@ -24,7 +24,7 @@ public class WorldMapCanvas extends JPanel {
 
 
     public WorldMapCanvas(BaseWorld world) {
-        mCanvasSize = 1200;
+        mCanvasSize = 1000;
         mGridSize = world.getGridSize() + FIXES_OUT_OF_CANVAS;
         mWorld = world;
 
