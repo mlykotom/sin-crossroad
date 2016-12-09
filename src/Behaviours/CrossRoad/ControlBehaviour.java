@@ -111,7 +111,7 @@ public class ControlBehaviour extends TickerBehaviour
 
     private void updateTimeAllocations()
     {
-        int weight = 1;
+        int weight = 3;
         int totalCarCount = 0;
         float minAllocatedTime = _cycleDuration / 10;
         for (State state : _states)
