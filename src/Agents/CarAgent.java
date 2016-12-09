@@ -13,7 +13,7 @@ import jade.util.Logger;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.Random;
 
 
 /**
@@ -21,6 +21,7 @@ import java.util.logging.Level;
  */
 public class CarAgent extends Agent {
     public static final String CAR_NAME_PREFIX = "Car::";
+    public static int sAverageSpeed = 50; // in km/h
     public Logger myLogger = Logger.getMyLogger(getClass().getName());
 
     private long timestampStart = 0;
@@ -32,6 +33,18 @@ public class CarAgent extends Agent {
 
     public static String getAgentName(int id) {
         return String.format("%s%d", CAR_NAME_PREFIX, id);
+    }
+
+
+    /**
+     * Gets car speed between 50 - 60 km/h
+     *
+     * @return in m/s
+     */
+    public double getSpeedInMeters() {
+        int speed = sAverageSpeed;
+        speed += new Random().nextInt(60);
+        return speed / 3.6;
     }
 
 
@@ -119,8 +132,8 @@ public class CarAgent extends Agent {
         }
     }
 
-    public void reportCrossRoadWaitingTime(float time)
-    {
+
+    public void reportCrossRoadWaitingTime(float time) {
         try {
             ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
             msg.setConversationId(WorldSimulationBehavior.CONVERSATION_GET_AGENT_CROSSROAD_TIME);

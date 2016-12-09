@@ -12,10 +12,10 @@ import Map.SpawnPoint;
 public class WorldThree extends BaseWorld {
     public WorldThree() {
         super("WorldThree");
-        SpawnPoint spawnA = new SpawnPoint("SpawnA", 1, 0, 500, 2000);
+        SpawnPoint spawnA = new SpawnPoint("SpawnA", 2, 0, 500, 2000);
         SpawnPoint spawnB = new SpawnPoint("SpawnB", 0, 1);
         SpawnPoint spawnC = new SpawnPoint("SpawnC", 1, 4);
-        SpawnPoint spawnF = new SpawnPoint("SpawnF", 0, 3, 1000, 3000);
+        SpawnPoint spawnF = new SpawnPoint("SpawnF", 0, 2, 1000, 3000);
         SpawnPoint spawnG = new SpawnPoint("spawnG", 5, 3);
         SpawnPoint spawnH = new SpawnPoint("spawnH", 4, 5, 1000, 3000);
 
