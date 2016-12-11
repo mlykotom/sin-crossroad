@@ -34,12 +34,16 @@ public class WorldAgent extends Agent {
 
     private ContainerController mContainerController;
     public final ConcurrentHashMap<String, AgentStatus> worldStatus = new ConcurrentHashMap<>();
+    private int mCanvasSize = 1000;
 
 
     @Override
     protected void setup() {
         sWorldAgentAID = getAID();
         sInstance = this;
+
+        handleArguments();
+
         mWorld = new WorldThree();
         mContainerController = getContainerController();
         sLogger.log(Level.INFO, "Creating " + mWorld.name);
@@ -50,6 +54,22 @@ public class WorldAgent extends Agent {
         setupWorldSimulation();
 
         mMainGui.setVisible(true);
+    }
+
+
+    private void handleArguments() {
+        Object[] arguments = getArguments();
+        if (arguments != null && arguments.length > 0) {
+            try {
+                mCanvasSize = Integer.parseInt((String) arguments[0]);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+    }
+
+
+    public int getCanvasSize() {
+        return mCanvasSize;
     }
 
 
@@ -111,8 +131,8 @@ public class WorldAgent extends Agent {
         }
     }
 
-    public void updateAverageWaitingTime(float time)
-    {
+
+    public void updateAverageWaitingTime(float time) {
         mAverageWaitingTime = mAverageWaitingTime
                 * (AVERAGE_TIME_SAMPLE_COUNT - 1) / AVERAGE_TIME_SAMPLE_COUNT
                 + time / AVERAGE_TIME_SAMPLE_COUNT;

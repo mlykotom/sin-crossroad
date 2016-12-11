@@ -23,8 +23,8 @@ public class WorldMapCanvas extends JPanel {
     private LinkedHashMap<UUID, Renderable> mPlaces = new LinkedHashMap<>();
 
 
-    public WorldMapCanvas(BaseWorld world) {
-        mCanvasSize = 1000;
+    public WorldMapCanvas(BaseWorld world, int canvasSize) {
+        mCanvasSize = canvasSize;
         mGridSize = world.getGridSize() + FIXES_OUT_OF_CANVAS;
         mWorld = world;
 

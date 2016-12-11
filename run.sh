@@ -1,3 +1,5 @@
 #!/bin/bash
 
-java -cp lib/*:bin jade.Boot -agents world:Agents.WorldAgent
+canvasSize="$1"
+java -cp lib/*:bin jade.Boot -agents "world:Agents.WorldAgent($canvasSize)"
+

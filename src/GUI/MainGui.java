@@ -48,7 +48,7 @@ public class MainGui extends JFrame {
 
     private MainGui(WorldAgent worldAgent) {
         mWorldAgent = worldAgent;
-        mWorldMapCanvas = new WorldMapCanvas(worldAgent.getWorld());
+        mWorldMapCanvas = new WorldMapCanvas(worldAgent.getWorld(), worldAgent.getCanvasSize());
     }
 
 
