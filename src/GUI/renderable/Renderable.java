@@ -1,7 +1,6 @@
 package GUI.renderable;
 
 import GUI.WorldMapCanvas;
-import com.sun.istack.internal.Nullable;
 
 import java.awt.*;
 
@@ -31,7 +30,7 @@ public abstract class Renderable {
     protected abstract void render(Graphics2D g2D);
 
 
-    protected void drawShape(Graphics2D g2D, Shape shape, Paint color, @Nullable Stroke stroke, @Nullable Paint borderColor) {
+    protected void drawShape(Graphics2D g2D, Shape shape, Paint color, Stroke stroke, Paint borderColor) {
         g2D.setPaint(color);
         g2D.fill(shape);
         g2D.setStroke(stroke == null ? NO_STROKE : stroke);

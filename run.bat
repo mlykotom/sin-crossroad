@@ -1,1 +1,0 @@
-"%JRE_HOME%\java" -cp lib\jade.jar;bin jade.Boot -gui -agents WorldAgent:Agents.WorldAgent
